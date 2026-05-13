@@ -3212,3 +3212,60 @@ TEST 4 — Chaîne_Ω corridors :
 ### Artefacts
 - `/app/memory/audit_provenance/p22omega_worker_safe_rearm.md` (rapport complet)
 - `/app/backend/engines/v8_institutional/v20_performance_bundle.py` (modifié)
+
+---
+
+## 2026-05-13 · P22Ω_REDIS_HOIST — Cache L1 Redis + warmup bundle complet
+**3 volets** : provisionnement Redis · migration cache LRU→Redis (fallback) · warmup bundle COMPLET
+
+### A · Provisionnement Redis
+- `apt-get install redis-server` → redis 7.0.15 installé
+- Config locale `/app/backend/cache/redis-omega.conf` (bind 127.0.0.1, port 6379, maxmemory 512mb, lru, snapshots)
+- `REDIS_URL=redis://localhost:6379/0` ajouté à `/app/backend/.env`
+- Hook `_ensure_redis_daemon_up()` dans `v20_startup` + `_ensure_lazy_init` (idempotent)
+
+### B · Migration LRU → Redis (architecture L1/L2)
+- `redis_omega.py` déjà branché dans `_cache_get` / `_cache_set` (vérifié actif)
+- L2 LRU local (10 000 entrées) + L1 Redis (cross-pod) avec promotion L1→L2 auto
+- Fallback LRU silencieux si Redis down (`is_redis_enabled()` returns False gracefully)
+
+### C · Warmup bundle COMPLET (élimination cache poisoning)
+- `_warmup_single()` invoque désormais `v20_territoire_bundle` (pipeline intégral)
+  au lieu de `compute_territoire_v10` seul (V5 + RenduΩ + veineux + interzone + presence_mask)
+- Contextvar `_WARMUP_CONTEXT` pour bypass hardcap user 20s → warmup hardcap 50s
+- SKIP `_cache_set` si `p22omega_miss_absorbed=True` (anti-poisoning)
+
+### Validation cross-pod (LRU L2 vide, Redis L1 persistant)
+- Restart backend → LRU=0 entries, Redis=2 keys (persistance OK)
+- Premier curl BSL chevreuil → `cache=HIT served_ms=0.01ms` (Redis L1 hit, LRU L2 warmed)
+- Stats post-HIT : `cache_size_LRU=1` (promotion automatique)
+
+### Validation 5 espèces BSL post-Redis
+| Espèce | Corridors | V5 natif | V30 remap | Verdict |
+|---|---|---|---|---|
+| chevreuil | 7 | ✓ | False | ✓ |
+| orignal | 7 | ✓ | False | ✓ |
+| **ours** | **7** | **✓ NATIF** | **False** | ✓ (était V30 remap) |
+| dindon | 0 halt | — | — | ✓ |
+| **coyote** | **6** | **✓ NATIF** | **False** | ✓ (était V30 remap) |
+
+### Comportement "couches parfaites puis recentrage 15s" → ÉLIMINÉ
+- Cause racine : warmup cachait compute_v10 seul → user MISS recomputait V5 → réécriture après ~15s
+- Fix : warmup cache désormais le BUNDLE COMPLET → user HIT = bundle final identique
+
+### Endpoint healthz/worker enrichi
+- `redis_omega` : `{connected, enabled, url, bundle_keys, tile_keys, memory_used, memory_peak}`
+- `platform_provisioned_items.redis_url.current` : `redis://localhost:6379/0` (était `ABSENT`)
+
+### Artefacts
+- `/app/memory/audit_provenance/p22omega_redis_hoist.md` (rapport complet)
+- `/app/backend/cache/redis-omega.conf` (config Redis)
+- `/app/backend/.env` (REDIS_URL)
+- `/app/backend/engines/v8_institutional/v20_performance_bundle.py` (modifié)
+
+### Conformité doctrinale
+- ✅ V30 LOCK inviolé
+- ✅ Supervisor.conf intact (READONLY respecté)
+- ✅ Aucune régression (fallback LRU si Redis down)
+- ✅ Validation 100% manuelle (curl + bash + redis-cli)
+- ✅ Aucun testing_agent_v3_fork

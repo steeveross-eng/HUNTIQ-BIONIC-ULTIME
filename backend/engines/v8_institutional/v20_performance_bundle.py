@@ -237,14 +237,19 @@ _DAEMONS_STATE = {
 
 
 async def _warmup_single(lat: float, lon: float, species: str = "cerf"):
-    """Compute + cache un seul waypoint avec params temporels DYNAMIQUES.
+    """Compute + cache un seul waypoint AVEC LE BUNDLE COMPLET (V5 + RenduΩ + veineux + masks).
 
-    P22Σ_V5_PRECHAUFFAGE_DYNAMIQUE_Ω · 2026-05-12T21:40Z · COMMANDANT STEEVE-MAX
-    Utilise month/hour ACTUELS au lieu de hardcoded (10, 7) pour que la cache
-    key match les requêtes frontend (qui envoient month/hour actuels via
-    new Date().getUTCMonth()+1 et getUTCHours()).
+    P22Ω_REDIS_HOIST · 2026-05-13 · COMMANDANT STEEVE-MAX
+    Le warmup invoque désormais le pipeline COMPLET du bundle au lieu de
+    `compute_territoire_v10` seul. Élimine le cache poisoning observé lors de
+    P22Ω_WORKER_SAFE_REARM (warmup cache → MISS user → recompute V5 → overwrite
+    → flash visuel ~15s sur UI).
+
+    Stratégie : appel direct à `v20_territoire_bundle` avec un Response synthétique.
+    Le pipeline complet (compute_v10 + V5 organic + presence_mask + RenduΩ +
+    veineux + interzone + esi_omega) populé via `_cache_set` LRU + Redis.
     """
-    from engines.v8_institutional.territoire_v10_supra import compute_territoire_v10
+    from fastapi import Response as _FastAPIResponse
     try:
         async with _WARMUP_SEMAPHORE:
             now = time.time()
@@ -252,11 +257,22 @@ async def _warmup_single(lat: float, lon: float, species: str = "cerf"):
             _dt = datetime.now(_tz.utc)
             _month = _dt.month
             _hour = _dt.hour
-            # Normalize species pour aligner avec le frontend (cerf → chevreuil)
+            # Normalize species pour aligner avec frontend (cerf → chevreuil, etc.)
             _species = SPECIES_ALIAS_TO_CANONICAL.get(species.lower(), species)
-            result = await compute_territoire_v10(lat, lon, _species, _month, _hour, 225.0, 15.0)
-            key = _cache_key(lat, lon, _species, _month, _hour, 225.0)
-            _cache_set(key, result)
+            _resp = _FastAPIResponse()
+            # P22Ω_REDIS_HOIST · 2026-05-13 — Active le contextvar warmup pour
+            # bypass le hardcap 20s (warmup peut attendre 50s pour cache complet).
+            _token = _WARMUP_CONTEXT.set(True)
+            try:
+                # Appel direct = full pipeline (cache_set du bundle complet inclus)
+                await v20_territoire_bundle(
+                    response=_resp,
+                    lat=lat, lon=lon, species=_species,
+                    month=_month, hour=_hour,
+                    wind_deg=225.0, wind_speed=15.0,
+                )
+            finally:
+                _WARMUP_CONTEXT.reset(_token)
             return time.time() - now
     except Exception as e:
         logger.warning(f"[V20-WARMUP] Failed {lat},{lon} {species}: {e}")
@@ -391,15 +407,34 @@ async def _prewarm_engines_omega():
 # Hardcap 20s sur le compute MISS, soft threshold 12s (warning log).
 # Au-delà du hardcap, on retourne le stale cache ou un bundle dégradé
 # au lieu de laisser pourrir le worker pendant 60s+.
+# P22Ω_REDIS_HOIST · 2026-05-13 — Le warmup utilise un contextvar pour
+# bypass le hardcap (le warmup populate le cache et peut attendre 45s,
+# vs requête user-facing limitée à 20s).
 # ═══════════════════════════════════════════════════════════════════════
 _MISS_HARDCAP_SEC = 20.0
 _MISS_SOFT_THRESHOLD_SEC = 12.0
+_MISS_WARMUP_HARDCAP_SEC = 50.0  # warmup peut attendre 50s pour cache complet
 _MISS_STATS: dict = {
     "absorbed_count": 0,        # MISS dépassant hardcap → absorption
     "soft_warning_count": 0,    # MISS dépassant soft threshold
     "total_miss_compute_s": 0.0,
     "last_absorbed_at": None,
 }
+
+# P22Ω_REDIS_HOIST · contextvar pour identifier les calls initiated par le warmup
+import contextvars
+_WARMUP_CONTEXT: contextvars.ContextVar[bool] = contextvars.ContextVar(
+    "_warmup_context", default=False,
+)
+
+
+def _effective_miss_hardcap() -> float:
+    """Retourne le hardcap effectif selon le contexte d'appel.
+
+    - Warmup context (background prechauffage) → 50s (permet compute fresh complet)
+    - User-facing (frontend request) → 20s (protection contre hang)
+    """
+    return _MISS_WARMUP_HARDCAP_SEC if _WARMUP_CONTEXT.get() else _MISS_HARDCAP_SEC
 
 
 async def _ensure_lazy_init():
@@ -411,6 +446,8 @@ async def _ensure_lazy_init():
         if _LAZY_INIT_DONE:
             return
         _LAZY_INIT_DONE = True
+        # P22Ω_REDIS_HOIST · 2026-05-13 · ensure Redis daemon up
+        _ensure_redis_daemon_up()
         loaded = _cache_load_disk()
         logger.info(f"[V20-LAZY-INIT] {loaded} entries loaded from disk")
         # P22Ω_WORKER_SAFE_REARM · 2026-05-13 · COMMANDANT STEEVE-MAX
@@ -430,9 +467,64 @@ async def _ensure_lazy_init():
         )
 
 
+# ═══════════════════════════════════════════════════════════════════════
+# P22Ω_REDIS_HOIST · 2026-05-13 · COMMANDANT STEEVE-MAX
+# S'assure que redis-server local tourne avant init. Redémarre si tombé.
+# Non-bloquant : si Redis indisponible, fallback transparent LRU in-memory
+# (logique déjà présente dans redis_omega.py).
+# ═══════════════════════════════════════════════════════════════════════
+_REDIS_OMEGA_CONF = os.environ.get("REDIS_OMEGA_CONFIG", "/app/backend/cache/redis-omega.conf")
+
+
+def _ensure_redis_daemon_up() -> bool:
+    """Vérifie que redis-server tourne sur la socket configurée.
+    Le démarre en daemon si absent. Idempotent.
+    """
+    if not os.environ.get("REDIS_URL"):
+        logger.info("[P22Ω_REDIS_HOIST] REDIS_URL non défini — skip daemon check")
+        return False
+    try:
+        import subprocess
+        # Test ping rapide
+        try:
+            r = subprocess.run(
+                ["redis-cli", "-h", "127.0.0.1", "-p", "6379", "ping"],
+                capture_output=True, text=True, timeout=2.0,
+            )
+            if r.returncode == 0 and "PONG" in r.stdout:
+                logger.info("[P22Ω_REDIS_HOIST] Redis daemon UP (ping=PONG)")
+                return True
+        except Exception:
+            pass
+        # Pas de ping → tenter de démarrer
+        if not os.path.exists(_REDIS_OMEGA_CONF):
+            logger.warning(f"[P22Ω_REDIS_HOIST] Config absente {_REDIS_OMEGA_CONF} — skip")
+            return False
+        subprocess.Popen(
+            ["redis-server", _REDIS_OMEGA_CONF, "--daemonize", "yes"],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        )
+        time.sleep(1.5)
+        # Re-test
+        r = subprocess.run(
+            ["redis-cli", "-h", "127.0.0.1", "-p", "6379", "ping"],
+            capture_output=True, text=True, timeout=2.0,
+        )
+        if r.returncode == 0 and "PONG" in r.stdout:
+            logger.info("[P22Ω_REDIS_HOIST] Redis daemon STARTED (ping=PONG)")
+            return True
+        logger.warning("[P22Ω_REDIS_HOIST] Redis startup failed — fallback LRU only")
+        return False
+    except Exception as e:
+        logger.warning(f"[P22Ω_REDIS_HOIST] Redis daemon check error: {e}")
+        return False
+
+
 # ═══ LIFESPAN HOOKS (called from server.py startup/shutdown) ═══
 async def v20_startup():
     """Called by server.py on app startup."""
+    # P22Ω_REDIS_HOIST · 2026-05-13 · démarre Redis daemon en priorité
+    _ensure_redis_daemon_up()
     loaded = _cache_load_disk()
     logger.info(f"[V20-PERFORMANCE] Startup: {loaded} entries loaded from disk")
     # P22Ω_WORKER_SAFE_REARM — daemons rearmés ici aussi (lazy-init peut être
@@ -721,16 +813,17 @@ async def v20_territoire_bundle(
     # P22Ω_WORKER_SAFE_REARM · MISS ABSORPTION (hardcap 20s, soft 12s)
     # ═══════════════════════════════════════════════════════════════════════
     _miss_t0 = time.time()
+    _hardcap = _effective_miss_hardcap()
     try:
         result = await asyncio.wait_for(
             compute_territoire_v10(lat, lon, species, month, hour, wind_deg, wind_speed),
-            timeout=_MISS_HARDCAP_SEC,
+            timeout=_hardcap,
         )
     except asyncio.TimeoutError:
         _MISS_STATS["absorbed_count"] += 1
         _MISS_STATS["last_absorbed_at"] = time.time()
         logger.warning(
-            f"[P22Ω_MISS_ABSORPTION] compute_territoire_v10 HARDCAP {_MISS_HARDCAP_SEC}s "
+            f"[P22Ω_MISS_ABSORPTION] compute_territoire_v10 HARDCAP {_hardcap}s "
             f"dépassé pour lat={lat},lon={lon},species={species}. Renvoi bundle dégradé."
         )
         # Bundle minimal dégradé (frontend affiche zones par défaut + signal)
@@ -742,7 +835,7 @@ async def v20_territoire_bundle(
             "data_source": "DEGRADED_MISS_ABSORPTION",
             "data_fiabilite": 0,
             "p22omega_miss_absorbed": True,
-            "p22omega_miss_hardcap_s": _MISS_HARDCAP_SEC,
+            "p22omega_miss_hardcap_s": _hardcap,
             "esi_omega": "PIPELINE_TIMEOUT",
         }
     _miss_compute_s = time.time() - _miss_t0
@@ -762,12 +855,12 @@ async def v20_territoire_bundle(
                 anchor_mode="TERRITORY_CONTINUOUS",
                 bundle_pre_computed=result,
             ),
-            timeout=_MISS_HARDCAP_SEC,
+            timeout=_hardcap,
         )
         v5_error = None
     except asyncio.TimeoutError:
         v5_bundle = None
-        v5_error = f"generate_organic_corridors TIMEOUT {_MISS_HARDCAP_SEC}s"
+        v5_error = f"generate_organic_corridors TIMEOUT {_hardcap}s"
         logger.warning(f"[P22Ω_MISS_ABSORPTION] V5 organic TIMEOUT pour species={species}")
     except Exception as _e_v5:
         v5_bundle = None
@@ -996,7 +1089,18 @@ async def v20_territoire_bundle(
     )
     result["esi_omega"] = bv["conformite"]
 
-    _cache_set(key, result)
+    # P22Ω_REDIS_HOIST · 2026-05-13 · COMMANDANT STEEVE-MAX
+    # NE PAS mettre en cache un bundle dégradé (timeout MISS absorption).
+    # Le bundle dégradé est servi UNE FOIS au client mais ne doit jamais
+    # polluer le cache (LRU+Redis) — sinon flash visuel "couches parfaites
+    # puis recentrage" observé par le Commandant.
+    if result.get("p22omega_miss_absorbed") is True:
+        logger.warning(
+            f"[P22Ω_REDIS_HOIST] SKIP _cache_set : bundle DEGRADED "
+            f"(p22omega_miss_absorbed=True) species={species} lat={lat},lon={lon}"
+        )
+    else:
+        _cache_set(key, result)
 
     elapsed_ms = round((time.time() - t0) * 1000, 2)
     _STATS["total_compute_ms"] += elapsed_ms
@@ -1083,6 +1187,13 @@ async def v20_healthz_worker():
     import os as _os
     _now = time.time()
 
+    # P22Ω_REDIS_HOIST · récupère stats Redis
+    try:
+        from engines.v8_institutional.redis_omega import redis_stats as _redis_stats, is_redis_enabled
+        _redis_state = {"connected": is_redis_enabled(), **_redis_stats()}
+    except Exception as _e:
+        _redis_state = {"connected": False, "error": str(_e)}
+
     def _age(ts):
         if ts is None:
             return None
@@ -1140,6 +1251,8 @@ async def v20_healthz_worker():
             ),
             "disk_exists": _CACHE_DISK_FILE.exists(),
         },
+        # P22Ω_REDIS_HOIST · 2026-05-13 · cache L1 Redis (cross-pod)
+        "redis_omega": _redis_state,
         "supervisor_managed": True,
         "platform_provisioned_items": {
             "multi_workers": {
