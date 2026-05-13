@@ -3319,3 +3319,43 @@ Au MÊME waypoint, MÊME paire de nodes vitaux :
 
 ### Artefacts
 - `/app/memory/audit_provenance/p22omega_corridors_divergence_inter_especes.md` (rapport complet)
+
+---
+
+## 2026-05-13 · P22Ω_TERRITOIRE_TOTAL_STACK_AUDIT_Ω — Audit intégral READ-ONLY
+**Scope** : territoire_omega · Waypoint BSL · mode BCE-4X ULTIME · V30 LOCK INVIOLÉ
+
+### Couverture audit (6 axes)
+1. ✅ Données & Sources — 13 répertoires datasets · 6 espèces SPECIES_BEHAVIOR · 5 APIs externes
+2. ✅ Engines & Pipeline — pipeline 10 étapes documenté · V5 NATIF confirmé · 0 fallback V8
+3. ✅ Couches & Styles — 8 panes RENDU_OMEGA Z-order · palette doctrinale frozen
+4. ✅ Cache, Warmup, MISS — L1 Redis + L2 LRU + warmup bundle complet
+5. ✅ Contrôles doctrinaux — 9 assertions BCE-4X validées
+6. ✅ Plan de remise en conformité — 5 phases (A immédiat → E ULTRA TERRITOIRE)
+
+### Écarts résiduels (aucun bloquant)
+- 🔴 PLATFORM (1) : Multi-workers Uvicorn (supervisor READONLY)
+- 🟡 P1 (3) : hardcap asyncio.wait_for limité sync CPU · Open-Meteo limit=20 trop agressif · HTTP 409 V30
+- 🟢 P2-P3 (8) : Double appel renduomega · décommissions · cache flush sélectif · CB unifié gis_omega
+
+### Pipeline bundle TERRITOIRE Ω (ordre)
+1. compute_territoire_v10 (Lidar + Open-Meteo + Overpass + MFFP)
+2. generate_organic_corridors V5 (8 params SPECIES_BEHAVIOR injectés post-DIVERGENCE)
+3. map_v5_corridors_to_ui
+4. (V30→V5 remap fallback — INACTIF post-fixes)
+5. apply_presence_mask_to_bundle (MFFP rectangles)
+6. apply_interzone_omega_to_bundle
+7. apply_veineux_omega_to_bundle
+8. apply_predictive_omega_v2_to_bundle (×2 idempotent)
+9. apply_renduomega_to_bundle (×2 — refactor P2)
+10. validate_bundle (ESI Ω)
+11. _cache_set L2 LRU + L1 Redis (skip si dégradé)
+
+### Artefact
+- `/app/memory/audit_provenance/p22omega_territoire_total_stack_audit.md` (rapport synthèse ultime)
+
+### Conformité doctrinale
+- ✅ V30 LOCK INVIOLÉ
+- ✅ Validation 100% READ-ONLY (aucune mutation)
+- ✅ Aucun testing_agent_v3_fork
+- ✅ Aucune modification supervisor
