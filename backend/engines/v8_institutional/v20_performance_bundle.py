@@ -94,6 +94,13 @@ _CACHE: "OrderedDict[str, tuple[float, dict]]" = OrderedDict()
 _CACHE_TTL_SEC = 86400
 _CACHE_MAX = 10000  # V11-SUPRA: 1024 → 10000
 
+# P22ΩΩ_BUNDLE_DEGRADED_CACHE · 2026-05-14 · STEEVE-MAX
+# TTL overrides per-key (bundles DEGRADED expirent en 90s pour ne pas
+# polluer le cache trop longtemps, mais évitent le 502 systématique en
+# cold-start quand Open-Meteo est en circuit-breaker).
+_CACHE_TTL_OVERRIDES: "dict[str, int]" = {}
+_CACHE_DEGRADED_TTL_SEC = 90  # 1.5 minute pour bundle dégradé
+
 # ═══ DISK PERSISTENCE ═══
 _CACHE_DIR = Path("/app/backend/cache")
 _CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -130,8 +137,11 @@ def _cache_get(key: str):
     entry = _CACHE.get(key)
     if entry:
         ts, payload = entry
-        if time.time() - ts > _CACHE_TTL_SEC:
+        # P22ΩΩ_BUNDLE_DEGRADED_CACHE : respecte TTL override si présent
+        ttl_effective = _CACHE_TTL_OVERRIDES.get(key, _CACHE_TTL_SEC)
+        if time.time() - ts > ttl_effective:
             _CACHE.pop(key, None)
+            _CACHE_TTL_OVERRIDES.pop(key, None)
         else:
             _CACHE.move_to_end(key)
             return payload
@@ -153,17 +163,30 @@ def _cache_get(key: str):
     return None
 
 
-def _cache_set(key: str, payload: dict):
+def _cache_set(key: str, payload: dict, ttl: int = None):
+    """P22ΩΩ_BUNDLE_DEGRADED_CACHE · 2026-05-14 · STEEVE-MAX
+    Stocke un bundle dans le LRU + Redis.
+    Si `ttl` est fourni (ex: 90s pour bundle DEGRADED), utilise-le au lieu du TTL par défaut.
+    Le TTL est gardé dans la dict _CACHE_TTL_OVERRIDES pour permettre les expirations rapides
+    des bundles dégradés tout en gardant le format tuple (timestamp, payload) inchangé.
+    """
+    effective_ttl = ttl if (ttl is not None and ttl > 0) else _CACHE_TTL_SEC
     _CACHE[key] = (time.time(), payload)
+    if effective_ttl != _CACHE_TTL_SEC:
+        _CACHE_TTL_OVERRIDES[key] = effective_ttl
+    else:
+        # Si on revient au TTL par défaut, on enlève tout override antérieur
+        _CACHE_TTL_OVERRIDES.pop(key, None)
     _CACHE.move_to_end(key)
     while len(_CACHE) > _CACHE_MAX:
-        _CACHE.popitem(last=False)
+        evicted_key, _ = _CACHE.popitem(last=False)
+        _CACHE_TTL_OVERRIDES.pop(evicted_key, None)
         _STATS["evictions"] += 1
     # Propagate to Redis (fire-and-forget)
     try:
         from engines.v8_institutional.redis_omega import redis_set, is_redis_enabled
         if is_redis_enabled():
-            redis_set(key, payload, ttl=_CACHE_TTL_SEC)
+            redis_set(key, payload, ttl=effective_ttl)
     except Exception:
         pass
 
@@ -411,9 +434,10 @@ async def _prewarm_engines_omega():
 # bypass le hardcap (le warmup populate le cache et peut attendre 45s,
 # vs requête user-facing limitée à 20s).
 # ═══════════════════════════════════════════════════════════════════════
-_MISS_HARDCAP_SEC = 20.0
-_MISS_SOFT_THRESHOLD_SEC = 12.0
-_MISS_WARMUP_HARDCAP_SEC = 50.0  # warmup peut attendre 50s pour cache complet
+_MISS_HARDCAP_SEC = 6.0   # P22ΩΩ 2026-05-14 : 10→6s — V10 cap 6s + V5 cap 6s + post ~10s = max ~22s < 25s K8s
+_MISS_SOFT_THRESHOLD_SEC = 5.0  # Aligné sur le nouveau hardcap 6s
+_MISS_WARMUP_HARDCAP_SEC = 12.0  # P22ΩΩ 2026-05-14 : 35→12s pour ne pas saturer single-worker
+_GLOBAL_BUNDLE_DEADLINE_SEC = 10.0  # P22ΩΩ 2026-05-14 : early-return si TOTAL > 10s (sous timeout K8s ~25s)
 _MISS_STATS: dict = {
     "absorbed_count": 0,        # MISS dépassant hardcap → absorption
     "soft_warning_count": 0,    # MISS dépassant soft threshold
@@ -450,21 +474,25 @@ async def _ensure_lazy_init():
         _ensure_redis_daemon_up()
         loaded = _cache_load_disk()
         logger.info(f"[V20-LAZY-INIT] {loaded} entries loaded from disk")
-        # P22Ω_WORKER_SAFE_REARM · 2026-05-13 · COMMANDANT STEEVE-MAX
-        # DAEMONS RÉACTIVÉS avec semaphore=2 + sleep randomisé 1800-2400s
-        # + prewarm engines (organic + smoother + rendu) au lazy-init.
-        asyncio.create_task(_prewarm_engines_omega())
-        asyncio.create_task(run_prechauffage_omega(limit=5))  # P22Ω_PHASE1_P1_FIXES (E1) — 20→5 anti Open-Meteo 429
-        asyncio.create_task(_periodic_refresh_daemon())
-        asyncio.create_task(_v5_compliance_monitor_daemon())
-        _DAEMONS_STATE["prechauffage_started_at"] = time.time()
-        _DAEMONS_STATE["periodic_refresh_started_at"] = time.time()
-        _DAEMONS_STATE["v5_monitor_started_at"] = time.time()
-        logger.info(
-            "[V20-LAZY-INIT] P22Ω_WORKER_SAFE_REARM + P22Ω_PHASE1_P1_FIXES — daemons ON: "
-            "prechauffage(sem=2,limit=5), periodic_refresh, v5_monitor "
-            f"(sleep randomized {_DAEMON_SLEEP_MIN}-{_DAEMON_SLEEP_MAX}s)"
-        )
+        # P22ΩΩ 2026-05-14 — Prechauffage daemons DÉSACTIVÉS par défaut (single-worker
+        # saturation). Pour réactiver : export P22OMEGA_PRECHAUFFAGE_DAEMONS=1
+        if os.environ.get("P22OMEGA_PRECHAUFFAGE_DAEMONS", "0") == "1":
+            asyncio.create_task(_prewarm_engines_omega())
+            asyncio.create_task(run_prechauffage_omega(limit=5))
+            asyncio.create_task(_periodic_refresh_daemon())
+            asyncio.create_task(_v5_compliance_monitor_daemon())
+            _DAEMONS_STATE["prechauffage_started_at"] = time.time()
+            _DAEMONS_STATE["periodic_refresh_started_at"] = time.time()
+            _DAEMONS_STATE["v5_monitor_started_at"] = time.time()
+            logger.info(
+                "[V20-LAZY-INIT] P22Ω_WORKER_SAFE_REARM + P22Ω_PHASE1_P1_FIXES — daemons ON: "
+                "prechauffage(sem=2,limit=5), periodic_refresh, v5_monitor "
+                f"(sleep randomized {_DAEMON_SLEEP_MIN}-{_DAEMON_SLEEP_MAX}s)"
+            )
+        else:
+            # Toujours faire le prewarm engines (très léger ~1.4ms)
+            asyncio.create_task(_prewarm_engines_omega())
+            logger.info("[V20-LAZY-INIT] P22ΩΩ — prechauffage daemons DISABLED (env P22OMEGA_PRECHAUFFAGE_DAEMONS)")
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -529,15 +557,85 @@ async def v20_startup():
     logger.info(f"[V20-PERFORMANCE] Startup: {loaded} entries loaded from disk")
     # P22Ω_WORKER_SAFE_REARM — daemons rearmés ici aussi (lazy-init peut être
     # bypassé en multi-pod). Idempotent via _DAEMONS_STATE checks.
-    if _DAEMONS_STATE["prechauffage_started_at"] is None:
+    # P22ΩΩ_BUNDLE_DEGRADED_CACHE · 2026-05-14 — Désactivation par défaut des
+    # daemons de prechauffage qui hog le single-worker (~60-96s par bundle).
+    # Pour réactiver : export P22OMEGA_PRECHAUFFAGE_DAEMONS=1
+    if (_DAEMONS_STATE["prechauffage_started_at"] is None
+            and os.environ.get("P22OMEGA_PRECHAUFFAGE_DAEMONS", "0") == "1"):
         asyncio.create_task(_prewarm_engines_omega())
-        asyncio.create_task(run_prechauffage_omega(limit=5))  # P22Ω_PHASE1_P1_FIXES (E1) — 20→5
+        asyncio.create_task(run_prechauffage_omega(limit=5))
         asyncio.create_task(_periodic_refresh_daemon())
         asyncio.create_task(_v5_compliance_monitor_daemon())
         _DAEMONS_STATE["prechauffage_started_at"] = time.time()
         _DAEMONS_STATE["periodic_refresh_started_at"] = time.time()
         _DAEMONS_STATE["v5_monitor_started_at"] = time.time()
-        logger.info("[V20-PERFORMANCE] P22Ω_WORKER_SAFE_REARM — startup hooks daemons ON")
+        logger.info("[V20-PERFORMANCE] P22Ω_WORKER_SAFE_REARM — startup hooks daemons ON (env explicit)")
+    else:
+        # Toujours faire le prewarm engines (très léger ~1.4ms)
+        asyncio.create_task(_prewarm_engines_omega())
+        logger.info("[V20-PERFORMANCE] P22ΩΩ — prechauffage daemons DISABLED par défaut (P22OMEGA_PRECHAUFFAGE_DAEMONS env)")
+    # P22ΩΩ_BUNDLE_DEGRADED_CACHE · 2026-05-14 · STEEVE-MAX
+    # Warmup BSL5 lancé INDÉPENDAMMENT (idempotent via _BSL5_WARMUP_STARTED flag)
+    # car la condition lazy-init peut déjà être True (race condition au boot).
+    # 2026-05-14 RÉVISION : BSL5 warmup DÉSACTIVÉ par défaut — il hog le single
+    # worker uvicorn pendant 60s+ par bundle (V10+V5+pipeline post non-bornés),
+    # bloquant les requêtes user → 502. À la place, on compte sur DEGRADED_CACHE
+    # TTL 90s + EARLY-RETURN pour absorber les cold-start utilisateurs.
+    # Pour réactiver : export P22OMEGA_BSL5_WARMUP=1
+    global _BSL5_WARMUP_STARTED
+    if not _BSL5_WARMUP_STARTED and os.environ.get("P22OMEGA_BSL5_WARMUP", "0") == "1":
+        _BSL5_WARMUP_STARTED = True
+        asyncio.create_task(_warmup_bsl_5_species_standard_contexts())
+        logger.info("[P22ΩΩ_BSL5_WARMUP] Startup task scheduled (env P22OMEGA_BSL5_WARMUP=1)")
+    else:
+        logger.info("[P22ΩΩ_BSL5_WARMUP] Skipped (P22OMEGA_BSL5_WARMUP env not set to '1')")
+
+
+_BSL5_WARMUP_STARTED = False
+
+
+async def _warmup_bsl_5_species_standard_contexts():
+    """P22ΩΩ_BUNDLE_DEGRADED_CACHE · 2026-05-14 · COMMANDANT STEEVE-MAX
+    Pré-charge les 5 espèces canoniques × waypoint BSL × 2 contextes temporels
+    standards du frontend (month=10 hour=14 wind=180 ET month=5 hour=11 wind=225).
+    Évite le 502 K8s au premier hit utilisateur sur ces combinaisons.
+    Exécution séquentielle (1 par 1) pour ne pas saturer le single-worker.
+    """
+    from fastapi import Response as _FastAPIResponse
+    BSL_LAT, BSL_LON = 48.206657, -68.382422
+    species_list = ["chevreuil", "orignal", "ours_noir", "coyote", "dindon_sauvage", "cerf"]
+    contexts = [(10, 14, 180.0), (5, 11, 225.0)]  # (month, hour, wind_deg)
+    total = len(species_list) * len(contexts)
+    done = 0
+    t_global = time.time()
+    logger.info(f"[P22ΩΩ_BSL5_WARMUP] Starting BSL × {len(species_list)} species × {len(contexts)} contexts = {total} bundles")
+    for sp in species_list:
+        sp_norm = SPECIES_ALIAS_TO_CANONICAL.get(sp.lower(), sp)
+        for (m, h, w) in contexts:
+            key = _cache_key(BSL_LAT, BSL_LON, sp_norm, m, h, w)
+            if _cache_get(key) is not None:
+                done += 1
+                continue
+            try:
+                t0 = time.time()
+                _token = _WARMUP_CONTEXT.set(True)
+                try:
+                    await v20_territoire_bundle(
+                        response=_FastAPIResponse(),
+                        lat=BSL_LAT, lon=BSL_LON, species=sp_norm,
+                        month=m, hour=h,
+                        wind_deg=w, wind_speed=15.0,
+                    )
+                finally:
+                    _WARMUP_CONTEXT.reset(_token)
+                done += 1
+                logger.info(f"[P22ΩΩ_BSL5_WARMUP] {sp_norm} m={m} h={h} w={int(w)} → cached in {(time.time()-t0):.1f}s ({done}/{total})")
+            except Exception as e:
+                logger.warning(f"[P22ΩΩ_BSL5_WARMUP] {sp_norm} m={m} h={h} w={int(w)} FAILED: {e}")
+            # Yield à la boucle pour permettre aux autres requêtes de passer
+            await asyncio.sleep(0.1)
+    logger.info(f"[P22ΩΩ_BSL5_WARMUP] DONE {done}/{total} in {(time.time()-t_global):.1f}s")
+    _cache_save_disk()
 
 
 async def v20_shutdown():
@@ -826,17 +924,28 @@ async def v20_territoire_bundle(
     try:
         result = await asyncio.wait_for(asyncio.shield(_compute_task), timeout=_hardcap)
     except asyncio.TimeoutError:
-        _compute_task.cancel()
-        # Laisser l'event loop traiter la cancellation (1 cycle suffit)
-        try:
-            await asyncio.wait_for(_compute_task, timeout=1.0)
-        except (asyncio.TimeoutError, asyncio.CancelledError, Exception):
-            pass
+        # P22ΩΩ_BG_CACHE · 2026-05-14 · le compute continue en arrière-plan ;
+        # callback pour cacher le résultat à la fin pour les prochains hits.
+        def _cache_completed_task(task):
+            try:
+                completed_result = task.result()
+                if completed_result and not completed_result.get("p22omega_miss_absorbed"):
+                    completed_result["waypoint"] = {"lat": lat, "lng": lon}
+                    completed_result["species"] = species
+                    _cache_set(key, completed_result)
+                    logger.info(
+                        f"[P22ΩΩ_BG_CACHE] V10 task completed AFTER timeout → cached "
+                        f"species={species} lat={lat},lon={lon}"
+                    )
+            except Exception as _e_bg:
+                logger.warning(f"[P22ΩΩ_BG_CACHE] callback error: {_e_bg}")
+        _compute_task.add_done_callback(_cache_completed_task)
         _MISS_STATS["absorbed_count"] += 1
         _MISS_STATS["last_absorbed_at"] = time.time()
         logger.warning(
             f"[P22Ω_MISS_ABSORPTION] compute_territoire_v10 HARDCAP {_hardcap}s "
-            f"dépassé pour lat={lat},lon={lon},species={species}. Renvoi bundle dégradé."
+            f"dépassé pour lat={lat},lon={lon},species={species}. Renvoi bundle dégradé "
+            f"(task continues in background)."
         )
         result = {
             "waypoint": {"lat": lat, "lng": lon},
@@ -857,25 +966,79 @@ async def v20_territoire_bundle(
             f"[P22Ω_MISS_ABSORPTION] SOFT_THRESHOLD {_MISS_SOFT_THRESHOLD_SEC}s dépassé "
             f"({_miss_compute_s:.1f}s) pour species={species} lat={lat},lon={lon}"
         )
-    try:
-        v5_bundle = await asyncio.wait_for(
-            generate_organic_corridors(
-                lat=lat, lon=lon, species=species,
-                month=month, hour=hour,
-                wind_deg=int(wind_deg), wind_speed=int(wind_speed),
-                anchor_mode="TERRITORY_CONTINUOUS",
-                bundle_pre_computed=result,
-            ),
-            timeout=_hardcap,
+    # P22ΩΩ_BUNDLE_DEGRADED_CACHE · 2026-05-14 · STEEVE-MAX
+    # Si V10 a timeouté (result.p22omega_miss_absorbed=True), on SKIP la V5
+    # organic generation : elle consommerait un 2e hardcap entier (10s)
+    # → 10+10=20s > timeout K8s proxy ~30s → 502.
+    # Budget restant pour V5 = max(2.0, _hardcap - _miss_compute_s).
+    if result.get("p22omega_miss_absorbed") is True:
+        v5_bundle = None
+        v5_error = "V5_SKIPPED_V10_DEGRADED"
+        logger.warning(
+            f"[P22ΩΩ_DEGRADED_CACHE] V5 organic SKIPPED car V10 dégradé "
+            f"species={species} lat={lat},lon={lon}"
         )
-        v5_error = None
-    except asyncio.TimeoutError:
-        v5_bundle = None
-        v5_error = f"generate_organic_corridors TIMEOUT {_hardcap}s"
-        logger.warning(f"[P22Ω_MISS_ABSORPTION] V5 organic TIMEOUT pour species={species}")
-    except Exception as _e_v5:
-        v5_bundle = None
-        v5_error = str(_e_v5)
+        # P22ΩΩ_BUNDLE_DEGRADED_CACHE · 2026-05-14 · EARLY-RETURN
+        # Court-circuit du pipeline post-V5 (RenduΩ + veineux + interzone +
+        # predictive + smoothing) qui consommerait 30-60s supplémentaires
+        # → 502 K8s certain. On cache le bundle dégradé (TTL 90s) et on
+        # retourne immédiatement. Le prochain hit utilisateur hittera le
+        # cache instantanément ; au bout de 90s, retry automatique.
+        result["waypoint"] = {"lat": lat, "lng": lon}
+        result["species"] = species
+        result["cache"] = "MISS"
+        result["v5_error"] = v5_error
+        result["served_ms"] = round((time.time() - t0) * 1000, 2)
+        _cache_set(key, result, ttl=_CACHE_DEGRADED_TTL_SEC)
+        response.headers["Cache-Control"] = "public, max-age=30, stale-while-revalidate=60"
+        response.headers["X-Cache"] = "MISS-DEGRADED-EARLYRETURN"
+        response.headers["X-Compute-Ms"] = str(round((time.time() - t0) * 1000, 2))
+        logger.warning(
+            f"[P22ΩΩ_DEGRADED_CACHE] EARLY-RETURN bundle dégradé "
+            f"species={species} lat={lat},lon={lon} (TTL={_CACHE_DEGRADED_TTL_SEC}s)"
+        )
+        return result
+    else:
+        _v5_budget = max(2.0, _hardcap - _miss_compute_s)
+        try:
+            v5_bundle = await asyncio.wait_for(
+                generate_organic_corridors(
+                    lat=lat, lon=lon, species=species,
+                    month=month, hour=hour,
+                    wind_deg=int(wind_deg), wind_speed=int(wind_speed),
+                    anchor_mode="TERRITORY_CONTINUOUS",
+                    bundle_pre_computed=result,
+                ),
+                timeout=_v5_budget,
+            )
+            v5_error = None
+        except asyncio.TimeoutError:
+            v5_bundle = None
+            v5_error = f"generate_organic_corridors TIMEOUT {_v5_budget:.1f}s"
+            logger.warning(f"[P22Ω_MISS_ABSORPTION] V5 organic TIMEOUT pour species={species}")
+        except Exception as _e_v5:
+            v5_bundle = None
+            v5_error = f"V5_EXCEPTION:{type(_e_v5).__name__}:{_e_v5}"
+        # P22ΩΩ_BUNDLE_DEGRADED_CACHE · 2026-05-14 · STEEVE-MAX
+        # Si V5 a timeouté ou raté, le pipeline legacy V10 (predictive + interzone +
+        # veineux + ecological_orchestrator + corridors_vitaux + RenduΩ) va tourner
+        # SANS V5 et peut prendre 30-60s → 502 K8s. On early-return avec bundle V10.
+        # V5_REWIRE_ACTIVE=False = bundle qui aurait subi le pipeline legacy lourd.
+        if v5_bundle is None and _miss_compute_s > (_hardcap * 0.5):
+            logger.warning(
+                f"[P22ΩΩ_DEGRADED_CACHE] V5 failed + V10 lent ({_miss_compute_s:.1f}s) → "
+                f"EARLY-RETURN bundle V10-only species={species} (skip pipeline legacy)"
+            )
+            result["waypoint"] = {"lat": lat, "lng": lon}
+            result["species"] = species
+            result["cache"] = "MISS"
+            result["v5_error"] = v5_error
+            result["served_ms"] = round((time.time() - t0) * 1000, 2)
+            result["p22omegaomega_v5_skipped_pipeline_legacy"] = True
+            _cache_set(key, result, ttl=_CACHE_DEGRADED_TTL_SEC)
+            response.headers["X-Cache"] = "MISS-V5FAIL-EARLYRETURN"
+            response.headers["X-Compute-Ms"] = str(round((time.time() - t0) * 1000, 2))
+            return result
     _V5_REWIRE_ACTIVE = v5_bundle is not None
     # ═══════════════════════════════════════════════════════════════════════
     # PHASE_XVIII_BIO_PRESENCE_MASK_Ω — COURT-CIRCUIT en amont
@@ -901,6 +1064,25 @@ async def v20_territoire_bundle(
         result["served_ms"] = round((time.time() - t0) * 1000, 2)
         result["p22omega_halt_cached"] = True
         _cache_set(key, result)
+        return result
+
+    # P22ΩΩ_BUNDLE_DEGRADED_CACHE · 2026-05-14 · DEADLINE GLOBAL
+    # Si on a déjà dépassé le deadline global (V10+V5 ont pris trop de temps),
+    # court-circuiter le pipeline post (RenduΩ + veineux + interzone + predictive)
+    # qui consommerait 10-30s supplémentaires. On cache et retourne maintenant.
+    _elapsed_so_far = time.time() - t0
+    if _elapsed_so_far > _GLOBAL_BUNDLE_DEADLINE_SEC:
+        logger.warning(
+            f"[P22ΩΩ_DEADLINE] Deadline global {_GLOBAL_BUNDLE_DEADLINE_SEC}s dépassé "
+            f"({_elapsed_so_far:.1f}s) après V10+V5 — skip pipeline post pour species={species}"
+        )
+        result["cache"] = "MISS"
+        result["served_ms"] = round(_elapsed_so_far * 1000, 2)
+        result["p22omegaomega_deadline_hit"] = True
+        # Cache avec TTL court car bundle partiel
+        _cache_set(key, result, ttl=_CACHE_DEGRADED_TTL_SEC)
+        response.headers["X-Cache"] = "MISS-DEADLINE-EARLYRETURN"
+        response.headers["X-Compute-Ms"] = str(round(_elapsed_so_far * 1000, 2))
         return result
 
     # ═══════════════════════════════════════════════════════════════════════
@@ -1100,15 +1282,20 @@ async def v20_territoire_bundle(
     )
     result["esi_omega"] = bv["conformite"]
 
-    # P22Ω_REDIS_HOIST · 2026-05-13 · COMMANDANT STEEVE-MAX
-    # NE PAS mettre en cache un bundle dégradé (timeout MISS absorption).
-    # Le bundle dégradé est servi UNE FOIS au client mais ne doit jamais
-    # polluer le cache (LRU+Redis) — sinon flash visuel "couches parfaites
-    # puis recentrage" observé par le Commandant.
+    # P22ΩΩ_BUNDLE_DEGRADED_CACHE · 2026-05-14 · COMMANDANT STEEVE-MAX
+    # Cache TOUS les bundles, y compris dégradés, MAIS avec TTL court (90s)
+    # pour les bundles dégradés. Sinon, en cold-start avec Open-Meteo en
+    # circuit-breaker OPEN (10 minutes), CHAQUE utilisateur subit 20-50s
+    # de compute → 502 K8s systématique (proxy timeout ~30s).
+    # Le bundle dégradé contient quand même les couches V5 (corridors,
+    # zones, hotspots, salines, affûts) générées par fallback — utilement
+    # rendues à l'utilisateur. Après 90s, retry automatique (l'engine
+    # peut alors avoir des données complètes).
     if result.get("p22omega_miss_absorbed") is True:
+        _cache_set(key, result, ttl=_CACHE_DEGRADED_TTL_SEC)
         logger.warning(
-            f"[P22Ω_REDIS_HOIST] SKIP _cache_set : bundle DEGRADED "
-            f"(p22omega_miss_absorbed=True) species={species} lat={lat},lon={lon}"
+            f"[P22ΩΩ_DEGRADED_CACHE] Cached DEGRADED bundle (TTL={_CACHE_DEGRADED_TTL_SEC}s) "
+            f"species={species} lat={lat},lon={lon} — évite 502 K8s en cold-start"
         )
     else:
         _cache_set(key, result)

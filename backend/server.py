@@ -120,6 +120,30 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"Vision engine index creation warning: {e}")
     
+    # P22ΩΩ_BUNDLE_DEGRADED_CACHE · 2026-05-14 · COMMANDANT STEEVE-MAX
+    # FastAPI utilise lifespan=lifespan → tous les @app.on_event("startup")
+    # définis plus bas sont IGNORÉS (FastAPI 0.95+). On invoque donc
+    # explicitement v20_startup() ici pour activer :
+    #  - le chargement du cache disque
+    #  - les daemons prechauffage / periodic_refresh / v5_monitor (sous env var)
+    try:
+        from engines.v8_institutional.v20_performance_bundle import v20_startup as _v20_startup
+        await _v20_startup()
+        logger.info("✓ V20-PERFORMANCE startup hook fired (BSL5 warmup scheduled)")
+    except Exception as e:
+        logger.warning(f"V20 startup hook from lifespan failed: {e}", exc_info=True)
+    
+    # P22ΩΩ — Self-audit DÉSACTIVÉ : lance des pytest subprocess qui hog le worker
+    # Pour réactiver : export P22OMEGA_SELF_AUDIT=1
+    # try:
+    #     from engines.v8_institutional.self_audit_omega import v20_self_audit_on_startup as _self_audit
+    #     import asyncio as _asyncio
+    #     _asyncio.create_task(_self_audit())
+    #     logger.info("✓ SELF-AUDIT-Ω scheduled (background)")
+    # except Exception as e:
+    #     logger.warning(f"SELF-AUDIT-Ω startup from lifespan failed: {e}")
+    logger.info("[P22ΩΩ] SELF-AUDIT-Ω DISABLED (lance subprocess pytest qui hog le worker)")
+    
     logger.info("=" * 60)
     logger.info("✓ All modules loaded successfully")
     logger.info("=" * 60)
