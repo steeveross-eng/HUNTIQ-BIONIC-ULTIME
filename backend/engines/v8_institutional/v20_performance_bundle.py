@@ -100,6 +100,7 @@ _CACHE_MAX = 10000  # V11-SUPRA: 1024 → 10000
 # cold-start quand Open-Meteo est en circuit-breaker).
 _CACHE_TTL_OVERRIDES: "dict[str, int]" = {}
 _CACHE_DEGRADED_TTL_SEC = 90  # 1.5 minute pour bundle dégradé
+_LAST_BG_DISK_SAVE_TS = 0.0  # P22ΩΩ_DISK_PERSIST · throttle save_disk depuis BG_CACHE
 
 # ═══ DISK PERSISTENCE ═══
 _CACHE_DIR = Path("/app/backend/cache")
@@ -937,6 +938,18 @@ async def v20_territoire_bundle(
                         f"[P22ΩΩ_BG_CACHE] V10 task completed AFTER timeout → cached "
                         f"species={species} lat={lat},lon={lon}"
                     )
+                    # P22ΩΩ_DISK_PERSIST · 2026-05-14 · STEEVE-MAX
+                    # Persiste le cache sur disque pour survivre aux restarts
+                    # backend (containers éphémères). Throttle 30s entre saves.
+                    try:
+                        global _LAST_BG_DISK_SAVE_TS
+                        _now = time.time()
+                        if _now - _LAST_BG_DISK_SAVE_TS > 30:
+                            _LAST_BG_DISK_SAVE_TS = _now
+                            _cache_save_disk()
+                            logger.info(f"[P22ΩΩ_DISK_PERSIST] BG cache saved to disk ({len(_CACHE)} entries)")
+                    except Exception as _e_ds:
+                        logger.warning(f"[P22ΩΩ_DISK_PERSIST] save error: {_e_ds}")
             except Exception as _e_bg:
                 logger.warning(f"[P22ΩΩ_BG_CACHE] callback error: {_e_bg}")
         _compute_task.add_done_callback(_cache_completed_task)

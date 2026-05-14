@@ -152,6 +152,14 @@ async def lifespan(app: FastAPI):
     
     # Shutdown
     logger.info("Server shutting down...")
+    # P22ΩΩ_DISK_PERSIST · 2026-05-14 · STEEVE-MAX
+    # Sauvegarder le cache LRU sur disque avant l'arrêt (containers éphémères).
+    try:
+        from engines.v8_institutional.v20_performance_bundle import v20_shutdown as _v20_shutdown
+        await _v20_shutdown()
+        logger.info("✓ V20-PERFORMANCE shutdown hook fired (cache saved to disk)")
+    except Exception as e:
+        logger.warning(f"V20 shutdown hook from lifespan failed: {e}")
     try:
         from territory_sync import shutdown_sync
         await shutdown_sync()
