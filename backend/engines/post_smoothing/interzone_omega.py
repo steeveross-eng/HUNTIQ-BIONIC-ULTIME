@@ -511,7 +511,21 @@ def generate_interzone_corridors(bundle: Dict[str, Any]) -> List[Dict[str, Any]]
     Retourne la LISTE des nouveaux corridors à fusionner avec ceux de V30.
     Ne mute PAS le bundle.
     """
-    species = str(bundle.get("species") or "orignal").lower()
+    # P22ΩSPECIES_LAYER_DIVERGENCEΩ_V2 · 2026-05-13 · STEEVE-MAX
+    # Normalisation alias → canon interzone (4 entrées natives + 5 alias) :
+    #   chevreuil      → cerf
+    #   ours_noir      → ours
+    #   dindon_sauvage → dindon
+    #   coyote, wapiti → orignal (fallback générique mais explicite)
+    _SP_RAW = str(bundle.get("species") or "orignal").lower()
+    _SP_ALIAS = {
+        "cerf": "cerf", "chevreuil": "cerf",
+        "orignal": "orignal", "wapiti": "orignal",
+        "ours": "ours", "ours_noir": "ours",
+        "dindon": "dindon", "dindon_sauvage": "dindon",
+        "coyote": "orignal",  # canidé fallback explicite (pas natif AFFINITY_MATRIX)
+    }
+    species = _SP_ALIAS.get(_SP_RAW, "orignal")
     affinity_map = AFFINITY_MATRIX.get(species) or AFFINITY_MATRIX["orignal"]
     zones = bundle.get("zones") or []
     salines = bundle.get("salines") or []

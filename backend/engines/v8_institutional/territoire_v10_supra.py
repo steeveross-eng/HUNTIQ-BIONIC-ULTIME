@@ -62,15 +62,49 @@ ZONE_CONFIGS = {
 }
 
 def compute_zones_v10(lat, lon, species, month, terrain_v10):
-    """ZONES V10-SUPRA: Catmull-Rom 22-40 vertices, terrain reel + IA."""
+    """ZONES V10-SUPRA: Catmull-Rom 22-40 vertices, terrain reel + IA.
+
+    ═══════════════════════════════════════════════════════════════════════════
+    P22ΩSPECIES_LAYER_DIVERGENCEΩ_V2 · 2026-05-13 · COMMANDANT STEEVE-MAX
+    ═══════════════════════════════════════════════════════════════════════════
+    Injection BIO_PROFILE_Ω : score et radius_mult sont désormais modulés par
+    SPECIES_PROFILES pour TOUTES les zones :
+      - rut         : cervidés > non-cervidés (chevreuil/orignal/wapiti/cerf)
+      - alimentation: orignal/ours (besoin alim. élevé) > autres
+      - repos       : chevreuil (couvert dense) > orignal (clairière)
+      - eau         : orignal (hydro_dep=0.95) > ours > chevreuil
+      - thermique   : dindon (zones ouvertes) > galliforme > cervidés
+    Plus aucune zone générique inter-espèces — chaque espèce a sa signature.
+    """
     t = terrain_v10
     cos_lat = max(0.5, math.cos(math.radians(lat)))
     zones = []
     base_radius = 0.003
+    # P22ΩSPECIES_LAYER_DIVERGENCEΩ_V2 — récupère profil biologique
+    sp_lower = (species or "cerf").lower()
+    sp_profile = SPECIES_PROFILES.get(sp_lower, SPECIES_PROFILES["cerf"])
+    sp_cover_pref = sp_profile.get("cover_pref", 0.5)
+    sp_sinuosity = sp_profile.get("sinuosity", 0.3)
+    sp_slope_tol = sp_profile.get("slope_tol", 25)
+    # Multiplicateurs biologiques par zone+espèce
+    SPECIES_ZONE_BIAS = {
+        "cerf":           {"rut": 1.20, "alimentation": 1.10, "repos": 1.15, "eau": 0.90, "thermique": 0.95},
+        "chevreuil":      {"rut": 1.20, "alimentation": 1.05, "repos": 1.30, "eau": 0.85, "thermique": 0.90},
+        "orignal":        {"rut": 1.15, "alimentation": 1.25, "repos": 0.95, "eau": 1.40, "thermique": 0.85},
+        "wapiti":         {"rut": 1.20, "alimentation": 1.15, "repos": 1.00, "eau": 1.00, "thermique": 0.95},
+        "ours":           {"rut": 0.80, "alimentation": 1.35, "repos": 1.20, "eau": 1.10, "thermique": 0.90},
+        "ours_noir":      {"rut": 0.80, "alimentation": 1.35, "repos": 1.20, "eau": 1.10, "thermique": 0.90},
+        "dindon":         {"rut": 0.70, "alimentation": 1.10, "repos": 0.90, "eau": 0.95, "thermique": 1.35},
+        "dindon_sauvage": {"rut": 0.70, "alimentation": 1.10, "repos": 0.90, "eau": 0.95, "thermique": 1.35},
+        "coyote":         {"rut": 0.85, "alimentation": 1.30, "repos": 1.05, "eau": 1.00, "thermique": 1.05},
+    }
+    zone_bias = SPECIES_ZONE_BIAS.get(sp_lower, SPECIES_ZONE_BIAS["cerf"])
 
     for i, (ztype, cfg) in enumerate(ZONE_CONFIGS.items()):
-        offset_angle = (i / len(ZONE_CONFIGS)) * 2 * math.pi + _seed(lat, lon, f"zo_{ztype}") * 1.5
-        dist = base_radius * (0.6 + _seed(lat, lon, f"zd_{ztype}") * 0.8) * cfg["radius_mult"]
+        offset_angle = (i / len(ZONE_CONFIGS)) * 2 * math.pi + _seed(lat, lon, f"zo_{ztype}_{sp_lower}") * 1.5
+        # P22ΩV2 : radius_mult modulé par bias espèce
+        sp_radius_factor = zone_bias.get(ztype, 1.0)
+        dist = base_radius * (0.6 + _seed(lat, lon, f"zd_{ztype}_{sp_lower}") * 0.8) * cfg["radius_mult"] * sp_radius_factor
         c_lat = lat + math.sin(offset_angle) * dist
         c_lon = lon + math.cos(offset_angle) * dist / cos_lat
 
@@ -99,23 +133,34 @@ def compute_zones_v10(lat, lon, species, month, terrain_v10):
             if t.get("zone_thermique_probable"):
                 score += 10
 
+        # P22ΩSPECIES_LAYER_DIVERGENCEΩ_V2 : SCORE modulé par espèce
+        # - couvert (cover_pref) influence repos + rut (refuge)
+        # - slope_tol influence l'exclusion pente effective
+        if ztype in ("repos", "rut"):
+            score += (sp_cover_pref - 0.5) * 15 * canopy
+        # Bias multiplicateur final
+        score *= sp_radius_factor
         score = round(min(100, max(5, score)), 1)
 
-        # Exclusion terrain
-        excluded = slope > cfg["slope_max"] or t.get("distance_eau_m", 999) < 10
+        # P22ΩV2 : slope_max modulé par slope_tol biologique (ours=35, chevreuil=20)
+        effective_slope_max = min(cfg["slope_max"], sp_slope_tol)
+        excluded = slope > effective_slope_max or t.get("distance_eau_m", 999) < 10
         excl_reason = ""
-        if slope > cfg["slope_max"]:
-            excl_reason = f"pente {slope}deg > {cfg['slope_max']}deg"
+        if slope > effective_slope_max:
+            excl_reason = f"pente {slope}deg > {effective_slope_max}deg (slope_tol {sp_lower}={sp_slope_tol})"
         elif t.get("distance_eau_m", 999) < 10:
             excl_reason = f"eau {t.get('distance_eau_m')}m < 10m"
 
         # Polygon Catmull-Rom 8-13 control → 22-40 vertices
-        n_ctrl = 8 + int(_seed(lat, lon, f"zn_{ztype}") * 5)
-        r = base_radius * cfg["radius_mult"] * (0.5 + _seed(lat, lon, f"zr_{ztype}") * 0.5)
+        # P22ΩV2 : sinuosity influence jitter (orignal=0.20 lisse, chevreuil=0.40 sinueux)
+        n_ctrl = 8 + int(_seed(lat, lon, f"zn_{ztype}_{sp_lower}") * 5)
+        r = base_radius * cfg["radius_mult"] * sp_radius_factor * (0.5 + _seed(lat, lon, f"zr_{ztype}_{sp_lower}") * 0.5)
         ctrl = []
         for j in range(n_ctrl):
             a = (j / n_ctrl) * 2 * math.pi
-            jitter = 0.65 + 0.7 * abs(math.sin(_seed(lat, lon, f"zj_{ztype}_{j}") * 7 + j * 2.9))
+            # P22ΩV2 : jitter modulé par sinuosity (0.65 base + facteur espèce)
+            jitter_amp = 0.7 + sp_sinuosity * 1.2
+            jitter = 0.65 + jitter_amp * abs(math.sin(_seed(lat, lon, f"zj_{ztype}_{sp_lower}_{j}") * 7 + j * 2.9))
             p_lat = c_lat + math.sin(a) * r * jitter
             p_lon = c_lon + math.cos(a) * r * jitter / cos_lat
             ctrl.append((p_lat, p_lon))
@@ -124,11 +169,13 @@ def compute_zones_v10(lat, lon, species, month, terrain_v10):
         polygon.append(polygon[0])  # fermer
 
         zones.append({
-            "id": f"zone_v10_{ztype}",
+            "id": f"zone_v10_{ztype}_{sp_lower}",
             "type": ztype,
+            "species": sp_lower,
             "center": {"lat": round(c_lat, 5), "lng": round(c_lon, 5)},
             "polygon": polygon,
             "score": score,
+            "species_bias_applied": sp_radius_factor,
             "terrain": {
                 "canopy": canopy,
                 "pente_deg": slope,
@@ -138,7 +185,7 @@ def compute_zones_v10(lat, lon, species, month, terrain_v10):
             },
             "excluded": excluded,
             "exclusion_reason": excl_reason,
-            "source": "V10-SUPRA-REEL+IA",
+            "source": "V10-SUPRA-REEL+IA+P22ΩV2",
         })
     return zones
 
@@ -159,6 +206,15 @@ SPECIES_PROFILES = {
     "ours": {"sinuosity": 0.45, "cover_pref": 0.9, "slope_tol": 35, "n": 10},
     "chevreuil": {"sinuosity": 0.40, "cover_pref": 0.8, "slope_tol": 20, "n": 14},
     "dindon": {"sinuosity": 0.25, "cover_pref": 0.5, "slope_tol": 15, "n": 10},
+    # ═══════════════════════════════════════════════════════════════════════════
+    # P22ΩSPECIES_LAYER_DIVERGENCEΩ_V2 · 2026-05-13 · COMMANDANT STEEVE-MAX
+    # ═══════════════════════════════════════════════════════════════════════════
+    # Aliases canoniques EXPLICITES (alignés engine V5 + presence_mask + smoother)
+    # Plus de fallback générique "cerf" pour ours_noir/dindon_sauvage/coyote.
+    # Chaque espèce a maintenant son profil biologique INDEXÉ SPECIES_ID.
+    "ours_noir":      {"sinuosity": 0.45, "cover_pref": 0.9, "slope_tol": 35, "n": 10},   # plantigrade prudent
+    "dindon_sauvage": {"sinuosity": 0.25, "cover_pref": 0.5, "slope_tol": 15, "n": 10},   # galliforme thermique
+    "coyote":         {"sinuosity": 0.35, "cover_pref": 0.6, "slope_tol": 30, "n": 11},   # canidé prédateur opportuniste
 }
 
 # 4 niveaux corridor
@@ -171,14 +227,24 @@ CORRIDOR_LEVELS = {
 
 
 def _classify_corridor(intensity, month, species):
-    """Classifie un corridor en 4 niveaux: EXTREME, INTENSE, SAISONNIER, NORMAL."""
-    # Saisonnier: rut (sept-nov cerf/orignal/wapiti) ou sortie hibernation (avr-mai ours)
+    """Classifie un corridor en 4 niveaux: EXTREME, INTENSE, SAISONNIER, NORMAL.
+
+    P22ΩSPECIES_LAYER_DIVERGENCEΩ_V2 · 2026-05-13 · STEEVE-MAX
+    Saisonnalité INDEXÉE SPECIES_ID — alias canoniques ajoutés (chevreuil≡cerf,
+    ours_noir≡ours, dindon_sauvage≡dindon, coyote opportuniste annuel).
+    """
     is_seasonal = False
-    if month in [9, 10, 11] and species in ["cerf", "orignal", "wapiti"]:
+    # Cervidés : rut sept-nov
+    if month in [9, 10, 11] and species in ["cerf", "chevreuil", "orignal", "wapiti"]:
         is_seasonal = True
-    elif month in [4, 5] and species == "ours":
+    # Ours : sortie hibernation avr-mai
+    elif month in [4, 5] and species in ["ours", "ours_noir"]:
         is_seasonal = True
-    elif month in [3, 4] and species == "dindon":
+    # Dindon : parade mars-avril
+    elif month in [3, 4] and species in ["dindon", "dindon_sauvage"]:
+        is_seasonal = True
+    # Coyote : pic d'activité reproductive janvier-mars (hurlement + territoires)
+    elif month in [1, 2, 3] and species == "coyote":
         is_seasonal = True
 
     if intensity >= 85:

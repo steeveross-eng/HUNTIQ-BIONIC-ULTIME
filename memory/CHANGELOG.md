@@ -3502,3 +3502,68 @@ Les 6 endpoints atomiques de l'injonction (`/corridors`, `/zones`, `/hotspots`, 
 
 ### Artefact
 - `/app/memory/audit_provenance/p22omega_frontend_render_injonction_omega.md`
+
+---
+
+## 2026-05-13 · P22ΩSPECIES_LAYER_DIVERGENCEΩ_V2 — MODE BIOLOGIQUE STRICT
+**Objectif** : Divergence biologique stricte par espèce sur TOUTES les couches TERRITOIRE Ω · interdiction couches génériques
+
+### Cause racine identifiée
+- 3 espèces canoniques (ours_noir, dindon_sauvage, coyote) tombaient en fallback `cerf` générique dans `SPECIES_PROFILES`
+- `compute_zones_v10` recevait `species` mais ne l'utilisait JAMAIS pour différencier la géométrie
+- `AFFINITY_MATRIX` interzone n'avait que 4 espèces natives sur 9 (5 aliases en fallback silencieux)
+
+### Correctifs appliqués
+**1. `SPECIES_PROFILES` étendu** (territoire_v10_supra.py)
+- Ajout `ours_noir` (plantigrade prudent), `dindon_sauvage` (galliforme thermique), `coyote` (canidé opportuniste)
+- 9 espèces canoniques toutes natives (plus aucun fallback `cerf` silencieux)
+
+**2. `compute_zones_v10` enrichi**
+- `SPECIES_ZONE_BIAS` matrice 9 espèces × 5 types de zones (rut, alimentation, repos, eau, thermique)
+- `score` modulé par bias × cover_pref × canopy
+- `radius_mult` modulé par bias espèce
+- `effective_slope_max` modulé par `slope_tol` biologique
+- `jitter` Catmull-Rom modulé par `sinuosity`
+- Métadonnée `species_bias_applied` ajoutée à chaque zone (audit)
+
+**3. `_classify_corridor` saisonnalité étendue**
+- ours/ours_noir : hibernation avr-mai
+- dindon/dindon_sauvage : parade mars-avril
+- coyote : pic reproductif janvier-mars (nouveau)
+
+**4. `AFFINITY_MATRIX` interzone — aliases normalisés**
+- `_SP_ALIAS` map explicite : chevreuil→cerf, ours_noir→ours, dindon_sauvage→dindon, wapiti/coyote→orignal
+- Plus de fallback silencieux
+
+### Preuve terrain BSL (mois 10)
+| Type zone | chevreuil | orignal | ours_noir | Espèce dominante |
+|---|---|---|---|---|
+| rut | 89.6 | 81.0 | 60.6 | chevreuil (cervidé) |
+| alimentation | 83.5 | 99.4 | **100.0** | ours_noir (hyperphage) |
+| repos | **100.0** | 72.5 | 97.9 | chevreuil (cover_pref 0.8) |
+| eau | 64.0 | **100.0** | 82.8 | orignal (hydro_dep 1.40) |
+| thermique | 68.2 | 64.5 | 68.2 | dindon en zones ouvertes |
+
+### Matrice BIO_PROFILE_Ω × COUCHE (8 couches)
+- ✓ corridors V5 : 8 params SPECIES_BEHAVIOR (P22Ω_CORRIDORS_DIVERGENCE antérieur)
+- ✓ zones : SPECIES_ZONE_BIAS + cover_pref/sinuosity/slope_tol
+- ⚠ hotspots : pas de bias dédié (à étudier P3)
+- n/a salines/affuts/contamination (indépendants espèce ciblée par nature)
+- ✓ interzone : aliases normalisés
+- ✓ veineux : species_modulator_omega
+- ✓ presence_mask : SPECIES_PRESENCE_REGISTRY
+- ✓ saisonnalité : 9 espèces canoniques
+
+### Fichiers modifiés
+- `/app/backend/engines/v8_institutional/territoire_v10_supra.py` (SPECIES_PROFILES + compute_zones_v10 + _classify_corridor)
+- `/app/backend/engines/post_smoothing/interzone_omega.py` (_SP_ALIAS normalisation)
+
+### Conformité doctrinale
+- ✅ V30 LOCK INVIOLÉ
+- ✅ 9 espèces canoniques SPECIES_ID strict (plus de fallback `cerf` silencieux)
+- ✅ 5 types de zones × 9 espèces = 45 combinaisons biologiquement modulées
+- ✅ MODE BIOLOGIQUE STRICT activé
+- ✅ Validation 100% manuelle · zéro testing_agent
+
+### Artefact
+- `/app/memory/audit_provenance/p22omega_species_layer_divergence_v2.md`
