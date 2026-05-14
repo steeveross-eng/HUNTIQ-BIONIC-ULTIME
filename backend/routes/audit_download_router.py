@@ -32,18 +32,28 @@ _AUDIT_DIR = Path("/app/memory/audit_provenance")
 
 
 def _safe_path(filename: str) -> Path:
-    """Empêche le path traversal et restreint aux .md doctrinaux."""
+    """Empêche le path traversal et restreint aux .md/.log/.png doctrinaux."""
     # Basename only (no slash)
     name = os.path.basename(filename)
     if name != filename:
         raise HTTPException(status_code=400, detail="invalid filename (path traversal)")
-    # Whitelist préfixe doctrinal
-    if not (name.startswith("p22omega_") or name.startswith("P22") or name.endswith(".md") or name.endswith(".log")):
+    # Whitelist : Markdown, logs, et PNG du dossier visual_divergence
+    allowed = (
+        name.startswith("p22omega_") or name.startswith("P22") or
+        name.endswith(".md") or name.endswith(".log") or
+        (name.startswith("divergence_bsl_") and name.endswith(".png"))
+    )
+    if not allowed:
         raise HTTPException(status_code=403, detail="filename not allowed (whitelist)")
-    full = (_AUDIT_DIR / name).resolve()
-    # Vérifier que le résultat reste dans _AUDIT_DIR
-    if not str(full).startswith(str(_AUDIT_DIR.resolve())):
-        raise HTTPException(status_code=400, detail="resolved path outside audit dir")
+    # Pour les PNG, chercher dans visual_divergence/
+    if name.endswith(".png"):
+        full = (_AUDIT_DIR / "visual_divergence" / name).resolve()
+        if not str(full).startswith(str((_AUDIT_DIR / "visual_divergence").resolve())):
+            raise HTTPException(status_code=400, detail="resolved path outside visual_divergence dir")
+    else:
+        full = (_AUDIT_DIR / name).resolve()
+        if not str(full).startswith(str(_AUDIT_DIR.resolve())):
+            raise HTTPException(status_code=400, detail="resolved path outside audit dir")
     return full
 
 
@@ -71,11 +81,16 @@ async def list_audit_files():
 
 @router.get("/files/{filename}")
 async def download_audit_file(filename: str):
-    """Sert le contenu d'un rapport en text/markdown brut."""
+    """Sert le contenu d'un rapport en text/markdown/png."""
     full = _safe_path(filename)
     if not full.exists():
         raise HTTPException(status_code=404, detail=f"audit file not found: {filename}")
-    media_type = "text/markdown; charset=utf-8" if filename.endswith(".md") else "text/plain; charset=utf-8"
+    if filename.endswith(".md"):
+        media_type = "text/markdown; charset=utf-8"
+    elif filename.endswith(".png"):
+        media_type = "image/png"
+    else:
+        media_type = "text/plain; charset=utf-8"
     return FileResponse(
         path=str(full),
         media_type=media_type,
