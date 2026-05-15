@@ -1,6 +1,41 @@
 # CHANGELOG · TERRITOIRE Ω · BIONIC HUNT
 **Format**: Chronologique inverse (plus récent en premier)
 
+## 2026-05-14 · P22ΩΩ_PRECHARGEMENT_INTELLIGENT_GEOLOCALISATION — Widget Premium
+
+### DIRECTIVE COMMANDANT STEEVE-MAX
+Implémenter un widget frontend "Préchargement intelligent par géolocalisation"
+pour offrir une expérience 0-cold-start aux utilisateurs Premium en pré-chargeant
+les 3 espèces préférées au waypoint favori.
+
+### IMPLÉMENTATION
+- **NOUVEAU** : `/app/frontend/src/lib/bionicBundleCache.js` — Cache LRU global
+  window-level (90s TTL, 128 entrées) partagé entre `useMapBundleV8` et le widget.
+- **NOUVEAU** : `/app/frontend/src/components/territoire/IntelligentPreloadWidget.jsx`
+  — Widget Premium auto-déclenché. Préchargement séquentiel 3 espèces (1.5s
+  inter-espèces, soft timeout 12s, retry 1× sur 502/503/504). États idle /
+  running (cyan + spinner) / done (emerald + checkmark) / skipped. Position
+  fixed bottom-4 right-4, pointer-events-none, non-bloquant.
+- **MODIFIÉ** : `/app/frontend/src/hooks/useMapBundleV8.js` — Utilise le cache
+  global window (les bundles préchargés sont consommés instantanément).
+- **MODIFIÉ** : `/app/frontend/src/pages/MonTerritoireBionicPage.jsx` — Insertion
+  du widget après `<TerritoireHeader/>`. Passage de favLat/favLon depuis
+  `selectedWaypointForZones || activeWaypoints[0]`.
+
+### VALIDATION VISUELLE (Playwright sur URL publique)
+- T+8s : Widget visible "⚡ PRÉCHARGEMENT INTELLIGENT · Actif… 1/3 · chevreuil"
+- T+18s : Widget terminé "⚡ PRÉCHARGEMENT INTELLIGENT · 0-cold-start prêt · 3/3 espèces"
+- Couches rendues : corridors multi-espèces colorés, zones, affûts, hotspots, salines.
+- HUD : CONFORMITÉ Ω 100% · CORRIDORS Ω 13 · ZONES Ω 5 · AFFÛTS Ω 8 · SALINES Ω 4 · HOTSPOTS Ω 4.
+
+### BÉNÉFICES
+- 0 cold-start visible pour Premium.
+- Différenciation Premium / Free → argument de conversion.
+- Aucun overhead Free (widget ne se rend pas).
+- Compatible single-worker (séquentiel + pauses inter-espèces).
+
+---
+
 ## 2026-05-14 · P22ΩΩ_BUNDLE_DEGRADED_CACHE — STABILISATION 502 K8s + PRÉCHARGEMENT BSL5
 
 ### CONTEXTE

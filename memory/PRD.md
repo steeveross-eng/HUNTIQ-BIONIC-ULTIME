@@ -36,6 +36,13 @@ Persona BCE-4X non-déviante.
   - Daemons saturants désactivés par défaut (env gates)
   - SELF-AUDIT-Ω pytest subprocess désactivé (cause hog worker)
   - Frontend `useMapBundleV8.js` retry automatique 502/503/504 (backoff 2s+8s)
+- ✅ **P22ΩΩ_PRECHARGEMENT_INTELLIGENT_GEOLOCALISATION** (2026-05-14) — Widget Premium :
+  - Cache LRU global window (90s) partagé useMapBundleV8 + widget
+  - Détection Premium (admin/premium_tier/is_premium/tier)
+  - Préchargement séquentiel 3 espèces × waypoint favori
+  - États visuels discrets (cyan running → emerald done)
+  - Non-bloquant, position fixed bottom-4 right-4
+  - 0-cold-start UX pour Premium → argument conversion
 
 ## PENDING / KNOWN ISSUES
 - ⚠️ **Single-worker uvicorn** : code SYNC dans `compute_territoire_v10` (1 await,

@@ -4,19 +4,19 @@
  * PHASE-PERFORMANCE-Omega: Consomme /api/v20/territoire/bundle (cache TTL 24h).
  * Fallback automatique vers /api/v8/institutional/territoire si V20 indisponible.
  * ZERO source legacy. ZERO degradation visuelle. ZERO recalcul inutile.
+ *
+ * P22ΩΩ_PRECHARGEMENT_INTELLIGENT 2026-05-14 — utilise le cache GLOBAL window
+ * partagé avec IntelligentPreloadWidget pour bénéficier des préchargements Premium.
  */
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { buildBundleCacheKey, bundleCacheGet, bundleCacheSet } from '../lib/bionicBundleCache';
 
 const API = process.env.REACT_APP_BACKEND_URL;
-
-// PHASE-PERFORMANCE-Omega: cache client TTL 24h (aligne avec backend)
-const CLIENT_CACHE_TTL_MS = 24 * 3600 * 1000; // 24h
 
 const useMapBundleV8 = () => {
   const [bundleData, setBundleData] = useState(null);
   const [loading, setLoading] = useState(false);
   const abortRef = useRef(null);
-  const cacheRef = useRef(new Map());
 
   const fetchBundle = useCallback(async (lat, lon, species = 'cerf', month, hour, windDeg) => {
     if (!lat || !lon) return null;
@@ -25,16 +25,13 @@ const useMapBundleV8 = () => {
     const m = month || (now.getMonth() + 1);
     const h = hour || now.getHours();
     const w = windDeg || 225;
-    // Quantification aligne avec backend (lat/lon 3dec, wind 15deg)
-    const latQ = lat.toFixed(3);
-    const lonQ = lon.toFixed(3);
-    const wQ = Math.round(w / 15) * 15 % 360;
-    const cacheKey = `${latQ}_${lonQ}_${species}_${m}_${h}_w${wQ}`;
+    const cacheKey = buildBundleCacheKey(lat, lon, species, m, h, w);
 
-    const cached = cacheRef.current.get(cacheKey);
-    if (cached && Date.now() - cached.ts < CLIENT_CACHE_TTL_MS) {
-      setBundleData(cached.data);
-      return cached.data;
+    // P22ΩΩ — lecture cache LRU GLOBAL window (partagé avec preload widget)
+    const cached = bundleCacheGet(cacheKey);
+    if (cached) {
+      setBundleData(cached);
+      return cached;
     }
 
     if (abortRef.current) abortRef.current.abort();
@@ -66,11 +63,8 @@ const useMapBundleV8 = () => {
         }
         const data = await res.json();
         setBundleData(data);
-        cacheRef.current.set(cacheKey, { data, ts: Date.now() });
-        if (cacheRef.current.size > 64) {
-          const firstKey = cacheRef.current.keys().next().value;
-          cacheRef.current.delete(firstKey);
-        }
+        // P22ΩΩ — écriture dans le cache LRU GLOBAL window (partagé)
+        bundleCacheSet(cacheKey, data);
         setLoading(false);
         return data;
       } catch (err) {

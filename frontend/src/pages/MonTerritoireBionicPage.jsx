@@ -49,8 +49,7 @@ import PlacesSidePanel from '@/components/territoire/PlacesSidePanel';
 import StatutCorridorsOmegaPanel from '@/components/territoire/StatutCorridorsOmegaPanel';
 // PHASE_3_3D_OMEGA · Cesium viewer (chargé via CDN ESM, 0B disque)
 import CesiumTerritoireViewer from '@/components/territoire/CesiumTerritoireViewer';
-import HudTerritoireUltime from '@/components/territoire/HudTerritoireUltime';
-import LayersOmegaSyncPanel from '@/components/territoire/LayersOmegaSyncPanel';
+import HudTerritoireUltime from '@/components/territoire/HudTerritoireUltime';import LayersOmegaSyncPanel from '@/components/territoire/LayersOmegaSyncPanel';
 import LayersPanelOmegaUnified from '@/components/territoire/LayersPanelOmegaUnified';
 import RenduOmegaIntegralCertifier from '@/components/territoire/RenduOmegaIntegralCertifier';
 import WeatherPanel from '@/components/territoire/ui/WeatherPanel';
@@ -99,6 +98,11 @@ import useTerritoireWatchdog from '@/hooks/useTerritoireWatchdog';
 // PHASE_XII_ESPECES_Ω (2026-04-28 · STEEVE-MAX) — 5 engines espèces Ω
 import EspecesOmegaPanel from '@/components/territoire/EspecesOmegaPanel';
 import BioReacteursOmegaPanel from '@/components/territoire/BioReacteursOmegaPanel';
+
+// P22ΩΩ_PRECHARGEMENT_INTELLIGENT_GEOLOCALISATION (2026-05-14 · STEEVE-MAX)
+// Widget Premium qui précharge en arrière-plan les bundles pour le waypoint
+// favori × 3 espèces préférées (0-cold-start UX).
+import IntelligentPreloadWidget from '@/components/territoire/IntelligentPreloadWidget';
 
 // Cle localStorage pour le dernier waypoint actif (legacy fallback)
 const LAST_WAYPOINT_KEY = 'bionic_last_active_waypoint_id';
@@ -1270,6 +1274,16 @@ const MonTerritoireBionicPage = ({ pageMode = 'analyse-bionic' } = {}) => {
             mapRef.current.setView([selectedWaypointForZones.lat, selectedWaypointForZones.lng], 14);
           }
         }}
+      />
+
+      {/* P22ΩΩ_PRECHARGEMENT_INTELLIGENT_GEOLOCALISATION · 2026-05-14 · STEEVE-MAX
+          Widget Premium : précharge en arrière-plan les bundles TERRITOIRE Ω
+          pour le waypoint favori × 3 espèces préférées (0-cold-start UX).
+          Position fixe bottom-4 right-4 (z-1100), non bloquant, jamais visible
+          pour les utilisateurs non-Premium. */}
+      <IntelligentPreloadWidget
+        favLat={selectedWaypointForZones?.lat || selectedWaypointForZones?.latitude || activeWaypoints?.[0]?.lat || activeWaypoints?.[0]?.latitude}
+        favLon={selectedWaypointForZones?.lng || selectedWaypointForZones?.longitude || activeWaypoints?.[0]?.lng || activeWaypoints?.[0]?.longitude}
       />
 
       {/* ════════════════════════════════════════════════════════════════
