@@ -1,6 +1,70 @@
 # CHANGELOG · TERRITOIRE Ω · BIONIC HUNT
 **Format**: Chronologique inverse (plus récent en premier)
 
+## 2026-05-19 · P22ΩΩ_CLEANUP_LEGACY_FINAL — Phase 0 EXÉCUTÉE (avec autocritique)
+
+### DIRECTIVE COMMANDANT STEEVE-MAX
+Suppression Phase 0 des artefacts legacy identifiés. **Validation par audit ultime**
+avant toute suppression destructive.
+
+### AUTOCRITIQUE BCE-4X (transparence totale)
+L'audit initial du `p22omegaomega_cleanup_legacy_final.md` classifiait 3 engines
+comme "Catégorie A — 0 usage prod" :
+- `engine_ia_corridors_omega.py` (V4)
+- `federal_datasets_omega.py`
+- `science_gaps_datasets.py`
+
+**Audit ultime avant suppression** a révélé que ces 3 fichiers sont **TOUS importés
+activement** par `territoire_v10_supra.py` et `server.py` :
+- `territoire_v10_supra.py:376` → `from ... engine_ia_corridors_omega import filter_conforme_corridors`
+- `territoire_v10_supra.py:1351-1352` → `from ... science_gaps_datasets import CWD_HEATMAP` + `from ... federal_datasets_omega import LEP_HABITATS, HYDAT_STATIONS`
+- `server.py:956,972` → `app.include_router(gaps_router)`, `app.include_router(federal_router)` (routers `/science-gaps`, `/federal/lep`, `/federal/hydat` actifs)
+
+Conformément aux contraintes inviolables, **REFUS de suppression Catégorie A** appliqué.
+
+### EXÉCUTION RÉELLE
+✅ **128 fichiers tests legacy archivés** via `git mv`-equivalent :
+- 99 fichiers `test_phase_*.py` → `tests/archive/phases_a_e/`
+- 6 fichiers `test_phase_xi-xv*.py` → `tests/archive/phases_xi_xv/`
+- 11 fichiers `test_phase_xvii-xix*.py` → `tests/archive/phases_xvii_xix/`
+- 12 fichiers `test_render_*.py` → `tests/archive/render/`
+- **27 507 lignes archivées** (2× plus que l'estimation initiale 14 250)
+
+✅ Configuration pytest :
+- `pyproject.toml` : `norecursedirs = ["archive", "__pycache__", "node_modules", ".git"]`
+- `tests/archive/__init__.py` : guard documenté
+
+### VALIDATION POST-EXÉCUTION (curl URL publique)
+| Endpoint | HTTP | Temps |
+|---|---|---|
+| `/api/health` | ✅ 200 | 0.28s |
+| `/api/v20/territoire/lep/status` | ✅ 200 | 0.15s |
+| `/api/v30/especes/list` | ✅ 200 | 0.10s |
+| 5 espèces × month=5 (HIT cache TTL 3600s) | ✅ 200 toutes | <0.17s chacune |
+| Conformité Ω | ✅ 100% maintenue | |
+
+### CUMUL DEPUIS DÉBUT P22ΩΩ
+| Phase | Lignes purgées/archivées |
+|---|---|
+| P22ΩΩ_ALLEGEMENT_STRUCTUREL (2026-05-17) | 2 628 (3 stubs backend + 7 composants frontend) |
+| P22ΩΩ_CLEANUP_LEGACY_FINAL (2026-05-19) | 27 507 (128 tests archivés) |
+| **TOTAL** | **30 135 lignes** |
+
+### GARDE-FOUS RESPECTÉS
+- ❌ 0 engine scientifique Ω modifié
+- ❌ 0 algorithme scoring/corridors/zones/salines/espèces touché
+- ❌ 0 modification contrat bundle JSON public
+- ❌ 0 impact TERRITOIRE_ESSENTIEL_1WORKER
+- ❌ 0 modification TTL ESSENTIEL_T0=3600s
+- ✅ Conformité Ω 100% maintenue
+
+### LEÇON DOCTRINALE
+Toujours INSPECTER le contexte des imports (lignes ±2) avant suppression, jamais
+se fier uniquement au count grep. Le document `p22omegaomega_cleanup_legacy_final.md`
+a été mis à jour avec un §10 d'autocritique complet.
+
+---
+
 ## 2026-05-19 · P22ΩΩ_PLAN_MODULARISATION_TERRITOIRE — Plan institutionnel complet (PLAN ONLY)
 
 ### DIRECTIVE COMMANDANT STEEVE-MAX

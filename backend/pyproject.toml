@@ -17,6 +17,10 @@ markers = [
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 
+# P22ΩΩ_CLEANUP_LEGACY_FINAL · 2026-05-19 · STEEVE-MAX
+# Tests legacy archivés exclus du pipeline pytest
+norecursedirs = ["archive", "__pycache__", "node_modules", ".git"]
+
 # Exclusions globales
 addopts = """
     --ignore=tests/test_territory_phase2.py

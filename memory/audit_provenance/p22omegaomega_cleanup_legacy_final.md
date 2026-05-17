@@ -2,8 +2,17 @@
 **Phase** : P22ΩΩ_PLAN_MODULARISATION_TERRITOIRE — Livrable 4/4
 **Date** : 2026-05-19 · **Doctrine** : BCE-4X ULTIME ABSOLU
 **Commandant** : STEEVE-MAX
+**Statut** : ⚠️ **PLAN INITIAL CORRIGÉ APRÈS AUDIT ULTIME — VOIR §10**
 
-> ⚠️ **PLAN DE NETTOYAGE — Aucune suppression sans autorisation explicite Phase 2.**
+> ⚠️ **DOCUMENT CORRIGÉ LE 2026-05-19 APRÈS DÉCOUVERTE D'AUDIT ERRONÉ**.
+> Le plan initial classifiait `engine_ia_corridors_omega.py`, `federal_datasets_omega.py`,
+> et `science_gaps_datasets.py` comme "Catégorie A — 0 usage prod". L'audit ultime avant
+> exécution a révélé que ces 3 fichiers sont **TOUS importés activement** par
+> `territoire_v10_supra.py` et `server.py`. Leur suppression aurait introduit
+> 3 ImportError et cassé le pipeline V10 + 2 routers actifs.
+>
+> **Conformément aux contraintes inviolables BCE-4X**, ces 3 fichiers ont été
+> **CONSERVÉS**. Seul l'archivage des tests legacy a été effectué.
 
 ---
 
@@ -187,3 +196,90 @@ Avant d'exécuter quoi que ce soit, le Commandant doit :
 - **Phase** : P22ΩΩ_PLAN_MODULARISATION_TERRITOIRE
 - **Livrable** : 4/4 — Cleanup legacy final
 - **Validation** : COMMANDANT STEEVE-MAX
+
+---
+
+## 10. EXÉCUTION RÉELLE 2026-05-19 — RAPPORT FINAL
+
+### 10.1 Catégorie A — **REFUSÉE après audit ultime**
+
+| Fichier | Statut | Preuve d'usage actif |
+|---|---|---|
+| `engine_ia_corridors_omega.py` (V4) | 🔴 **CONSERVÉ** | `territoire_v10_supra.py:376` → `from engines.v8_institutional.engine_ia_corridors_omega import filter_conforme_corridors` (appel V10 actif) + 16 autres refs |
+| `federal_datasets_omega.py` | 🔴 **CONSERVÉ** | `territoire_v10_supra.py:1352` → `from ... import LEP_HABITATS, HYDAT_STATIONS` + `server.py:972` → `app.include_router(federal_router)` (routers `/federal/lep`, `/federal/hydat` actifs) |
+| `science_gaps_datasets.py` | 🔴 **CONSERVÉ** | `territoire_v10_supra.py:1351` → `from ... import CWD_HEATMAP` + `server.py:956` → `app.include_router(gaps_router)` (router `/science-gaps` actif) |
+
+### 10.2 Autocritique BCE-4X
+
+L'audit initial Phase 1 (étape `1.5b` du plan modularisation) avait conclu :
+> "federal_datasets / science_gaps : 0 ref prod (hors tests)"
+
+Cet audit était **erroné**. La cause :
+- L'audit utilisait `grep -rln "$mod" --exclude-dir=tests` ce qui excluait correctement les tests.
+- **Mais** l'audit affichait uniquement le COUNT (0) **sans inspecter** les fichiers réellement trouvés.
+- En revérifiant avec inspection de contexte avant suppression, les **imports effectifs** ont été révélés.
+
+**Leçon doctrinale** : Toujours INSPECTER le contexte des imports (lignes ±2) avant toute suppression, jamais se fier uniquement au count.
+
+### 10.3 Catégorie B — Archivage tests legacy ✅ DONE
+
+| Catégorie | Fichiers archivés | Lignes archivées |
+|---|---|---|
+| Phases A-E (`test_phase_a/b/c/d/e_*.py` + autres) | 99 | (partagé) |
+| Phases XI-XV (`test_phase_xi/xii/xiii/xiv/xv_*.py`) | 6 | (partagé) |
+| Phases XVII-XIX (`test_phase_xvii/xviii/xix_*.py`) | 11 | (partagé) |
+| Tests rendu (`test_render_*.py`) | 12 | (partagé) |
+| **TOTAL** | **128** | **27 507 lignes** |
+
+Destination : `/app/backend/tests/archive/{phases_a_e,phases_xi_xv,phases_xvii_xix,render}/`
+
+Configuration pytest : `pyproject.toml` updated avec `norecursedirs = ["archive", ...]`
+
+### 10.4 Validation post-archivage
+
+| Test | Résultat |
+|---|---|
+| `/app/backend/tests/` (niveau 1) | **0 fichier** `test_phase_*.py` ou `test_render_*.py` restant |
+| `/app/backend/tests/archive/` | **128 fichiers** archivés correctement |
+| `__init__.py` archive guard | ✅ Créé |
+| `pyproject.toml` norecursedirs | ✅ `["archive", "__pycache__", "node_modules", ".git"]` |
+
+### 10.5 Garde-fous respectés
+
+- ✅ **0 engine scientifique Ω modifié**
+- ✅ **0 algorithme scoring/corridors/zones/salines/espèces touché**
+- ✅ **0 modification contrat bundle JSON public**
+- ✅ **0 modification pipeline V10/V20**
+- ✅ **0 impact TERRITOIRE_ESSENTIEL_1WORKER**
+- ✅ **0 modification TTL ESSENTIEL_T0=3600s**
+
+### 10.6 Volume réel purgé/archivé
+
+| Item | Lignes |
+|---|---|
+| Phase 1 (déjà fait 2026-05-17) | 2 628 (backend stubs + frontend orphelins) |
+| Phase 0 cette session — Tests archivés | **27 507** (128 fichiers) |
+| Phase 0 cette session — Engines V4 (REFUSÉ) | 0 (conservation pour sécurité) |
+| **TOTAL CUMULÉ depuis le début P22ΩΩ** | **30 135 lignes** |
+
+### 10.7 Recommandation Phase 1A
+
+Avec les tests archivés, la base est plus propre pour démarrer Phase 1A
+(création des packages `v10/` `v20/` `v30_future/`).
+
+Pour purger réellement les engines V4 + datasets fédéraux, il faudrait d'abord :
+1. **Refactor `territoire_v10_supra.py`** pour inliner `filter_conforme_corridors`
+2. **Migrer les datasets fédéraux** vers un nouveau module si vraiment obsolètes
+3. **Désactiver les routers** `/federal/*` et `/science-gaps/*` si non utilisés en prod
+
+Ce travail dépasse le cadre du "cleanup" et appartient au **découpage V10/V20**
+ou à une phase ultérieure de simplification doctrinale.
+
+### 10.8 Signature finale
+
+- **Date d'exécution** : 2026-05-19
+- **Doctrine** : BCE-4X ULTIME ABSOLU
+- **Statut** : ✅ **CLEANUP_LEGACY_FINAL = PARTIELLEMENT DONE**
+  - Cat. A backend : **REFUSÉE** après audit ultime (preuve d'usage prod actif)
+  - Tests legacy : **DONE** (128 fichiers archivés · 27 507 lignes)
+- **Validation post-archivage** : à effectuer ÉTAPES 4-5 du protocole (curl + screenshot)
