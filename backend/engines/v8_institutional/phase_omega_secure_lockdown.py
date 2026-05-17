@@ -181,8 +181,7 @@ def bloc_5_terrain_bio_ia() -> dict[str, Any]:
         "IA_VISION_AWARE_Ω": any((ENGINES_DIR).glob("*vision*.py")) or True,  # hook schema en place
         "IA_CORRIDORS_Ω": (ENGINES_DIR / "engine_ia_corridors_organic_omega.py").exists(),
         "IA_SALINES_Ω": (ENGINES_DIR / "engine_salines_v11_supra.py").exists(),
-        "IA_ZONES_Ω": (ENGINES_DIR / "engine_zones.py").exists()
-                      or (ENGINES_DIR / "zones_organic_v1.py").exists(),
+        "IA_ZONES_Ω": (ENGINES_DIR / "engine_zones.py").exists(),
     }
     return {
         "bloc": "BLOC_5_TERRAIN_BIO_IA",

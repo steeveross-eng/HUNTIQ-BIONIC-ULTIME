@@ -1,6 +1,43 @@
 # CHANGELOG · TERRITOIRE Ω · BIONIC HUNT
 **Format**: Chronologique inverse (plus récent en premier)
 
+## 2026-05-17 · P22ΩΩ_ALLEGEMENT_STRUCTUREL_OMEGA — Suppression 2628 lignes + Export JSON
+
+### DIRECTIVE COMMANDANT STEEVE-MAX (Phase 2 autorisée explicitement)
+
+### PHASE 1 — VALIDATION (sans effet)
+- 10 modules `*_v1.py` listés : **7 N'EXISTAIENT PAS** déjà · 3 stubs trouvés (zones/hotspots/salines `_organic_v1.py`)
+- Corridors V1-V4 : **0 existants**
+- Scoring V1-V6 : **0 existants**
+- Météo legacy : **0 existants**
+- 7 composants frontend confirmés **0 imports** : Amenagement/BionicZoneDiagnostic/DiagnosticExclusions/MonTerritoireBionic/PhaseAPanelV8/PhaseCPanelV8/StandDetailPanel
+- Routes "orphelines" `bionic_engine_router` + `map_perf` → en réalité **ACTIVES** via `modules/routers.py` et `server_orchestrator.py` (conservées)
+
+### PHASE 2 — SUPPRESSION (autorisée)
+- **3 stubs backend** : `zones_organic_v1.py` (55l) · `hotspots_organic_v1.py` (57l) · `salines_organic_v1.py` (55l)
+- **7 composants frontend** : 2 461 lignes au total
+- **Total purgé** : **2 628 lignes**
+- 3 audit-tools nettoyés : `phase_omega_secure_lockdown.py` · `tools/audit_phase_engine_canonique.py` · `tools/audit_engines_x199_x200.py`
+
+### VALIDATION POST-SUPPRESSION
+- Screenshot Playwright `/territoire` : **94 polylines · 10 markers · HUD complet · CONFORMITÉ Ω 100% · SCORE 65.22**
+- Bundle chevreuil : 5 zones · 13 corridors · 4 salines · 5 hotspots · HIT cache · NON dégradé
+- Widget Premium fonctionnel : "1/3 · orignal"
+- **0 régression**
+
+### P22ΩΩ_TERRITOIRE_STRUCTURE_EXPORT
+- JSON maître `/app/memory/TERRITOIRE_STRUCTURE_OMEGA.json` (20.17 KB · UTF-8)
+- Endpoint téléchargeable `GET /api/export/territoire-structure?download=true`
+- Endpoint metadata `GET /api/export/territoire-structure/meta`
+- Copie miroir `/app/memory/audit_provenance/TERRITOIRE_STRUCTURE_OMEGA.json`
+- Routeur : `routes/territoire_structure_export_router.py`
+
+### PLAN_OPTIMISATION_TERRITOIRE_OMEGA
+- 6 axes × 29 actions × roadmap P0→P5 (12 mois)
+- Document : `/app/memory/PLAN_OPTIMISATION_TERRITOIRE_OMEGA.md`
+
+---
+
 ## 2026-05-14 · P22ΩΩ_PRECHARGEMENT_INTELLIGENT_GEOLOCALISATION — Widget Premium
 
 ### DIRECTIVE COMMANDANT STEEVE-MAX

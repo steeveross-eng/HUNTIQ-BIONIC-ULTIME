@@ -98,7 +98,6 @@ def check_zero_doublon() -> Dict[str, Any]:
         "salines": [
             "engines/v8_institutional/engine_salines.py",
             "engines/v8_institutional/engine_salines_v11_supra.py",
-            "engines/v8_institutional/salines_organic_v1.py",
             "engines/eco_zones_omega/router.py",
             # archivés V7 (consommés comme source, pas comme router actif)
             "modules/salines_ultime_engine/router.py",

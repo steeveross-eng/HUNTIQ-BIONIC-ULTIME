@@ -1,0 +1,515 @@
+{
+  "_metadata": {
+    "name": "TERRITOIRE_STRUCTURE_OMEGA",
+    "version": "1.0.0",
+    "snapshot_date": "2026-05-17",
+    "doctrine": "BCE-4X ULTIME ABSOLU",
+    "phase": "P22ΩΩ_TERRITOIRE_STRUCTURE_EXPORT",
+    "validated_by": "COMMANDANT STEEVE-MAX",
+    "status_post_allegement": true,
+    "files_purged": {
+      "backend_stubs": ["zones_organic_v1.py", "hotspots_organic_v1.py", "salines_organic_v1.py"],
+      "frontend_orphans": [
+        "AmenagementPanel.jsx",
+        "BionicZoneDiagnosticPanel.jsx",
+        "DiagnosticExclusionsPanel.jsx",
+        "MonTerritoireBionic.jsx",
+        "PhaseAPanelV8.jsx",
+        "PhaseCPanelV8.jsx",
+        "StandDetailPanel.jsx"
+      ],
+      "lines_removed": 2628
+    }
+  },
+
+  "architecture": {
+    "deployment": {
+      "frontend_port": 3000,
+      "backend_port": 8001,
+      "workers": 1,
+      "reload": true,
+      "ingress": "K8s · *.preview.emergentagent.com",
+      "api_prefix_routed": "/api/* → 8001",
+      "frontend_routed": "/* → 3000"
+    },
+    "datastores": {
+      "mongodb": {
+        "url_env": "MONGO_URL",
+        "database_env": "DB_NAME",
+        "database_value": "huntiq_v6",
+        "host": "localhost:27017",
+        "collections_used": ["users", "orders", "products", "analytics", "sightings", "hunting_groups"]
+      },
+      "lru_in_memory": {
+        "module": "engines/v8_institutional/v20_performance_bundle.py",
+        "max_entries": 10000,
+        "ttl_default_sec": 86400,
+        "ttl_degraded_sec": 90
+      },
+      "lru_disk_persist": {
+        "file": "/app/backend/cache/territoire_bundle.pkl",
+        "save_strategy": "throttle 30s from BG_CACHE callback + on shutdown",
+        "loaded_on_startup": true
+      },
+      "redis_l1": {
+        "module": "engines/v8_institutional/redis_omega.py",
+        "host": "localhost:6379",
+        "status": "non_persistent_between_forks",
+        "fallback": "LRU in-memory"
+      }
+    }
+  },
+
+  "pipeline_territoire_omega": {
+    "entry_point": {
+      "endpoint": "GET /api/v20/territoire/bundle",
+      "params": ["lat", "lon", "species", "month", "hour", "wind_deg", "wind_speed"],
+      "router_file": "server.py",
+      "handler_function": "v20_territoire_bundle"
+    },
+
+    "orchestrators": {
+      "v20_performance_bundle": {
+        "file": "engines/v8_institutional/v20_performance_bundle.py",
+        "role": "PRIMARY · cache + hardcaps + early-return + BG_CACHE",
+        "key_constants": {
+          "_MISS_HARDCAP_SEC": 6.0,
+          "_MISS_WARMUP_HARDCAP_SEC": 12.0,
+          "_MISS_SOFT_THRESHOLD_SEC": 5.0,
+          "_GLOBAL_BUNDLE_DEADLINE_SEC": 10.0,
+          "_CACHE_TTL_SEC": 86400,
+          "_CACHE_DEGRADED_TTL_SEC": 90,
+          "_CACHE_MAX": 10000
+        },
+        "mitigations_p22omegaomega": [
+          "DEGRADED bundle cached TTL 90s (no SKIP)",
+          "EARLY-RETURN if V10 degraded",
+          "BG_CACHE callback persists late-completed bundles",
+          "Global deadline 10s skips heavy post-V5 pipeline"
+        ]
+      },
+      "territoire_v10_supra": {
+        "file": "engines/v8_institutional/territoire_v10_supra.py",
+        "role": "V10 SUPRA · terrain + meteo + zones/hotspots/salines",
+        "main_function": "compute_territoire_v10",
+        "signature": "(lat, lon, species, month, hour, wind_deg=225, wind_speed=15)"
+      },
+      "terrain_v10_supra": {
+        "file": "engines/v8_institutional/terrain_v10_supra.py",
+        "role": "DEM · slope · aspect · drainage",
+        "main_function": "compute_terrain_v10"
+      },
+      "ecological_orchestrator_omega": {
+        "file": "engines/v8_institutional/ecological_orchestrator_omega.py",
+        "role": "Fusion écologique multi-couches"
+      }
+    },
+
+    "corridors_engines": {
+      "v5_organic_primary": {
+        "file": "engines/v8_institutional/engine_ia_corridors_organic_omega.py",
+        "function": "generate_organic_corridors",
+        "active_pipeline_role": "PRIMARY · corridors V5 organic NATIFS",
+        "signature": "(lat, lon, species, month, hour, wind_deg, wind_speed, anchor_mode, bundle_pre_computed)",
+        "anchor_mode": "TERRITORY_CONTINUOUS",
+        "divergence_strict_par_espece": true
+      },
+      "v4_legacy_omega": {
+        "file": "engines/v8_institutional/engine_ia_corridors_omega.py",
+        "role": "LEGACY · fallback non utilisé par pipeline actif"
+      },
+      "corridors_vitaux_omega": {
+        "file": "engines/v8_institutional/corridors_vitaux_omega.py",
+        "role": "Détection vital pour corridors haute conformité"
+      },
+      "connectivite_ecologique": {
+        "file": "engines/v8_institutional/engine_connectivite_ecologique_omega.py",
+        "role": "Connectivité inter-zones"
+      },
+      "audit_supra": {
+        "file": "engines/v8_institutional/audit_supra_corridors_omega.py",
+        "role": "Audit conformité corridors"
+      }
+    },
+
+    "zones_engines": {
+      "engine_zones": {
+        "file": "engines/v8_institutional/engine_zones.py",
+        "role": "PRIMARY · zones vitales par espèce",
+        "active_pipeline_role": "PRIMARY"
+      },
+      "zones_v11_supra": {
+        "file": "engines/v8_institutional/engine_zones_v11_supra.py",
+        "role": "Zones V11 supra-instituionnelles"
+      }
+    },
+
+    "hotspots_engines": {
+      "engine_hotspots": {
+        "file": "engines/v8_institutional/engine_hotspots.py",
+        "role": "PRIMARY · hotspots biologiques"
+      }
+    },
+
+    "salines_engines": {
+      "engine_salines": {
+        "file": "engines/v8_institutional/engine_salines.py",
+        "role": "Base salines"
+      },
+      "engine_salines_v11_supra": {
+        "file": "engines/v8_institutional/engine_salines_v11_supra.py",
+        "role": "PRIMARY · salines V11 SUPRA (source de vérité active)"
+      },
+      "recettes_salines_omega": {
+        "file": "engines/v8_institutional/engine_recettes_salines_omega.py",
+        "role": "Recettes minéralisation"
+      }
+    },
+
+    "affuts_engines": {
+      "engine_affuts": {
+        "file": "engines/v8_institutional/engine_affuts.py",
+        "role": "PRIMARY · placement affûts par visibilité"
+      },
+      "engine_visibilite": {
+        "file": "engines/v8_institutional/engine_visibilite.py",
+        "role": "Calcul visibilité"
+      },
+      "engine_terrain_cost": {
+        "file": "engines/v8_institutional/engine_terrain_cost.py",
+        "role": "Coût parcours"
+      },
+      "engine_audio_acoustique": {
+        "file": "engines/v8_institutional/engine_audio_acoustique.py",
+        "role": "Propagation acoustique"
+      }
+    },
+
+    "species_engines": {
+      "target_species_5": ["chevreuil", "orignal", "ours_noir", "coyote", "dindon_sauvage"],
+      "engines": {
+        "engine_espece_omega": {
+          "file": "engines/v8_institutional/engine_espece_omega.py",
+          "role": "Orchestration espèces"
+        },
+        "engine_species_profiles_omega": {
+          "file": "engines/v8_institutional/engine_species_profiles_omega.py",
+          "role": "Profils biologiques par espèce"
+        },
+        "species_modulator_omega": {
+          "file": "engines/v8_institutional/species_modulator_omega.py",
+          "role": "Modulation paramètres par espèce"
+        },
+        "species_presence_mask_omega": {
+          "file": "engines/v8_institutional/species_presence_mask_omega.py",
+          "role": "Masque présence biologique"
+        },
+        "species_weighting_profiles": {
+          "file": "engines/v8_institutional/species_weighting_profiles.py",
+          "role": "Pondérations comportementales"
+        },
+        "phase_xii_bio_reacteurs": {
+          "files": [
+            "engines/v8_institutional/especes/mffp_phase3_p1_omega.py",
+            "engines/v8_institutional/especes/"
+          ],
+          "role": "5 BIO-RÉACTEURS Ω (PHASE XII)"
+        }
+      }
+    },
+
+    "meteo_engines": {
+      "open_meteo_breaker": {
+        "file": "engines/v8_institutional/open_meteo_breaker.py",
+        "role": "Circuit-breaker Open-Meteo (3 errors / 600s)",
+        "external_api": "api.open-meteo.com",
+        "status": "frequently_OPEN due to 429 free-tier rate-limit"
+      },
+      "engine_vent": {
+        "file": "engines/v8_institutional/engine_vent.py",
+        "role": "Modèle vent surface"
+      },
+      "engine_thermique_microclimat_omega": {
+        "file": "engines/v8_institutional/engine_thermique_microclimat_omega.py",
+        "role": "Microclimat thermique (FORÊT/CLAIRIÈRE)"
+      },
+      "engine_pression_atmospherique_omega": {
+        "file": "engines/v8_institutional/engine_pression_atmospherique_omega.py",
+        "role": "Pression atmosphérique"
+      },
+      "engine_canopee_thermique_omega": {
+        "file": "engines/v8_institutional/engine_canopee_thermique_omega.py",
+        "role": "Canopée thermique"
+      },
+      "engine_climat_futur_omega": {
+        "file": "engines/v8_institutional/engine_climat_futur_omega.py",
+        "role": "Projections climatiques"
+      },
+      "lidar_irda_v11": {
+        "file": "engines/v8_institutional/lidar_irda_v11.py",
+        "role": "PRIMARY · LIDAR + IRDA SUPRA (fallback météo)",
+        "data_source": "V11-LIDAR-IRDA-SUPRA"
+      }
+    },
+
+    "comportement_engines": {
+      "engine_comportement": "engines/v8_institutional/engine_comportement.py",
+      "engine_comportement_avance": "engines/v8_institutional/engine_comportement_avance.py",
+      "engine_comportement_biologique_omega": "engines/v8_institutional/engine_comportement_biologique_omega.py",
+      "engine_trophic_behavior_omega": "engines/v8_institutional/engine_trophic_behavior_omega.py",
+      "engine_psychologie": "engines/v8_institutional/engine_psychologie.py",
+      "engine_population_dynamics_omega": "engines/v8_institutional/engine_population_dynamics_omega.py"
+    },
+
+    "predictive_ia_engines": {
+      "predictive_omega_v2": "engines/v8_institutional/predictive_omega_v2.py",
+      "engine_prediction": "engines/v8_institutional/engine_prediction.py",
+      "engine_intelligence": "engines/v8_institutional/engine_intelligence.py",
+      "engine_ia_vision_ecologique_omega": "engines/v8_institutional/engine_ia_vision_ecologique_omega.py",
+      "engine_ia_vision_registry_omega": "engines/v8_institutional/engine_ia_vision_registry_omega.py"
+    },
+
+    "exclusions_dynamiques": {
+      "origine_externe_filter_omega": "engines/v8_institutional/origine_externe_filter_omega.py",
+      "origine_externe_inversion_omega": "engines/v8_institutional/origine_externe_inversion_omega.py",
+      "lep_ingestion_omega": "engines/v8_institutional/lep_ingestion_omega.py",
+      "federal_datasets_omega": "engines/v8_institutional/federal_datasets_omega.py",
+      "science_gaps_datasets": "engines/v8_institutional/science_gaps_datasets.py"
+    },
+
+    "rendu_export": {
+      "engine_rendu_omega": "engines/v8_institutional/engine_rendu_omega.py",
+      "engine_render_omega": "engines/v8_institutional/engine_render_omega.py",
+      "export_institutionnel_v20_omega": "engines/v8_institutional/export_institutionnel_v20_omega.py",
+      "v20_3d_overlays_omega": "engines/v8_institutional/v20_3d_overlays_omega.py",
+      "v20_mvt_tiles": "engines/v8_institutional/v20_mvt_tiles.py"
+    },
+
+    "audit_securite": {
+      "audit_supra_corridors_omega": "engines/v8_institutional/audit_supra_corridors_omega.py",
+      "monitoring_alerte_omega": "engines/v8_institutional/monitoring_alerte_omega.py",
+      "visual_proof_omega": "engines/v8_institutional/visual_proof_omega.py",
+      "visual_proof_live_omega": "engines/v8_institutional/visual_proof_live_omega.py",
+      "sla_baseline_30j_omega": "engines/v8_institutional/sla_baseline_30j_omega.py",
+      "securite_omega_v19": "engines/v8_institutional/securite_omega_v19.py",
+      "protections_omega": "engines/v8_institutional/protections_omega.py",
+      "phase_omega_secure_lockdown": "engines/v8_institutional/phase_omega_secure_lockdown.py",
+      "registry_lock_omega": "engines/v8_institutional/registry_lock_omega.py"
+    }
+  },
+
+  "routes_backend_actives": {
+    "core_territoire": {
+      "GET /api/v20/territoire/bundle": "server.py · v20_territoire_bundle",
+      "GET /api/v20/territoire/lep/status": "server.py · stub doctrinal",
+      "GET /api/v20/territoire/audit/files/{filename}": "routes/audit_download_router.py",
+      "GET /api/v20/territoire/bundle/stats": "server.py",
+      "POST /api/v20/territoire/bundle/save-disk": "server.py",
+      "GET /api/export/territoire-structure": "routes/territoire_structure_export_router.py · NOUVEAU 2026-05-17"
+    },
+    "ultime_score_v30": {
+      "GET /api/v30/territoire/ultime-score": "server.py"
+    },
+    "especes_phase_xii": {
+      "GET /api/v30/especes/list": "routes/especes_omega_router.py",
+      "GET /api/v30/especes/lock-signature": "routes/especes_omega_router.py",
+      "GET /api/v30/especes/audit/status": "routes/especes_omega_router.py",
+      "GET /api/v30/especes/bio-reacteur/{species}": "routes/bio_reacteur_router_omega.py"
+    },
+    "corridors_v30": {
+      "GET /api/v30/corridors/status": "routes/v30_corridors_status_router.py"
+    },
+    "ecological": {
+      "ecological_orchestrator_router": "routes/ecological_orchestrator_router.py",
+      "ecological_router_v8": "routes/ecological_router_v8.py",
+      "corridors_vitaux_router": "routes/corridors_vitaux_router.py",
+      "predictive_omega_v2_router": "routes/predictive_omega_v2_router.py",
+      "renduomega_router": "routes/renduomega_router.py"
+    },
+    "auth_users": {
+      "POST /api/auth/login": "modules/auth_engine/*",
+      "GET /api/auth/verify": "modules/auth_engine/*",
+      "GET /api/auth/auto-login": "modules/auth_engine/*",
+      "GET /api/users/me": "modules/user_engine/*"
+    }
+  },
+
+  "frontend": {
+    "entry_page": {
+      "file": "pages/MonTerritoireBionicPage.jsx",
+      "lines": 1907,
+      "role": "Page principale TERRITOIRE Ω"
+    },
+    "carte_principale": {
+      "file": "components/territoire/BionicLayersV8.jsx",
+      "role": "Layer Leaflet principal · consomme bundle V20"
+    },
+    "map_content": {
+      "file": "components/territoire/map/MapContent.jsx",
+      "role": "Container Leaflet"
+    },
+    "hud_v30": {
+      "file": "components/territoire/HudTerritoireUltime.jsx",
+      "role": "HUD CORRIDORS V30 · scoring · conformité"
+    },
+    "especes_panel": {
+      "file": "components/territoire/EspecesOmegaPanel.jsx",
+      "role": "PHASE-XII Espèces"
+    },
+    "bio_reacteurs_panel": {
+      "file": "components/territoire/BioReacteursOmegaPanel.jsx",
+      "role": "5 BIO-RÉACTEURS Ω"
+    },
+    "intelligent_preload_widget": {
+      "file": "components/territoire/IntelligentPreloadWidget.jsx",
+      "role": "PRÉCHARGEMENT INTELLIGENT Premium · P22ΩΩ"
+    },
+    "hooks_principaux": {
+      "useMapBundleV8": {
+        "file": "hooks/useMapBundleV8.js",
+        "role": "Fetch + cache global window + retry 502/503/504"
+      },
+      "useUserData": "hooks/useUserData.js",
+      "useGeolocation": "hooks/useGeolocation.js",
+      "useBionicScoringV8": "hooks/useBionicScoringV8.js",
+      "useInstitutionalV8": "hooks/useInstitutionalV8.js",
+      "useZoneOrchestrator": "hooks/useZoneOrchestrator.js",
+      "useZoneCache": "hooks/useZoneCache.js",
+      "useTerritoireEffects": "hooks/useTerritoireEffects.js",
+      "useTerritoireWatchdog": "hooks/useTerritoireWatchdog.js"
+    },
+    "cache_global_window": {
+      "file": "lib/bionicBundleCache.js",
+      "ttl_ms": 90000,
+      "max_entries": 128,
+      "shared_between": ["useMapBundleV8", "IntelligentPreloadWidget"]
+    },
+    "overlays_actifs": [
+      "AlphaHotspotsLayer.jsx",
+      "CameraMarkersLayer.jsx",
+      "ContaminationOverlayLayer.jsx",
+      "EcoforestryLayers.jsx",
+      "HuntingPathLayer.jsx",
+      "HydrographyOverlayLayer.jsx",
+      "NdviOverlayLayer.jsx",
+      "NutritionPointsLayer.jsx",
+      "StandsMapLayer.jsx",
+      "StructureContrastLayer.jsx",
+      "TrajectoriesLayer.jsx",
+      "WindFlowLayer.jsx"
+    ],
+    "panels_actifs": [
+      "InspectionBiologiquePanel.jsx",
+      "InstitutionalHealthPanel.jsx",
+      "IntelligenceDashboard.jsx",
+      "LayersOmegaSyncPanel.jsx",
+      "LayersPanelOmegaUnified.jsx",
+      "NutritionPanelOmega.jsx",
+      "NutritionPointDetailPanel.jsx",
+      "PlacesSidePanel.jsx",
+      "StatutCorridorsOmegaPanel.jsx",
+      "TerritoryAnalysisPanel.jsx",
+      "WaypointUnifiedPanel.jsx",
+      "ZoneFavorites.jsx",
+      "ZoneInfoPanel.jsx"
+    ]
+  },
+
+  "transformations_data_flow": {
+    "1_user_request": {
+      "step": "Frontend fetch via useMapBundleV8",
+      "cache_check": "bundleCacheGet(key) — window LRU 90s"
+    },
+    "2_backend_cache_check": {
+      "step": "v20_performance_bundle._cache_get(key)",
+      "layers": ["LRU in-memory (10000 entries · 24h TTL)", "Redis L1 (si dispo)", "Disque pickle"]
+    },
+    "3_compute_v10": {
+      "step": "compute_territoire_v10",
+      "hardcap": "6s user / 12s warmup",
+      "sub_components": ["terrain_v10 (await)", "open_meteo + LIDAR_IRDA fallback", "zones + hotspots + salines + affuts SYNC"]
+    },
+    "4_compute_v5_corridors": {
+      "step": "generate_organic_corridors",
+      "budget": "max(2s, hardcap - V10_elapsed)",
+      "early_return_si_v10_degraded": true
+    },
+    "5_pipeline_post_v5": {
+      "step": "RenduΩ + veineux + interzone + predictive",
+      "global_deadline": "10s",
+      "skip_si_dépassé": true
+    },
+    "6_cache_set_response": {
+      "step": "_cache_set(key, result)",
+      "ttl_choisi": "90s si degraded, 86400s sinon",
+      "bg_callback_si_timeout": "task continue + cache à la fin"
+    }
+  },
+
+  "limites_architecturales_connues": {
+    "L1_single_worker": {
+      "severity": "HIGH",
+      "description": "--workers 1 → event loop bloqué pendant V10 SYNC ~50s cold-start",
+      "mitigations_p22omegaomega": ["EARLY-RETURN", "BG_CACHE", "DEGRADED_CACHE TTL 90s", "frontend retry 2s+8s", "Widget Premium preload"],
+      "resolution_definitive": "Multi-worker uvicorn --workers 4 · escalation Emergent pending"
+    },
+    "L2_compute_v10_sync": {
+      "severity": "MEDIUM",
+      "description": "compute_territoire_v10 : 1 await + reste sync → hog event loop",
+      "resolution": "Multi-worker compense (chaque worker = event loop isolé)"
+    },
+    "L3_redis_non_persistant": {
+      "severity": "LOW",
+      "description": "Redis local disparaît entre forks de containers",
+      "mitigation": "Cache disque pickle persistant"
+    },
+    "L4_openmeteo_429": {
+      "severity": "LOW",
+      "description": "Free tier rate-limit fréquent → CB OPEN 600s",
+      "mitigation": "V11-LIDAR-IRDA fallback automatique"
+    }
+  },
+
+  "etat_mitigations_p22omegaomega": {
+    "BUNDLE_DEGRADED_CACHE_TTL_90s": "ACTIVE",
+    "MISS_HARDCAP_6s": "ACTIVE",
+    "WARMUP_HARDCAP_12s": "ACTIVE",
+    "GLOBAL_BUNDLE_DEADLINE_10s": "ACTIVE",
+    "EARLY_RETURN_V10_DEGRADED": "ACTIVE",
+    "BG_CACHE_CALLBACK_DISK_PERSIST_30s": "ACTIVE",
+    "LIFESPAN_INVOKES_V20_STARTUP": "ACTIVE",
+    "SELF_AUDIT_OMEGA": "DISABLED (subprocess pytest hog worker)",
+    "PRECHAUFFAGE_DAEMONS": "DISABLED (env-gated P22OMEGA_PRECHAUFFAGE_DAEMONS=1)",
+    "BSL5_WARMUP": "DISABLED (env-gated P22OMEGA_BSL5_WARMUP=1)",
+    "FRONTEND_RETRY_502_503_504": "ACTIVE (2s + 8s)",
+    "INTELLIGENT_PRELOAD_WIDGET_PREMIUM": "ACTIVE",
+    "BUNDLE_CACHE_GLOBAL_WINDOW_90s": "ACTIVE"
+  },
+
+  "deletion_audit_2026_05_17": {
+    "phase": "P22ΩΩ_ALLEGEMENT_STRUCTUREL_OMEGA",
+    "files_deleted": {
+      "backend": [
+        "engines/v8_institutional/zones_organic_v1.py (55 lines)",
+        "engines/v8_institutional/hotspots_organic_v1.py (57 lines)",
+        "engines/v8_institutional/salines_organic_v1.py (55 lines)"
+      ],
+      "frontend": [
+        "components/territoire/AmenagementPanel.jsx (253 lines)",
+        "components/territoire/BionicZoneDiagnosticPanel.jsx (449 lines)",
+        "components/territoire/DiagnosticExclusionsPanel.jsx (367 lines)",
+        "components/territoire/MonTerritoireBionic.jsx (594 lines)",
+        "components/territoire/PhaseAPanelV8.jsx (357 lines)",
+        "components/territoire/PhaseCPanelV8.jsx (237 lines)",
+        "components/territoire/StandDetailPanel.jsx (204 lines)"
+      ],
+      "lines_removed_total": 2628
+    },
+    "files_modified": [
+      "engines/v8_institutional/phase_omega_secure_lockdown.py · retiré ref zones_organic_v1",
+      "tools/audit_phase_engine_canonique.py · retiré ref ENGINE_ZONES_ORGANIC_V1 (E12)",
+      "tools/audit_engines_x199_x200.py · retiré ref salines_organic_v1"
+    ],
+    "validated_no_regression": true
+  }
+}

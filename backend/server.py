@@ -1436,6 +1436,15 @@ try:
 except Exception as e:
     logger.warning(f"P22Ω_INJONCTION_DOCTRINAL_DOWNLOAD router not loaded: {e}")
 
+# ═══ P22ΩΩ_TERRITOIRE_STRUCTURE_EXPORT (Commandant STEEVE-MAX · 2026-05-17) ═══
+# Endpoint téléchargeable du JSON maître structure TERRITOIRE Ω.
+try:
+    from routes.territoire_structure_export_router import router as territoire_structure_export_router
+    app.include_router(territoire_structure_export_router)
+    logger.info("✓ P22ΩΩ_TERRITOIRE_STRUCTURE_EXPORT active : /api/export/territoire-structure")
+except Exception as e:
+    logger.warning(f"P22ΩΩ_TERRITOIRE_STRUCTURE_EXPORT router not loaded: {e}")
+
 # ═══ PHASE_XII_ESPECES_Ω — 5 ENGINES ESPÈCES (Commandant STEEVE-MAX · 2026-04-28) ═══
 try:
     from routes.especes_omega_router import router as especes_omega_router
