@@ -1,6 +1,60 @@
 # CHANGELOG · TERRITOIRE Ω · BIONIC HUNT
 **Format**: Chronologique inverse (plus récent en premier)
 
+## 2026-05-19 · P22ΩΩ_PLAN_MODULARISATION_TERRITOIRE — Plan institutionnel complet (PLAN ONLY)
+
+### DIRECTIVE COMMANDANT STEEVE-MAX
+Établir la feuille de route complète de modularisation de TERRITOIRE Ω.
+**AUCUN code modifié** — uniquement plan institutionnel.
+
+### LIVRABLES (5 documents dans `/app/memory/audit_provenance/`)
+- `p22omegaomega_analyse_monolithique_server.md` — 7070 lignes monolithiques cartographiées
+- `p22omegaomega_plan_de_decoupage_v10_v20.md` — 10 étapes de découpage séquentiel
+- `p22omegaomega_roadmap_zero_cost_engine.md` — Phase 1A→2C sur 12 mois
+- `p22omegaomega_cleanup_legacy_final.md` — Liste candidats + ordre suppression
+- `p22omegaomega_plan_modularisation_master.md` — Document maître consolidé
+
+### CARTOGRAPHIE MONOLITHE
+| Fichier | Lignes | Type |
+|---|---|---|
+| v20_performance_bundle.py | 1 982 | Cache + hardcaps + warmup + daemons + corridors V5 + endpoints + monitoring |
+| territoire_v10_supra.py | 1 495 | Terrain + zones + corridors V10 + affûts + hotspots + salines + comportement |
+| server.py | 1 686 | Lifespan + 142 routers + auth + payments |
+| MonTerritoireBionicPage.jsx | 1 907 | Carte + HUD + panneaux + waypoints |
+
+### ARCHITECTURE MODULAIRE CIBLE
+```
+engines/v8_institutional/
+├── v10/  (4 pipelines : terrain, meteo, biologie, affuts)
+├── v20/  (5 pipelines : territoire_logic, cache, daemons, compliance, rendu_avance)
+└── v30_future/  (3 engines : static, deferred_rendering, zero_cost)
+```
+
+### LEGACY À SUPPRIMER (Phase 0)
+- 3 engines V4 (engine_ia_corridors_omega.py V4, federal_datasets_omega.py, science_gaps_datasets.py) : ~750 lignes
+- 116 fichiers `test_phase_*.py` (à archiver via git mv) : ~12 000 lignes
+- 12 fichiers `test_render_*.py` (à archiver) : ~1 500 lignes
+- **Total Phase 0** : ~14 250 lignes purgeables/archivables
+
+### CONTRAINTES INVIOLABLES
+- ❌ Aucune modification engines scientifiques Ω
+- ❌ Aucune modification scoring/corridors/zones/salines/espèces
+- ❌ Aucune modification contrat bundle JSON public
+- ❌ Aucun impact TERRITOIRE_ESSENTIEL_1WORKER
+- ❌ Aucun impact TTL ESSENTIEL_T0=3600s
+- ❌ Aucun impact Conformité Ω 100%
+
+### EFFORT ESTIMÉ
+- Phase 0 (cleanup) : 1 jour
+- Phase 1 (découpage V10/V20) : ~14 jours
+- Phase 1B+1C (Static + Deferred) : 2 mois
+- Phase 2 (Zero-Cost edge) : 6 mois supplémentaires
+
+### STATUT
+🟡 **EN ATTENTE D'AUTORISATION COMMANDANT** pour exécution Phase 0.
+
+---
+
 ## 2026-05-19 · P22ΩΩ_TERRITOIRE_TTL_ESSENTIEL_3600S — TTL ESSENTIEL_T0 600s → 3600s + CPU SAFE MODE
 
 ### DIRECTIVE COMMANDANT STEEVE-MAX
