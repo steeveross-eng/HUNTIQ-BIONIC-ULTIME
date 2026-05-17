@@ -125,17 +125,36 @@ def _resolve_species(member: Dict[str, Any]) -> List[str]:
 
 
 async def _prewarm_single_bundle(lat: float, lon: float, species: str) -> bool:
-    """Précharge un bundle pour un (waypoint, espèce). Renvoie True si succès."""
+    """Précharge un bundle pour un (waypoint, espèce). Renvoie True si succès.
+
+    P22ΩΩ_TERRITOIRE_TTL_ESSENTIEL_3600S · 2026-05-19 · STEEVE-MAX
+    Skip si un bundle ESSENTIEL valide < 3600s est déjà en cache (évite recalcul).
+    """
     try:
         from fastapi import Response as _FastAPIResponse
         from engines.v8_institutional.v20_performance_bundle import (
             v20_territoire_bundle,
             _WARMUP_CONTEXT,
+            _CACHE,
+            _cache_key,
+            _CACHE_ESSENTIEL_TTL_SEC,
         )
         now = time.localtime()
         month = now.tm_mon
         hour = now.tm_hour
         wind_deg = 225.0
+        # SKIP si bundle ESSENTIEL/COMPLET déjà en cache < TTL
+        key = _cache_key(lat, lon, species, month, hour, wind_deg)
+        existing = _CACHE.get(key)
+        if existing:
+            entry_ts, _entry_data = existing
+            age_sec = time.time() - entry_ts
+            if age_sec < _CACHE_ESSENTIEL_TTL_SEC:
+                logger.debug(
+                    f"[ESSENTIEL_PREWARM_CRON] SKIP recompute (cache valid age={age_sec:.0f}s "
+                    f"< TTL={_CACHE_ESSENTIEL_TTL_SEC}s) species={species}"
+                )
+                return True  # comptabilisé comme "warmed" car déjà chaud
         _token = _WARMUP_CONTEXT.set(True)
         try:
             await v20_territoire_bundle(
@@ -156,6 +175,20 @@ async def _prewarm_single_bundle(lat: float, lon: float, species: str) -> bool:
         return False
 
 
+def _get_cpu_percent() -> float:
+    """P22ΩΩ_PREWARM_SAFE_MODE — Mesure CPU sans bloquer."""
+    try:
+        import psutil
+        return float(psutil.cpu_percent(interval=None))
+    except Exception:
+        return 0.0
+
+
+# P22ΩΩ_PREWARM_SAFE_MODE — Seuil CPU au-delà duquel on suspend le prewarm
+CPU_PAUSE_THRESHOLD = float(os.environ.get("P22OMEGA_PREWARM_CPU_PAUSE_THRESHOLD", "70.0"))
+CPU_RESUME_THRESHOLD = float(os.environ.get("P22OMEGA_PREWARM_CPU_RESUME_THRESHOLD", "50.0"))
+
+
 async def _run_one_cycle(db) -> None:
     """Exécute un cycle complet de prewarm."""
     if _CRON_STATE["running"]:
@@ -168,10 +201,27 @@ async def _run_one_cycle(db) -> None:
         logger.info(f"[ESSENTIEL_PREWARM_CRON] Démarrage cycle · {len(members)} membres")
         warmed = 0
         errors = 0
+        cpu_pauses = 0
+        # Init CPU mesure (premier appel retourne 0)
+        _get_cpu_percent()
+        await asyncio.sleep(0.5)
         for member in members:
             lat, lon = _resolve_waypoint(member)
             species_list = _resolve_species(member)
             for sp in species_list:
+                # P22ΩΩ_PREWARM_SAFE_MODE · 2026-05-19 · STEEVE-MAX
+                # CPU guard : pause si CPU > 70%, reprend si < 50%
+                cpu = _get_cpu_percent()
+                while cpu > CPU_PAUSE_THRESHOLD:
+                    cpu_pauses += 1
+                    logger.warning(
+                        f"[ESSENTIEL_PREWARM_CRON] CPU {cpu:.1f}% > {CPU_PAUSE_THRESHOLD}% → pause 30s"
+                    )
+                    await asyncio.sleep(30)
+                    cpu = _get_cpu_percent()
+                    if cpu < CPU_RESUME_THRESHOLD:
+                        logger.info(f"[ESSENTIEL_PREWARM_CRON] CPU {cpu:.1f}% < {CPU_RESUME_THRESHOLD}% → resume")
+                        break
                 ok = await _prewarm_single_bundle(lat, lon, sp)
                 if ok:
                     warmed += 1
@@ -192,9 +242,10 @@ async def _run_one_cycle(db) -> None:
         _CRON_STATE["last_cycle_duration_sec"] = round(cycle_duration, 1)
         _CRON_STATE["last_cycle_members_warmed"] = warmed
         _CRON_STATE["last_cycle_errors"] = errors
+        _CRON_STATE["last_cycle_cpu_pauses"] = cpu_pauses
         logger.info(
             f"[ESSENTIEL_PREWARM_CRON] Cycle DONE · warmed={warmed} errors={errors} "
-            f"duration={cycle_duration:.1f}s"
+            f"cpu_pauses={cpu_pauses} duration={cycle_duration:.1f}s"
         )
     finally:
         _CRON_STATE["running"] = False
@@ -228,5 +279,9 @@ def get_cron_state() -> Dict[str, Any]:
         "max_members_per_cycle": MAX_MEMBERS_PER_CYCLE,
         "throttle_sec": THROTTLE_SEC,
         "interval_sec": INTERVAL_SEC,
+        "ttl_essentiel_sec": 3600,  # P22ΩΩ_TERRITOIRE_TTL_ESSENTIEL_3600S
+        "cpu_pause_threshold_pct": CPU_PAUSE_THRESHOLD,
+        "cpu_resume_threshold_pct": CPU_RESUME_THRESHOLD,
+        "current_cpu_pct": _get_cpu_percent(),
         **_CRON_STATE,
     }

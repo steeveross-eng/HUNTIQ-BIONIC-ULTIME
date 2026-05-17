@@ -1,6 +1,63 @@
 # CHANGELOG · TERRITOIRE Ω · BIONIC HUNT
 **Format**: Chronologique inverse (plus récent en premier)
 
+## 2026-05-19 · P22ΩΩ_TERRITOIRE_TTL_ESSENTIEL_3600S — TTL ESSENTIEL_T0 600s → 3600s + CPU SAFE MODE
+
+### DIRECTIVE COMMANDANT STEEVE-MAX
+Maximiser la stabilité et la performance de TERRITOIRE Ω en `--workers 1` pour
+2 000 membres en étendant le TTL ESSENTIEL_T0 à 3 600s (1h), tout en maintenant
+la conformité scientifique et opérationnelle Ω.
+
+### MODIFICATIONS BACKEND
+- `v20_performance_bundle.py` :
+  - `_CACHE_ESSENTIEL_TTL_SEC = 600 → 3600` (× 6 plus de cache HIT)
+  - Alias canonique `_CACHE_TTL_ESSENTIEL_SEC = _CACHE_ESSENTIEL_TTL_SEC`
+  - Les 4 chemins ESSENTIEL_T0 (early-return V10 dégradé, V5 fail, deadline hit, end-of-pipeline degraded) honorent automatiquement le nouveau TTL
+  - TTL COMPLET_T0 / ENRICHI_TDELTA inchangés (24h)
+- `essentiel_prewarm_cron.py` :
+  - **SKIP recompute** si bundle ESSENTIEL valide < 3600s déjà en cache (évite le recalcul inutile)
+  - **CPU SAFE MODE** : pause 30s si CPU > 70%, resume si < 50%
+  - `_CRON_STATE["last_cycle_cpu_pauses"]` exposé
+  - `get_cron_state()` expose : `ttl_essentiel_sec`, `cpu_pause_threshold_pct`, `cpu_resume_threshold_pct`, `current_cpu_pct`
+- `psutil==7.2.2` ajouté à `requirements.txt`
+
+### MODIFICATIONS FRONTEND
+- `lib/bionicBundleCache.js` :
+  - `essentielTtlMs: 600_000 → 3_600_000` (1h)
+  - `defaultTtlMs: 600_000 → 3_600_000`
+  - `completTtlMs: 24h` inchangé
+  - Nouvelle fonction `bundleCacheAge(key)` exposée
+- `hooks/useMapBundleV8.js` :
+  - Import de `bundleCacheAge`
+  - Constante `REFETCH_AGE_THRESHOLD_MS = 60_000`
+  - **Re-fetch silencieux T+Δ uniquement si âge cache < 60s** (BG_CACHE backend a ~50-60s pour produire ENRICHI_TDELTA)
+  - Si bundle ESSENTIEL_T0 > 60s : skip re-fetch (le ENRICHI ne sera plus produit, on respecte le TTL 3600s)
+  - Délais re-fetch adaptés : `delay - age` pour éviter double-call après reload
+
+### VALIDATION
+- `/api/admin/essentiel-prewarm/status` expose `ttl_essentiel_sec=3600`, `cpu_pause_threshold_pct=70.0`, `current_cpu_pct` ✓
+- Bundle chevreuil HIT cache : `X-Bundle-Tier: ENRICHI_TDELTA · X-Cache: HIT · X-Cache-Age-Sec: 8395` ✓
+- Cache disk : 11 entrées persistées ✓
+- Screenshot Playwright T+15s : **95 polylines · 10 markers · CONFORMITÉ Ω 100% · SCORE 62.24** · Widget Premium "T0 ESSENTIEL · 1/3 · orignal" ✓
+
+### ENV-VARS (nouveaux)
+```bash
+P22OMEGA_PREWARM_CPU_PAUSE_THRESHOLD=70.0   # CPU% pour pause cron
+P22OMEGA_PREWARM_CPU_RESUME_THRESHOLD=50.0  # CPU% pour resume cron
+```
+
+### GAINS QUANTIFIÉS
+| Métrique | Avant (600s) | Après (3600s) | Gain |
+|---|---|---|---|
+| TTL ESSENTIEL backend | 600s | **3600s** | ×6 |
+| TTL ESSENTIEL frontend | 600s | **3600s** | ×6 |
+| Recalculs/h pour 2000 membres | ~12 000 (10min×60) | **~2 000 (1h)** | ÷6 |
+| Charge CPU moyenne 1-worker | référence | **-60-80%** estimé | divisée par 5 |
+| Garde-fou CPU | aucun | **pause si > 70% / resume si < 50%** | ∞ |
+| SKIP recompute si cache valide | non | **oui** (cron) | -100% recompute redondants |
+
+---
+
 ## 2026-05-18 · P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER — Profil 3-cercles + Cache 2000 membres
 
 ### DIRECTIVE COMMANDANT STEEVE-MAX

@@ -111,7 +111,10 @@ _LAST_BG_DISK_SAVE_TS = 0.0  # P22ΩΩ_DISK_PERSIST · throttle save_disk depuis
 # Le cache stocke 2 niveaux indépendants pour le même waypoint × espèce :
 #   - cache key suffixé "_t0"     : bundle ESSENTIEL T0 (TTL ESSENTIEL 600s)
 #   - cache key suffixé "_tdelta" : bundle ENRICHI T+Δ   (TTL standard 24h)
-_CACHE_ESSENTIEL_TTL_SEC = 600  # 10 minutes — bundles ESSENTIELS chauds pour 2000 membres
+_CACHE_ESSENTIEL_TTL_SEC = 3600  # P22ΩΩ_TERRITOIRE_TTL_ESSENTIEL_3600S · 2026-05-19 · STEEVE-MAX
+                                 # 600s → 3600s (1h) : maximise HIT cache pour 2000 membres
+                                 # tout en gardant une vérité scientifique suffisante (Cercle ESSENTIEL).
+_CACHE_TTL_ESSENTIEL_SEC = _CACHE_ESSENTIEL_TTL_SEC  # alias canonique demandé par Commandant
 _CACHE_MAX_ESSENTIEL = 5000     # capacité dédiée aux bundles ESSENTIELS (2000 membres × 2-3 contexts)
 _ESSENTIEL_MODE_ENABLED = True  # gate globale (env P22OMEGA_ESSENTIEL_1WORKER=0 désactive)
 

@@ -16,12 +16,14 @@ const GLOBAL_KEY = '__BIONIC_BUNDLE_CACHE_V1';
 if (typeof window !== 'undefined' && !window[GLOBAL_KEY]) {
   window[GLOBAL_KEY] = {
     store: new Map(), // key → { data, ts, tier }
-    // P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER · 2026-05-18 · STEEVE-MAX
-    // Capacité 5 000 entrées + TTL 600s adapté pour 2 000 membres
-    // (aligné backend _CACHE_ESSENTIEL_TTL_SEC = 600s).
+    // P22ΩΩ_TERRITOIRE_TTL_ESSENTIEL_3600S · 2026-05-19 · STEEVE-MAX
+    // ESSENTIEL_T0  : 3600s (1h) — aligné backend _CACHE_ESSENTIEL_TTL_SEC.
+    // COMPLET_T0    : 24h
+    // ENRICHI_TDELTA: 24h (servi via re-fetch silencieux T+Δ)
+    // Capacité 5 000 entrées pour 2 000 membres.
     maxEntries: 5000,
-    defaultTtlMs: 600 * 1000, // 10 min pour bundles ESSENTIELS
-    essentielTtlMs: 600 * 1000,
+    defaultTtlMs: 3600 * 1000, // 1h pour bundles ESSENTIELS
+    essentielTtlMs: 3600 * 1000,
     completTtlMs: 24 * 3600 * 1000, // 24h pour bundles COMPLET_T0 / ENRICHI_TDELTA
   };
 }
@@ -83,6 +85,19 @@ export const bundleCacheTier = (key) => {
   const entry = root.store.get(key);
   if (!entry) return null;
   return entry.tier || (entry.data && entry.data.bundle_tier) || 'ESSENTIEL_T0';
+};
+
+/**
+ * P22ΩΩ_TERRITOIRE_TTL_ESSENTIEL_3600S : retourne l'âge en ms d'une entrée cache.
+ * Utilisé par useMapBundleV8 pour décider si un re-fetch silencieux T+Δ est
+ * encore pertinent (BG_CACHE backend finit en ~50-60s).
+ */
+export const bundleCacheAge = (key) => {
+  const root = _root();
+  if (!root) return null;
+  const entry = root.store.get(key);
+  if (!entry) return null;
+  return Date.now() - entry.ts;
 };
 
 export const bundleCacheStats = () => {

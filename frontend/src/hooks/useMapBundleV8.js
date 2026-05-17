@@ -15,12 +15,19 @@
  *     silencieusement la carte sans relancer le squelette.
  */
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { buildBundleCacheKey, bundleCacheGet, bundleCacheSet, bundleCacheTier } from '../lib/bionicBundleCache';
+import { buildBundleCacheKey, bundleCacheGet, bundleCacheSet, bundleCacheTier, bundleCacheAge } from '../lib/bionicBundleCache';
 
 const API = process.env.REACT_APP_BACKEND_URL;
 
 // P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER : délais re-fetch silencieux
 const REFETCH_DELAYS_MS = [12000, 25000]; // 12s puis 25s
+// P22ΩΩ_TERRITOIRE_TTL_ESSENTIEL_3600S · 2026-05-19 · STEEVE-MAX
+// Le re-fetch silencieux T+Δ n'a de sens que dans la fenêtre 0-60s après l'arrivée
+// du bundle ESSENTIEL_T0 (durée approximative du BG_CACHE backend).
+// Au-delà, le bundle est soit déjà ENRICHI_TDELTA, soit le ENRICHI ne sera pas
+// disponible (cycle BG complet expiré). Éviter le re-fetch prématuré pour
+// honorer le TTL ESSENTIEL 3600s et minimiser la charge backend pour 2000 membres.
+const REFETCH_AGE_THRESHOLD_MS = 60_000; // 60s
 
 const useMapBundleV8 = () => {
   const [bundleData, setBundleData] = useState(null);
@@ -73,14 +80,23 @@ const useMapBundleV8 = () => {
       setBundleData(cached);
       const cTier = cached.bundle_tier || bundleCacheTier(cacheKey) || 'ESSENTIEL_T0';
       setBundleTier(cTier);
-      // Si on n'a que l'ESSENTIEL_T0 en cache, programmer re-fetch silencieux T+Δ
+      // P22ΩΩ_TERRITOIRE_TTL_ESSENTIEL_3600S : ne programmer un re-fetch silencieux
+      // T+Δ que si :
+      //   - cache est ESSENTIEL_T0 (potentiellement upgradable)
+      //   - ET l'âge du cache est < 60s (BG_CACHE backend peut encore avoir produit ENRICHI)
+      // Au-delà, on respecte le TTL ESSENTIEL 3600s sans solliciter le backend.
       if (cTier === 'ESSENTIEL_T0') {
-        const url = `${API}/api/v20/territoire/bundle?lat=${lat}&lon=${lon}&species=${species}&month=${m}&hour=${h}&wind_deg=${w}`;
-        _clearRefetchTimers();
-        REFETCH_DELAYS_MS.forEach((delay) => {
-          const t = setTimeout(() => _silentRefetch(cacheKey, url), delay);
-          refetchTimersRef.current.push(t);
-        });
+        const age = bundleCacheAge(cacheKey) || 0;
+        if (age < REFETCH_AGE_THRESHOLD_MS) {
+          const url = `${API}/api/v20/territoire/bundle?lat=${lat}&lon=${lon}&species=${species}&month=${m}&hour=${h}&wind_deg=${w}`;
+          _clearRefetchTimers();
+          REFETCH_DELAYS_MS.forEach((delay) => {
+            const t = setTimeout(() => _silentRefetch(cacheKey, url), Math.max(0, delay - age));
+            refetchTimersRef.current.push(t);
+          });
+        } else {
+          console.info(`[P22ΩΩ_TTL_3600S] Skip re-fetch ESSENTIEL (age=${Math.round(age/1000)}s > ${REFETCH_AGE_THRESHOLD_MS/1000}s)`);
+        }
       }
       return cached;
     }
