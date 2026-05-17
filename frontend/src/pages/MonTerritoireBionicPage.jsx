@@ -720,9 +720,12 @@ const MonTerritoireBionicPage = ({ pageMode = 'analyse-bionic' } = {}) => {
   } = useBionicScoringV8();
 
   // ═══ UI-V8-FORCE-Omega: Bundle V8 unique (zones+corridors+heatmap) ═══
+  // P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER : récupère aussi bundleTier pour
+  // signaler si on est sur ESSENTIEL_T0 ou ENRICHI_TDELTA / COMPLET_T0.
   const {
     bundleData: bundleDataV8, loading: bundleV8Loading, fetchBundle: fetchBundleV8,
     cacheState: bundleCacheState, servedMs: bundleServedMs, computeMs: bundleComputeMs,
+    bundleTier: bundleTierV8,
   } = useMapBundleV8();
 
   // ═══ V8-FRONTEND-PHASE-A-Omega: Relocalisation + Salines ═══

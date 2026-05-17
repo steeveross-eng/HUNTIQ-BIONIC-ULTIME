@@ -143,6 +143,22 @@ async def lifespan(app: FastAPI):
     # except Exception as e:
     #     logger.warning(f"SELF-AUDIT-Ω startup from lifespan failed: {e}")
     logger.info("[P22ΩΩ] SELF-AUDIT-Ω DISABLED (lance subprocess pytest qui hog le worker)")
+
+    # P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER · 2026-05-18 · STEEVE-MAX
+    # Cron pré-calcul 2000 membres : actif uniquement si P22OMEGA_PREWARM_MEMBERS_CRON=1
+    try:
+        import asyncio as _asyncio_cron
+        from engines.v8_institutional.essentiel_prewarm_cron import (
+            essentiel_prewarm_cron_daemon as _prewarm_daemon,
+            _is_cron_enabled as _is_prewarm_cron_enabled,
+        )
+        if _is_prewarm_cron_enabled():
+            _asyncio_cron.create_task(_prewarm_daemon())
+            logger.info("✓ P22ΩΩ_ESSENTIEL_PREWARM cron daemon scheduled (background)")
+        else:
+            logger.info("[P22ΩΩ] ESSENTIEL_PREWARM cron daemon DISABLED (env P22OMEGA_PREWARM_MEMBERS_CRON != 1)")
+    except Exception as e:
+        logger.warning(f"P22ΩΩ_ESSENTIEL_PREWARM cron daemon failed to schedule: {e}")
     
     logger.info("=" * 60)
     logger.info("✓ All modules loaded successfully")
@@ -1444,6 +1460,15 @@ try:
     logger.info("✓ P22ΩΩ_TERRITOIRE_STRUCTURE_EXPORT active : /api/export/territoire-structure")
 except Exception as e:
     logger.warning(f"P22ΩΩ_TERRITOIRE_STRUCTURE_EXPORT router not loaded: {e}")
+
+# ═══ P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER (Commandant STEEVE-MAX · 2026-05-18) ═══
+# Router admin pour le cron pré-calcul 2000 membres
+try:
+    from routes.essentiel_prewarm_router import router as essentiel_prewarm_router
+    app.include_router(essentiel_prewarm_router)
+    logger.info("✓ P22ΩΩ_ESSENTIEL_PREWARM router active : /api/admin/essentiel-prewarm/*")
+except Exception as e:
+    logger.warning(f"P22ΩΩ_ESSENTIEL_PREWARM router not loaded: {e}")
 
 # ═══ PHASE_XII_ESPECES_Ω — 5 ENGINES ESPÈCES (Commandant STEEVE-MAX · 2026-04-28) ═══
 try:

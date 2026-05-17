@@ -60,11 +60,19 @@ const isPremiumUser = (user) => {
   return false;
 };
 
+// P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER 2026-05-18 · STEEVE-MAX
+// Détecte si l'utilisateur est authentifié (pas Premium-only).
+// Le préchargement T0 ESSENTIEL est désormais activé pour TOUS les membres.
+const isAuthenticatedUser = (user) => Boolean(user && (user.id || user.email || user.username));
+
 const IntelligentPreloadWidget = ({ favLat, favLon, favSpeciesOverride }) => {
   const { user } = useAuth();
   const { profile } = useUserProfile();
 
-  // Détecte si Premium
+  // P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER : préchargement ouvert à tous les
+  // membres authentifiés (Free + Premium). Le widget est toujours affiché
+  // s'il y a au moins un user connecté + un waypoint favori.
+  const authenticated = useMemo(() => isAuthenticatedUser(user), [user]);
   const premium = useMemo(() => isPremiumUser(user), [user]);
 
   // 3 espèces préférées (normalisées) — fallback si vide
@@ -84,7 +92,8 @@ const IntelligentPreloadWidget = ({ favLat, favLon, favSpeciesOverride }) => {
   useEffect(() => {
     // Garde-fous
     if (startedRef.current) return;
-    if (!premium) {
+    // P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER : si pas authentifié, on skippe
+    if (!authenticated) {
       setStatus('skipped');
       return;
     }
@@ -164,10 +173,10 @@ const IntelligentPreloadWidget = ({ favLat, favLon, favSpeciesOverride }) => {
     return () => {
       cancelled = true;
     };
-  }, [premium, favLat, favLon, topSpecies]);
+  }, [authenticated, favLat, favLon, topSpecies]);
 
-  // Cache l'affichage si non-Premium
-  if (!premium || status === 'skipped') return null;
+  // Cache l'affichage si non-authentifié
+  if (!authenticated || status === 'skipped') return null;
 
   // Pas encore prêt (attend waypoint favori)
   if (status === 'idle') return null;
@@ -207,7 +216,7 @@ const IntelligentPreloadWidget = ({ favLat, favLon, favSpeciesOverride }) => {
                 className="text-[10px] font-bold uppercase tracking-widest text-cyan-300"
                 data-testid="intelligent-preload-label"
               >
-                Préchargement intelligent
+                {premium ? 'Préchargement intelligent · Premium' : 'Préchargement intelligent'}
               </span>
             </div>
             <div
@@ -217,7 +226,7 @@ const IntelligentPreloadWidget = ({ favLat, favLon, favSpeciesOverride }) => {
               data-testid="intelligent-preload-status"
             >
               {status === 'running'
-                ? `Actif… ${progress.done}/${progress.total} · ${progress.lastSpecies || '…'}`
+                ? `T0 ESSENTIEL · ${progress.done}/${progress.total} · ${progress.lastSpecies || '…'}`
                 : `0-cold-start prêt · ${progress.done}/${progress.total} espèces`}
             </div>
           </div>

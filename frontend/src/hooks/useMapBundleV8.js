@@ -2,21 +2,61 @@
  * useMapBundleV8 — Hook V20-PERFORMANCE-Omega
  * ============================================
  * PHASE-PERFORMANCE-Omega: Consomme /api/v20/territoire/bundle (cache TTL 24h).
- * Fallback automatique vers /api/v8/institutional/territoire si V20 indisponible.
- * ZERO source legacy. ZERO degradation visuelle. ZERO recalcul inutile.
  *
  * P22ΩΩ_PRECHARGEMENT_INTELLIGENT 2026-05-14 — utilise le cache GLOBAL window
- * partagé avec IntelligentPreloadWidget pour bénéficier des préchargements Premium.
+ * partagé avec IntelligentPreloadWidget.
+ *
+ * P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER 2026-05-18 — Profil 2-passes :
+ *  1. T0 : affiche immédiatement le bundle ESSENTIEL (terrain + meteo +
+ *     zones + hotspots + salines + species, sans corridors_vitaux ni affuts détaillés).
+ *  2. T+Δ : re-fetch silencieux après 12s pour récupérer le bundle ENRICHI
+ *     (le BG_CACHE backend a complété entre-temps). Si la nouvelle réponse
+ *     a `bundle_tier === "ENRICHI_TDELTA"` ou `"COMPLET_T0"`, on met à jour
+ *     silencieusement la carte sans relancer le squelette.
  */
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { buildBundleCacheKey, bundleCacheGet, bundleCacheSet } from '../lib/bionicBundleCache';
+import { buildBundleCacheKey, bundleCacheGet, bundleCacheSet, bundleCacheTier } from '../lib/bionicBundleCache';
 
 const API = process.env.REACT_APP_BACKEND_URL;
+
+// P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER : délais re-fetch silencieux
+const REFETCH_DELAYS_MS = [12000, 25000]; // 12s puis 25s
 
 const useMapBundleV8 = () => {
   const [bundleData, setBundleData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [bundleTier, setBundleTier] = useState(null); // ESSENTIEL_T0 | ENRICHI_TDELTA | COMPLET_T0
   const abortRef = useRef(null);
+  const refetchTimersRef = useRef([]);
+
+  const _clearRefetchTimers = () => {
+    refetchTimersRef.current.forEach((t) => clearTimeout(t));
+    refetchTimersRef.current = [];
+  };
+
+  // Re-fetch silencieux : ne modifie pas le loading state, met à jour
+  // bundleData uniquement si le nouveau bundle est de tier supérieur.
+  const _silentRefetch = useCallback(async (cacheKey, url) => {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) return null;
+      const newTier = res.headers.get('X-Bundle-Tier') || '';
+      const data = await res.json();
+      const dataTier = data.bundle_tier || newTier || 'ESSENTIEL_T0';
+      // Mise à jour SILENCIEUSE uniquement si on monte de tier
+      if (dataTier === 'ENRICHI_TDELTA' || dataTier === 'COMPLET_T0') {
+        bundleCacheSet(cacheKey, data);
+        setBundleData(data);
+        setBundleTier(dataTier);
+        console.info(`[P22ΩΩ_ESSENTIEL_1WORKER] Silent refetch upgraded bundle → ${dataTier}`);
+        return data;
+      }
+      return null;
+    } catch (e) {
+      // Silencieux : pas de console.error
+      return null;
+    }
+  }, []);
 
   const fetchBundle = useCallback(async (lat, lon, species = 'cerf', month, hour, windDeg) => {
     if (!lat || !lon) return null;
@@ -31,6 +71,17 @@ const useMapBundleV8 = () => {
     const cached = bundleCacheGet(cacheKey);
     if (cached) {
       setBundleData(cached);
+      const cTier = cached.bundle_tier || bundleCacheTier(cacheKey) || 'ESSENTIEL_T0';
+      setBundleTier(cTier);
+      // Si on n'a que l'ESSENTIEL_T0 en cache, programmer re-fetch silencieux T+Δ
+      if (cTier === 'ESSENTIEL_T0') {
+        const url = `${API}/api/v20/territoire/bundle?lat=${lat}&lon=${lon}&species=${species}&month=${m}&hour=${h}&wind_deg=${w}`;
+        _clearRefetchTimers();
+        REFETCH_DELAYS_MS.forEach((delay) => {
+          const t = setTimeout(() => _silentRefetch(cacheKey, url), delay);
+          refetchTimersRef.current.push(t);
+        });
+      }
       return cached;
     }
 
@@ -38,22 +89,18 @@ const useMapBundleV8 = () => {
     abortRef.current = new AbortController();
 
     setLoading(true);
+    _clearRefetchTimers();
 
-    // P22ΩΩ_BUNDLE_DEGRADED_CACHE · 2026-05-14 · COMMANDANT STEEVE-MAX
-    // Retry automatique sur 502/504 (cold-start backend V10) :
-    // - 1er hit utilisateur : peut subir 502 K8s (single worker uvicorn saturé)
-    // - Backend BG_CACHE met le bundle V10 complet en cache après 50s
-    // - 2e hit (notre retry) : HIT cache → bundle complet renvoyé en <1s
-    // Backoff : 2s puis 8s (laisser BG_CACHE le temps de finir le V10).
+    // Retry automatique sur 502/504 (cold-start backend V10)
     const RETRY_DELAYS_MS = [2000, 8000];
     const url = `${API}/api/v20/territoire/bundle?lat=${lat}&lon=${lon}&species=${species}&month=${m}&hour=${h}&wind_deg=${w}`;
 
     for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt += 1) {
       try {
         const res = await fetch(url, { signal: abortRef.current.signal });
-        // Retry sur 502/503/504 (cold-start backend)
         if ((res.status === 502 || res.status === 503 || res.status === 504) && attempt < RETRY_DELAYS_MS.length) {
           console.warn(`[V20-PERFORMANCE] Bundle ${res.status} attempt ${attempt + 1}, retry in ${RETRY_DELAYS_MS[attempt]}ms`);
+          // eslint-disable-next-line no-await-in-loop
           await new Promise((r) => setTimeout(r, RETRY_DELAYS_MS[attempt]));
           continue;
         }
@@ -61,20 +108,31 @@ const useMapBundleV8 = () => {
           setLoading(false);
           return null;
         }
+        // eslint-disable-next-line no-await-in-loop
         const data = await res.json();
+        const tier = data.bundle_tier || res.headers.get('X-Bundle-Tier') || 'ESSENTIEL_T0';
         setBundleData(data);
-        // P22ΩΩ — écriture dans le cache LRU GLOBAL window (partagé)
+        setBundleTier(tier);
         bundleCacheSet(cacheKey, data);
         setLoading(false);
+        // P22ΩΩ_ESSENTIEL_1WORKER : si on a reçu ESSENTIEL_T0, programmer re-fetch
+        // silencieux pour récupérer la version ENRICHI_TDELTA après BG_CACHE.
+        if (tier === 'ESSENTIEL_T0') {
+          console.info('[P22ΩΩ_ESSENTIEL_1WORKER] T0 reçu → programmation re-fetch T+Δ');
+          REFETCH_DELAYS_MS.forEach((delay) => {
+            const t = setTimeout(() => _silentRefetch(cacheKey, url), delay);
+            refetchTimersRef.current.push(t);
+          });
+        }
         return data;
       } catch (err) {
         if (err.name === 'AbortError') {
           setLoading(false);
           return null;
         }
-        // Sur erreur réseau / timeout, retry si tentatives restantes
         if (attempt < RETRY_DELAYS_MS.length) {
           console.warn(`[V20-PERFORMANCE] Bundle network error attempt ${attempt + 1}, retry in ${RETRY_DELAYS_MS[attempt]}ms:`, err.message || err);
+          // eslint-disable-next-line no-await-in-loop
           await new Promise((r) => setTimeout(r, RETRY_DELAYS_MS[attempt]));
           continue;
         }
@@ -85,15 +143,19 @@ const useMapBundleV8 = () => {
     }
     setLoading(false);
     return null;
-  }, []);
+  }, [_silentRefetch]);
 
   useEffect(() => {
-    return () => { if (abortRef.current) abortRef.current.abort(); };
+    return () => {
+      if (abortRef.current) abortRef.current.abort();
+      _clearRefetchTimers();
+    };
   }, []);
 
   return {
     bundleData,
     loading,
+    bundleTier, // 🌟 P22ΩΩ_ESSENTIEL_1WORKER : ESSENTIEL_T0 | ENRICHI_TDELTA | COMPLET_T0
     fetchBundle,
     zones: bundleData?.zones || [],
     corridors: bundleData?.corridors || [],

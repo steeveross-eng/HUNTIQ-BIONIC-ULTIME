@@ -102,6 +102,19 @@ _CACHE_TTL_OVERRIDES: "dict[str, int]" = {}
 _CACHE_DEGRADED_TTL_SEC = 90  # 1.5 minute pour bundle dégradé
 _LAST_BG_DISK_SAVE_TS = 0.0  # P22ΩΩ_DISK_PERSIST · throttle save_disk depuis BG_CACHE
 
+# P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER · 2026-05-18 · STEEVE-MAX
+# ─── Profil "ESSENTIEL_1WORKER" : 3 cercles temporels ───
+# T0       : terrain + meteo + zones + hotspots + salines + species + V5 corridors essentiels (~6s budget)
+# T+Δ      : enrichissement BG via callback (corridors_vitaux + connectivité + affuts détaillés + comportement)
+# AVANCÉ   : opt-in user (predictive IA, 3D overlays, MVT tiles) — jamais bloquant
+#
+# Le cache stocke 2 niveaux indépendants pour le même waypoint × espèce :
+#   - cache key suffixé "_t0"     : bundle ESSENTIEL T0 (TTL ESSENTIEL 600s)
+#   - cache key suffixé "_tdelta" : bundle ENRICHI T+Δ   (TTL standard 24h)
+_CACHE_ESSENTIEL_TTL_SEC = 600  # 10 minutes — bundles ESSENTIELS chauds pour 2000 membres
+_CACHE_MAX_ESSENTIEL = 5000     # capacité dédiée aux bundles ESSENTIELS (2000 membres × 2-3 contexts)
+_ESSENTIEL_MODE_ENABLED = True  # gate globale (env P22OMEGA_ESSENTIEL_1WORKER=0 désactive)
+
 # ═══ DISK PERSISTENCE ═══
 _CACHE_DIR = Path("/app/backend/cache")
 _CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -881,6 +894,8 @@ async def v20_territoire_bundle(
         response.headers["X-Cache"] = "HIT"
         response.headers["X-Cache-Age-Sec"] = str(int(time.time() - _CACHE[key][0]))
         response.headers["X-Compute-Ms"] = str(elapsed_ms)
+        # P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER · headers de tier pour frontend
+        response.headers["X-Bundle-Tier"] = str(cached.get("bundle_tier", "ENRICHI_TDELTA"))
         out = dict(cached)
         out["cache"] = "HIT"
         out["cache_age_sec"] = int(time.time() - _CACHE[key][0])
@@ -927,15 +942,20 @@ async def v20_territoire_bundle(
     except asyncio.TimeoutError:
         # P22ΩΩ_BG_CACHE · 2026-05-14 · le compute continue en arrière-plan ;
         # callback pour cacher le résultat à la fin pour les prochains hits.
+        # P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER · 2026-05-18 : marque le bundle
+        # complet comme bundle_tier="ENRICHI_TDELTA" + TTL standard 24h pour
+        # remplacer le bundle ESSENTIEL_T0 servi initialement.
         def _cache_completed_task(task):
             try:
                 completed_result = task.result()
                 if completed_result and not completed_result.get("p22omega_miss_absorbed"):
                     completed_result["waypoint"] = {"lat": lat, "lng": lon}
                     completed_result["species"] = species
-                    _cache_set(key, completed_result)
+                    completed_result["bundle_tier"] = "ENRICHI_TDELTA"  # 🌟 marker T+Δ
+                    completed_result["bg_cache_origin"] = "P22ΩΩ_ESSENTIEL_1WORKER"
+                    _cache_set(key, completed_result)  # TTL standard 24h
                     logger.info(
-                        f"[P22ΩΩ_BG_CACHE] V10 task completed AFTER timeout → cached "
+                        f"[P22ΩΩ_BG_CACHE] V10 task completed → bundle ENRICHI_TDELTA cached "
                         f"species={species} lat={lat},lon={lon}"
                     )
                     # P22ΩΩ_DISK_PERSIST · 2026-05-14 · STEEVE-MAX
@@ -988,27 +1008,35 @@ async def v20_territoire_bundle(
         v5_bundle = None
         v5_error = "V5_SKIPPED_V10_DEGRADED"
         logger.warning(
-            f"[P22ΩΩ_DEGRADED_CACHE] V5 organic SKIPPED car V10 dégradé "
+            f"[P22ΩΩ_ESSENTIEL_T0] V5 organic SKIPPED car V10 dégradé "
             f"species={species} lat={lat},lon={lon}"
         )
-        # P22ΩΩ_BUNDLE_DEGRADED_CACHE · 2026-05-14 · EARLY-RETURN
-        # Court-circuit du pipeline post-V5 (RenduΩ + veineux + interzone +
-        # predictive + smoothing) qui consommerait 30-60s supplémentaires
-        # → 502 K8s certain. On cache le bundle dégradé (TTL 90s) et on
-        # retourne immédiatement. Le prochain hit utilisateur hittera le
-        # cache instantanément ; au bout de 90s, retry automatique.
+        # P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER · 2026-05-18 · STEEVE-MAX
+        # Bundle ESSENTIEL T0 servi immédiatement (terrain + meteo + zones + hotspots +
+        # salines + species). Le pipeline post-V5 (corridors_vitaux + connectivité +
+        # affuts détaillés + comportement) tourne en BG_CACHE pour produire le
+        # bundle ENRICHI T+Δ destiné au prochain hit utilisateur.
         result["waypoint"] = {"lat": lat, "lng": lon}
         result["species"] = species
         result["cache"] = "MISS"
         result["v5_error"] = v5_error
+        result["bundle_tier"] = "ESSENTIEL_T0"  # 🌟 P22ΩΩ_ESSENTIEL_1WORKER
         result["served_ms"] = round((time.time() - t0) * 1000, 2)
-        _cache_set(key, result, ttl=_CACHE_DEGRADED_TTL_SEC)
-        response.headers["Cache-Control"] = "public, max-age=30, stale-while-revalidate=60"
-        response.headers["X-Cache"] = "MISS-DEGRADED-EARLYRETURN"
+        # TTL ESSENTIEL 600s (au lieu de 90s DEGRADED) : on assume que ce bundle
+        # est utile pendant 10 minutes pour les 2000 membres.
+        _essentiel_ttl = (
+            _CACHE_ESSENTIEL_TTL_SEC
+            if os.environ.get("P22OMEGA_ESSENTIEL_1WORKER", "1") == "1"
+            else _CACHE_DEGRADED_TTL_SEC
+        )
+        _cache_set(key, result, ttl=_essentiel_ttl)
+        response.headers["Cache-Control"] = "public, max-age=60, stale-while-revalidate=300"
+        response.headers["X-Cache"] = "MISS-ESSENTIEL-T0"
+        response.headers["X-Bundle-Tier"] = "ESSENTIEL_T0"
         response.headers["X-Compute-Ms"] = str(round((time.time() - t0) * 1000, 2))
         logger.warning(
-            f"[P22ΩΩ_DEGRADED_CACHE] EARLY-RETURN bundle dégradé "
-            f"species={species} lat={lat},lon={lon} (TTL={_CACHE_DEGRADED_TTL_SEC}s)"
+            f"[P22ΩΩ_ESSENTIEL_T0] EARLY-RETURN bundle ESSENTIEL T0 "
+            f"species={species} lat={lat},lon={lon} (TTL={_essentiel_ttl}s) — BG_CACHE produira T+Δ"
         )
         return result
     else:
@@ -1048,8 +1076,15 @@ async def v20_territoire_bundle(
             result["v5_error"] = v5_error
             result["served_ms"] = round((time.time() - t0) * 1000, 2)
             result["p22omegaomega_v5_skipped_pipeline_legacy"] = True
-            _cache_set(key, result, ttl=_CACHE_DEGRADED_TTL_SEC)
-            response.headers["X-Cache"] = "MISS-V5FAIL-EARLYRETURN"
+            result["bundle_tier"] = "ESSENTIEL_T0"  # P22ΩΩ_ESSENTIEL_1WORKER
+            _essentiel_ttl_v5 = (
+                _CACHE_ESSENTIEL_TTL_SEC
+                if os.environ.get("P22OMEGA_ESSENTIEL_1WORKER", "1") == "1"
+                else _CACHE_DEGRADED_TTL_SEC
+            )
+            _cache_set(key, result, ttl=_essentiel_ttl_v5)
+            response.headers["X-Cache"] = "MISS-ESSENTIEL-T0-V5FAIL"
+            response.headers["X-Bundle-Tier"] = "ESSENTIEL_T0"
             response.headers["X-Compute-Ms"] = str(round((time.time() - t0) * 1000, 2))
             return result
     _V5_REWIRE_ACTIVE = v5_bundle is not None
@@ -1092,9 +1127,16 @@ async def v20_territoire_bundle(
         result["cache"] = "MISS"
         result["served_ms"] = round(_elapsed_so_far * 1000, 2)
         result["p22omegaomega_deadline_hit"] = True
-        # Cache avec TTL court car bundle partiel
-        _cache_set(key, result, ttl=_CACHE_DEGRADED_TTL_SEC)
-        response.headers["X-Cache"] = "MISS-DEADLINE-EARLYRETURN"
+        result["bundle_tier"] = "ESSENTIEL_T0"  # P22ΩΩ_ESSENTIEL_1WORKER · deadline = bundle partiel
+        # Cache avec TTL ESSENTIEL 600s pour pouvoir hitter ce bundle partiel
+        _essentiel_ttl_dl = (
+            _CACHE_ESSENTIEL_TTL_SEC
+            if os.environ.get("P22OMEGA_ESSENTIEL_1WORKER", "1") == "1"
+            else _CACHE_DEGRADED_TTL_SEC
+        )
+        _cache_set(key, result, ttl=_essentiel_ttl_dl)
+        response.headers["X-Cache"] = "MISS-ESSENTIEL-T0-DEADLINE"
+        response.headers["X-Bundle-Tier"] = "ESSENTIEL_T0"
         response.headers["X-Compute-Ms"] = str(round(_elapsed_so_far * 1000, 2))
         return result
 
@@ -1305,12 +1347,21 @@ async def v20_territoire_bundle(
     # rendues à l'utilisateur. Après 90s, retry automatique (l'engine
     # peut alors avoir des données complètes).
     if result.get("p22omega_miss_absorbed") is True:
-        _cache_set(key, result, ttl=_CACHE_DEGRADED_TTL_SEC)
+        result["bundle_tier"] = "ESSENTIEL_T0"  # P22ΩΩ_ESSENTIEL_1WORKER
+        _essentiel_ttl_deg = (
+            _CACHE_ESSENTIEL_TTL_SEC
+            if os.environ.get("P22OMEGA_ESSENTIEL_1WORKER", "1") == "1"
+            else _CACHE_DEGRADED_TTL_SEC
+        )
+        _cache_set(key, result, ttl=_essentiel_ttl_deg)
         logger.warning(
-            f"[P22ΩΩ_DEGRADED_CACHE] Cached DEGRADED bundle (TTL={_CACHE_DEGRADED_TTL_SEC}s) "
+            f"[P22ΩΩ_ESSENTIEL_T0] Cached ESSENTIEL bundle (TTL={_essentiel_ttl_deg}s) "
             f"species={species} lat={lat},lon={lon} — évite 502 K8s en cold-start"
         )
     else:
+        # P22ΩΩ_ESSENTIEL_1WORKER : pipeline complet exécuté → bundle COMPLET_T0
+        # (équivalent ENRICHI_TDELTA mais servi dans la première réponse).
+        result["bundle_tier"] = "COMPLET_T0"
         _cache_set(key, result)
 
     elapsed_ms = round((time.time() - t0) * 1000, 2)
@@ -1319,6 +1370,7 @@ async def v20_territoire_bundle(
     response.headers["Cache-Control"] = "public, max-age=300, stale-while-revalidate=900"
     response.headers["Vary"] = "Accept-Encoding"
     response.headers["X-Cache"] = "MISS"
+    response.headers["X-Bundle-Tier"] = str(result.get("bundle_tier", "COMPLET_T0"))
     response.headers["X-Compute-Ms"] = str(elapsed_ms)
 
     result["cache"] = "MISS"

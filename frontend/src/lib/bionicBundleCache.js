@@ -15,9 +15,14 @@ const GLOBAL_KEY = '__BIONIC_BUNDLE_CACHE_V1';
 
 if (typeof window !== 'undefined' && !window[GLOBAL_KEY]) {
   window[GLOBAL_KEY] = {
-    store: new Map(), // key → { data, ts }
-    maxEntries: 128,
-    defaultTtlMs: 90 * 1000,
+    store: new Map(), // key → { data, ts, tier }
+    // P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER · 2026-05-18 · STEEVE-MAX
+    // Capacité 5 000 entrées + TTL 600s adapté pour 2 000 membres
+    // (aligné backend _CACHE_ESSENTIEL_TTL_SEC = 600s).
+    maxEntries: 5000,
+    defaultTtlMs: 600 * 1000, // 10 min pour bundles ESSENTIELS
+    essentielTtlMs: 600 * 1000,
+    completTtlMs: 24 * 3600 * 1000, // 24h pour bundles COMPLET_T0 / ENRICHI_TDELTA
   };
 }
 
@@ -39,7 +44,15 @@ export const bundleCacheGet = (key) => {
   if (!root) return null;
   const entry = root.store.get(key);
   if (!entry) return null;
-  if (Date.now() - entry.ts > root.defaultTtlMs) {
+  // P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER : TTL adaptatif selon tier
+  // - ESSENTIEL_T0 : 600s
+  // - COMPLET_T0 / ENRICHI_TDELTA : 24h
+  const tier = entry.tier || (entry.data && entry.data.bundle_tier) || 'ESSENTIEL_T0';
+  const ttl =
+    tier === 'COMPLET_T0' || tier === 'ENRICHI_TDELTA'
+      ? root.completTtlMs
+      : root.essentielTtlMs;
+  if (Date.now() - entry.ts > ttl) {
     root.store.delete(key);
     return null;
   }
@@ -56,7 +69,20 @@ export const bundleCacheSet = (key, data) => {
     const oldest = root.store.keys().next().value;
     if (oldest !== undefined) root.store.delete(oldest);
   }
-  root.store.set(key, { data, ts: Date.now() });
+  const tier = (data && data.bundle_tier) || 'ESSENTIEL_T0';
+  root.store.set(key, { data, ts: Date.now(), tier });
+};
+
+/**
+ * P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER : indique si le bundle dans le cache est
+ * ESSENTIEL_T0 (donc remplaçable par une version enrichie via re-fetch silencieux).
+ */
+export const bundleCacheTier = (key) => {
+  const root = _root();
+  if (!root) return null;
+  const entry = root.store.get(key);
+  if (!entry) return null;
+  return entry.tier || (entry.data && entry.data.bundle_tier) || 'ESSENTIEL_T0';
 };
 
 export const bundleCacheStats = () => {

@@ -16,8 +16,12 @@
 import React, { useEffect, useState } from 'react';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const MIN_DURATION_MS = 3000;
-const MAX_DURATION_MS = 5000;
+// P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER · 2026-05-18 · STEEVE-MAX
+// Durées drastiquement réduites pour permettre l'affichage <1s perçu.
+// Le splash devient un flash de cohérence (500ms min), pas un blocage 3-5s.
+// Carte + HUD se montent en arrière-plan pendant le splash → squelette instantané.
+const MIN_DURATION_MS = 500;
+const MAX_DURATION_MS = 2000;
 
 const STEPS = [
   { id: 'health', label: 'Vérification protections Ω · V30 LOCKED', endpoint: '/api/v30/territoire/health' },

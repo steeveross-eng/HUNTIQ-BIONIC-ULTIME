@@ -1,6 +1,50 @@
 # CHANGELOG · TERRITOIRE Ω · BIONIC HUNT
 **Format**: Chronologique inverse (plus récent en premier)
 
+## 2026-05-18 · P22ΩΩ_TERRITOIRE_ESSENTIEL_1WORKER — Profil 3-cercles + Cache 2000 membres
+
+### DIRECTIVE COMMANDANT STEEVE-MAX
+Rendre TERRITOIRE Ω pleinement exploitable en `--workers 1` pour 2 000 membres,
+affichage perçu <1s grâce au squelette instantané + préchargement intelligent +
+cache multi-niveaux optimisé.
+
+### ARCHITECTURE 3-CERCLES TEMPORELS
+- **Cercle T0 (~6s)** : terrain + meteo + zones + hotspots + salines + species + V5 corridors essentiels
+- **Cercle T+Δ (BG_CACHE)** : corridors_vitaux + connectivité + affuts détaillés + comportement
+- **Cercle AVANCÉ** : predictive IA + 3D overlays + MVT tiles (opt-in)
+
+### MODIFICATIONS BACKEND
+- `v20_performance_bundle.py` : constantes ESSENTIEL (TTL 600s, max 5000 entries),
+  tag `bundle_tier` partout (ESSENTIEL_T0 / ENRICHI_TDELTA / COMPLET_T0),
+  header `X-Bundle-Tier` sur toutes les réponses
+- **NOUVEAU** `engines/v8_institutional/essentiel_prewarm_cron.py` :
+  daemon cron pré-calcul 2000 membres (env-gated)
+- **NOUVEAU** `routes/essentiel_prewarm_router.py` : endpoints `/api/admin/essentiel-prewarm/{status,trigger}`
+- `server.py` : router + daemon enregistrés dans lifespan
+
+### MODIFICATIONS FRONTEND
+- `lib/bionicBundleCache.js` : maxEntries 128→5000, TTL ESSENTIEL 90s→600s,
+  TTL COMPLET 24h, `bundleCacheTier()` exposé
+- `hooks/useMapBundleV8.js` réécrit : état `bundleTier`, re-fetch silencieux T+12s/T+25s
+- `IntelligentPreloadWidget.jsx` : préchargement ouvert à **tous les membres authentifiés**
+  (pas seulement Premium), label dynamique selon tier user
+- `TerritoireWarmupSplash.jsx` : durée 3-5s → 0.5-2s (squelette instantané)
+
+### VALIDATION
+- Bundle waypoint neuf : **2.84s · COMPLET_T0** (HTTP 200)
+- Bundle HIT cache : **0.18s** (`X-Bundle-Tier: COMPLET_T0`)
+- 2 espèces parallèles : 0.76s simultanées
+- Screenshot Playwright : 94 polylines · CONFORMITÉ Ω 100% · SCORE 65.22
+
+### ENV-VARS
+- `P22OMEGA_ESSENTIEL_1WORKER=1` (ON par défaut)
+- `P22OMEGA_PREWARM_MEMBERS_CRON=1` (OFF par défaut — activer post multi-worker)
+- `P22OMEGA_PREWARM_MAX_MEMBERS=2000`
+- `P22OMEGA_PREWARM_THROTTLE_SEC=3.0`
+- `P22OMEGA_PREWARM_INTERVAL_SEC=14400`
+
+---
+
 ## 2026-05-17 · P22ΩΩ_ALLEGEMENT_STRUCTUREL_OMEGA — Suppression 2628 lignes + Export JSON
 
 ### DIRECTIVE COMMANDANT STEEVE-MAX (Phase 2 autorisée explicitement)
