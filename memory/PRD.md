@@ -216,6 +216,25 @@ Persona BCE-4X non-déviante.
     - endpoints legacy V8 : toujours 404 (préservé conformément à la doctrine)
   - **2 derniers 404 console DevTools éliminés** : `/api/v8/map/relocalisation` + `/salines`
   - **V30_LOCK** respecté · aucune modification fonctionnelle TERRITOIRE Ω
+- ✅ **P22ΩΩ_PALIER_3_MIGRATION_V7_SPATIAL_Ω** (2026-05-18) — Migration V7 SPATIAL vers Ω:
+  - **Nouveau router proxy** `routes/territoire_omega_spatial_router.py` (114 L) :
+    - `GET /api/v20/territoire/spatial/heatmap` (proxy → V7 heatmap, 23 moteurs + nutrition + temporal)
+    - `GET /api/v20/territoire/spatial/score` (proxy → V7 scoring)
+    - `GET /api/v20/territoire/spatial/status`
+    - Mode : **PROXY PURE** — délégation aux fonctions V7 par import direct (aucune duplication logique)
+    - Tag `served_by=TERRITOIRE-Ω-SPATIAL-ROUTER` + `upstream_engine` pour traçabilité
+  - **Re-câblage frontend** (2 composants) :
+    - `components/territoire/ConsolidatedHeatmapLayer.jsx` : 3 occurrences `v7/spatial/heatmap` → `v20/territoire/spatial/heatmap` (3 fetch + retry DataCloneError)
+    - `components/territoire/BionicScoreBadge.jsx` : 2 occurrences `v7/spatial/scoring` → `v20/territoire/spatial/score`
+    - `hooks/useBionicScoring.js` : header docstring corrigé (utilisait déjà `/v1/v51/intelligence/v7/score-chasse`, hors V7 spatial)
+  - **Désactivation V7 legacy HTTP** : `server.py:821-830` router V7 spatial commenté (module Python toujours importé pour délégation Ω)
+  - **Validation externe proxy K8s** :
+    - Ω heatmap : 200 OK · 144 points · 3.7s · `served_by=TERRITOIRE-Ω-SPATIAL-ROUTER`
+    - Ω score : 200 OK · `spatial_score=51.3 rating=adequat` · 3.3s
+    - V7 legacy `/api/v7/spatial/{heatmap,scoring}` → **404 propre** (désactivé)
+    - Bundle V20 intact : 14 corridors · 5 zones · 4 salines · 148ms (cache HIT)
+  - **V30_LOCK** respecté · aucune modification scoring V7 (délégation pure)
+  - **Console DevTools COMMANDANT** : aucun appel résiduel `/api/v7/spatial/*` côté frontend
 
 ## PENDING / KNOWN ISSUES
 - ⚠️ **Single-worker uvicorn** : code SYNC dans `compute_territoire_v10` (1 await,

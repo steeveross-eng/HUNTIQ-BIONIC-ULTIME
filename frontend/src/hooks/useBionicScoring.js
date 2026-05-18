@@ -1,8 +1,10 @@
 /**
  * useBionicScoring Hook
  * Calcule les scores BIONIC pour un waypoint ou une position
- * RECABLE V7: Integre /api/v7/spatial/scoring + score_chasse_v7
- * dataVersion: V7 — BCE-4X TRACE-LOG-Omega
+ * P22ΩΩ_PALIER_3_MIGRATION_V7_SPATIAL_Ω · 2026-05-18 · STEEVE-MAX
+ *   Note : ce hook utilise /api/v1/v51/intelligence/v7/score-chasse (Intelligence V7)
+ *   et NON pas /api/v7/spatial/scoring. Aucune migration requise ici.
+ * dataVersion: Ω — BCE-4X TRACE-LOG-Omega
  */
 
 import { useState, useCallback, useRef } from 'react';

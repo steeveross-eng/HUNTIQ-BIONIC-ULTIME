@@ -1,7 +1,11 @@
 /**
  * ConsolidatedHeatmapLayer.jsx — Score consolidé multi-moteurs (data-only)
- * RECABLE V7: Consomme /api/v7/spatial/heatmap (SPATIAL-ENGINE-V7)
- * dataVersion: V7 — BCE-4X TRACE-LOG-Omega
+ *
+ * P22ΩΩ_PALIER_3_MIGRATION_V7_SPATIAL_Ω · 2026-05-18 · STEEVE-MAX
+ * Migration : /api/v7/spatial/heatmap → /api/v20/territoire/spatial/heatmap (Ω)
+ * Logique métier inchangée — endpoint Ω délègue à SPATIAL-ENGINE-V7 (V30_LOCK).
+ *
+ * dataVersion: Ω — BCE-4X TRACE-LOG-Omega
  */
 import { useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '@/components/GlobalAuth';
@@ -46,18 +50,18 @@ const ConsolidatedHeatmapLayer = ({
         species: species === 'CERF' ? 'cerf' : species.toLowerCase(),
         month, grid_size: 12,
       });
-      // V7 RECABLE: SPATIAL-ENGINE-V7
-      const res = await fetch(`${apiUrl}/api/v7/spatial/heatmap?${params}`, {
+      // P22ΩΩ_PALIER_3_MIGRATION_V7_SPATIAL_Ω — Endpoint Ω
+      const res = await fetch(`${apiUrl}/api/v20/territoire/spatial/heatmap?${params}`, {
         headers,
         signal: abortRef.current.signal,
       });
       if (!res.ok) return;
       const data = await res.json();
 
-      // Adapter la sortie V7 au format attendu par le callback
+      // Adapter la sortie au format attendu par le callback
       const adapted = {
         ...data,
-        dataVersion: 'V7',
+        dataVersion: data.dataVersion || 'Ω',
         score_global: data.points ? Math.round(data.points.reduce((s, p) => s + p.score, 0) / data.points.length) : 0,
         grid: data.points || [],
       };
@@ -76,16 +80,16 @@ const ConsolidatedHeatmapLayer = ({
             lat: centerLat, lon: centerLng,
             species: species === 'CERF' ? 'cerf' : species.toLowerCase(), month, grid_size: 12,
           });
-          const retryRes = await fetch(`${apiUrl}/api/v7/spatial/heatmap?${params}`, { headers: retryHeaders });
+          const retryRes = await fetch(`${apiUrl}/api/v20/territoire/spatial/heatmap?${params}`, { headers: retryHeaders });
           if (retryRes.ok) {
             const data = await retryRes.json();
-            const adapted = { ...data, dataVersion: 'V7', score_global: data.points ? Math.round(data.points.reduce((s, p) => s + p.score, 0) / data.points.length) : 0, grid: data.points || [] };
+            const adapted = { ...data, dataVersion: data.dataVersion || 'Ω', score_global: data.points ? Math.round(data.points.reduce((s, p) => s + p.score, 0) / data.points.length) : 0, grid: data.points || [] };
             cacheRef.current = adapted;
             if (lastKeyRef.current === key && onDataLoadedRef.current) onDataLoadedRef.current(adapted);
           }
-        } catch (retryErr) { console.error('[HEATMAP-V7] Retry failed:', retryErr); }
+        } catch (retryErr) { console.error('[HEATMAP-Ω] Retry failed:', retryErr); }
       } else {
-        console.error('[HEATMAP-V7]', err);
+        console.error('[HEATMAP-Ω]', err);
       }
     }
   }, [centerLat, centerLng, species, month, enabled, includeCorridors, token]);

@@ -32,12 +32,12 @@ export const BionicScoreBadge = ({ center, species = 'cerf', month = 10, compact
     const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
     try {
-      // DELETE-LEGACY-V6: Recable vers SPATIAL-ENGINE-V7
+      // P22ΩΩ_PALIER_3_MIGRATION_V7_SPATIAL_Ω — Endpoint Ω (proxy V7)
       const headers = {};
       const token = localStorage.getItem('token');
       if (token) headers.Authorization = `Bearer ${token}`;
       const res = await fetch(
-        `${apiUrl}/api/v7/spatial/scoring?lat=${center.lat}&lon=${center.lng}&species=${sp.toLowerCase()}&month=${month}`,
+        `${apiUrl}/api/v20/territoire/spatial/score?lat=${center.lat}&lon=${center.lng}&species=${sp.toLowerCase()}&month=${month}`,
         { headers, signal: abortRef.current.signal }
       );
       if (res.ok) {
@@ -45,7 +45,7 @@ export const BionicScoreBadge = ({ center, species = 'cerf', month = 10, compact
         setScore({
           score_global: data.spatial_score,
           classe: data.rating === 'premium' ? 'EXCELLENT' : data.rating === 'optimal' ? 'BON' : data.rating === 'adequat' ? 'MOYEN' : 'FAIBLE',
-          dataVersion: 'V7',
+          dataVersion: data.dataVersion || 'Ω',
           ...data,
         });
       }
@@ -56,14 +56,14 @@ export const BionicScoreBadge = ({ center, species = 'cerf', month = 10, compact
           const headers = {};
           const token = localStorage.getItem('token');
           if (token) headers.Authorization = `Bearer ${token}`;
-          const retryRes = await fetch(`${apiUrl}/api/v7/spatial/scoring?lat=${center.lat}&lon=${center.lng}&species=${sp.toLowerCase()}&month=${month}`, { headers });
+          const retryRes = await fetch(`${apiUrl}/api/v20/territoire/spatial/score?lat=${center.lat}&lon=${center.lng}&species=${sp.toLowerCase()}&month=${month}`, { headers });
           if (retryRes.ok) {
             const data = await retryRes.json();
-            setScore({ score_global: data.spatial_score, classe: data.rating === 'premium' ? 'EXCELLENT' : data.rating === 'optimal' ? 'BON' : data.rating === 'adequat' ? 'MOYEN' : 'FAIBLE', dataVersion: 'V7', ...data });
+            setScore({ score_global: data.spatial_score, classe: data.rating === 'premium' ? 'EXCELLENT' : data.rating === 'optimal' ? 'BON' : data.rating === 'adequat' ? 'MOYEN' : 'FAIBLE', dataVersion: data.dataVersion || 'Ω', ...data });
           }
         } catch (_) {}
       } else {
-        console.error('[ScoreBadge]', e);
+        console.error('[ScoreBadge-Ω]', e);
       }
     }
     setLoading(false);

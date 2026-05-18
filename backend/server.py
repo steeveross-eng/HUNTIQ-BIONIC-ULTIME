@@ -818,13 +818,22 @@ try:
 except Exception as e:
     logger.warning(f"Nutrition Engine V7 not loaded: {e}")
 
-# SPATIAL-ENGINE-V7 — Moteur geospatial central V7
-try:
-    from engines.spatial_engine_v7.router import router as spatial_v7_router
-    app.include_router(spatial_v7_router)
-    logger.info("✓ SPATIAL-ENGINE-V7 registered (/api/v7/spatial) — 6 endpoints")
-except Exception as e:
-    logger.warning(f"Spatial Engine V7 not loaded: {e}")
+# SPATIAL-ENGINE-V7 — P22ΩΩ_PALIER_3_MIGRATION_V7_SPATIAL_Ω · 2026-05-18 · STEEVE-MAX
+# Router HTTP /api/v7/spatial/* DÉSACTIVÉ — endpoints exposés désormais via
+# /api/v20/territoire/spatial/{heatmap,score,status} (router Ω proxy).
+# Le module Python `engines.spatial_engine_v7.router` reste IMPORTÉ par le router Ω
+# pour la délégation métier (logique scoring V7 préservée intégralement, V30_LOCK).
+# Pour réactiver le routing HTTP V7 legacy : décommenter les 2 lignes ci-dessous.
+# try:
+#     from engines.spatial_engine_v7.router import router as spatial_v7_router
+#     app.include_router(spatial_v7_router)
+#     logger.info("✓ SPATIAL-ENGINE-V7 registered (/api/v7/spatial) — 6 endpoints")
+# except Exception as e:
+#     logger.warning(f"Spatial Engine V7 not loaded: {e}")
+logger.info(
+    "[P22ΩΩ.PALIER_3] SPATIAL-ENGINE-V7 HTTP router DISABLED — "
+    "remplacé par /api/v20/territoire/spatial/* (Ω proxy)"
+)
 
 # SUPRA-ENGINE-V7 — Moteur decisionnel central V7
 try:
@@ -894,6 +903,22 @@ try:
     )
 except Exception as e:
     logger.warning(f"TERRITOIRE-Ω Relocalisation+Salines router not loaded: {e}")
+
+# P22ΩΩ_PALIER_3_MIGRATION_V7_SPATIAL_Ω · 2026-05-18 · STEEVE-MAX
+# Endpoints Ω institutionnels qui délèguent à la logique métier V7 existante.
+# Frontend consommera désormais /api/v20/territoire/spatial/* au lieu de /api/v7/spatial/*.
+try:
+    from routes.territoire_omega_spatial_router import (
+        router as territoire_omega_spatial_router,
+    )
+    app.include_router(territoire_omega_spatial_router)
+    logger.info(
+        "✓ TERRITOIRE-Ω-SPATIAL registered — "
+        "/api/v20/territoire/spatial/{heatmap,score,status} "
+        "(proxy pure → SPATIAL-ENGINE-V7, V30_LOCK respecté)"
+    )
+except Exception as e:
+    logger.warning(f"TERRITOIRE-Ω Spatial router not loaded: {e}")
 
 logger.info("[P22ΩΩ.EXTRACTION] V8-PHASE-A MIGRATED → /api/v20/territoire/{relocalisation,salines-placement}")
 
