@@ -132,6 +132,56 @@ async def lifespan(app: FastAPI):
         logger.info("✓ V20-PERFORMANCE startup hook fired (BSL5 warmup scheduled)")
     except Exception as e:
         logger.warning(f"V20 startup hook from lifespan failed: {e}", exc_info=True)
+
+    # ═══════════════════════════════════════════════════════════════════════
+    # P22ΩΩ_PREWARM_SYNCHRONE_BETA · 2026-05-18 · COMMANDANT STEEVE-MAX
+    # DIRECTIVE BCE-4X ULTIME ABSOLU — P0b option β VALIDÉE
+    # ─────────────────────────────────────────────────────────────────────
+    # OBJECTIF : Éliminer la latence cold-start de 12+ secondes sur le
+    # premier hit utilisateur de /api/v20/territoire/bundle.
+    #
+    # STRATÉGIE :
+    #   - Lance UN seul prewarm canonique (orignal @ waypoint BSL standard)
+    #     en background non-bloquant pour le boot.
+    #   - Utilise _warmup_single() qui set le contextvar warmup pour bypass
+    #     le hardcap 20s. Le cache (LRU + Redis fallback + disk) est peuplé
+    #     pour le tier le plus haut (ENRICHI_TDELTA / COMPLET_T0).
+    #   - À la première requête utilisateur sur les contextes standards,
+    #     cache HIT garanti (~50ms).
+    #
+    # PORTÉE DÉLIBÉRÉMENT RESTREINTE :
+    #   - 1 espèce primaire (orignal) × 1 contexte canonique
+    #   - Pas les daemons BSL5 complets (5 espèces × 2 contextes = 10 prewarms
+    #     séquentiels sur 60s+ → saturation worker garantie)
+    #   - Pas de prechauffage daemons périodiques (DISABLED par défaut)
+    #
+    # SOFT-FAIL : aucune exception ne bloque le boot.
+    # ═══════════════════════════════════════════════════════════════════════
+    try:
+        import asyncio as _asyncio
+        from engines.v8_institutional.v20_performance_bundle import _warmup_single
+
+        async def _prewarm_canonical_omega():
+            """Prewarm async non-bloquant — 1 espèce canonique BSL."""
+            try:
+                # Waypoint canonique BSL (Bas-Saint-Laurent, QC) — espèce primaire
+                # du COMMANDANT pour validation visuelle TERRITOIRE Ω.
+                _t = await _warmup_single(
+                    lat=48.206657,
+                    lon=-68.382422,
+                    species="orignal",
+                )
+                logger.info(
+                    f"[P22ΩΩ_PREWARM_SYNCHRONE_BETA] Canonical bundle warmed in {_t:.1f}s "
+                    f"(orignal @ 48.206657, -68.382422) — first user hit will be cache HIT"
+                )
+            except Exception as _e:
+                logger.warning(f"[P22ΩΩ_PREWARM_SYNCHRONE_BETA] Warmup failed: {_e}")
+
+        _asyncio.create_task(_prewarm_canonical_omega())
+        logger.info("✓ P22ΩΩ_PREWARM_SYNCHRONE_BETA scheduled (background, non-blocking)")
+    except Exception as e:
+        logger.warning(f"P22ΩΩ_PREWARM_SYNCHRONE_BETA scheduling failed: {e}")
     
     # P22ΩΩ — Self-audit DÉSACTIVÉ : lance des pytest subprocess qui hog le worker
     # Pour réactiver : export P22OMEGA_SELF_AUDIT=1
@@ -1548,6 +1598,22 @@ except Exception as e:
     logger.error(
         f"SCHEMA_VIOLATION PHASE_XXVI_Ω BIO_PROFILE_135: {e} · PIPELINE_PARTIAL"
     )
+
+
+# ═══ P22ΩΩ_STUBS_AUXILIAIRES_404 — STUBS 200 OK pour endpoints frontend orphelins ═══
+# (Commandant STEEVE-MAX · 2026-05-18 · DIRECTIVE P0a BCE-4X ULTIME ABSOLU)
+# Élimine les 404 console (seo/meta, bdre/dashboard, bdre/sources,
+# legal-time/status, legal-time/upcoming, sharing/notifications/anonymous).
+# Tous documentés comme « non-bloquants » par audit Phase-A.
+try:
+    from routes.stubs_auxiliary_404_omega import router as stubs_aux_router
+    app.include_router(stubs_aux_router, prefix="/api")
+    logger.info(
+        "✓ P22ΩΩ_STUBS_AUXILIAIRES_404 active : 6 endpoints stubbed — "
+        "/api/{seo/meta,v1/bdre/*,v1/notification/legal-time/*,sharing/notifications/anonymous}"
+    )
+except Exception as e:
+    logger.warning(f"P22ΩΩ_STUBS_AUXILIAIRES_404 router not loaded: {e}")
 
 
 logger.info("=" * 60)
