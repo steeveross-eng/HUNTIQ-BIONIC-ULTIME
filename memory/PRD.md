@@ -74,6 +74,17 @@ Persona BCE-4X non-déviante.
   - **Routes nouvellement 404** : 17 routes 3D/MVT (mesh-3d/*, tiles/*, corridors/active,
     zones/active, points-interet/active, buffer-600m, terrain-3d/compute)
   - **Routes préservées** : bundle V20 (cache HIT 193ms externe), santé, espèces, 11 stubs P0a
+- ✅ **P22ΩΩ_FRONTEND_FIX_GROUPS_ITERABLE_Ω** (2026-05-18) — Fix crash React TERRITOIRE :
+  - **Symptôme** : `TypeError: myGroups.owned_groups is not iterable` (écran rouge plein)
+  - **Cause** : stub backend `/api/groups/{user_id}/my-groups` renvoyait `[]` ;
+    `useHuntingGroups` init `{ owned_groups: [], member_groups: [] }` et fait
+    `[...myGroups.owned_groups, ...myGroups.member_groups]` (ligne 373)
+  - **Fix backend** : stub renvoie `{ owned_groups: [], member_groups: [] }` (shape correcte)
+  - **Fix backend** : stub `/api/sharing/sent/{user_id}` renvoie `{ email_shares: [], link_shares: [] }`
+  - **Fix frontend** : `useSharing.js` (`fetchMyGroups`, `fetchSentShares`, `allGroups`)
+    garde défensive systematique — validation `Array.isArray` + fallback objet vide en cas d'erreur
+  - **Validation Playwright** : page TERRITOIRE Ω complètement hydratée, HUD + carte + panels
+    actifs, AUCUN crash, score 100/100 corridors 55/55
 
 ## PENDING / KNOWN ISSUES
 - ⚠️ **Single-worker uvicorn** : code SYNC dans `compute_territoire_v10` (1 await,

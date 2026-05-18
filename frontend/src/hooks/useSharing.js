@@ -123,9 +123,18 @@ export const useWaypointSharing = (userId) => {
     
     try {
       const result = await apiRequest(`/api/sharing/sent/${userId}`);
-      setSentShares(result);
+      // P22ΩΩ_FRONTEND_FIX_GROUPS_ITERABLE_Ω · 2026-05-18 · STEEVE-MAX
+      // Garde défensive — l'état attend { email_shares: [], link_shares: [] }.
+      const safe = (result && typeof result === 'object' && !Array.isArray(result))
+        ? {
+            email_shares: Array.isArray(result.email_shares) ? result.email_shares : [],
+            link_shares: Array.isArray(result.link_shares) ? result.link_shares : [],
+          }
+        : { email_shares: [], link_shares: [] };
+      setSentShares(safe);
     } catch (e) {
       console.error('Error fetching sent shares:', e);
+      setSentShares({ email_shares: [], link_shares: [] });
     }
   }, [userId]);
 
@@ -215,9 +224,20 @@ export const useHuntingGroups = (userId) => {
     
     try {
       const result = await apiRequest(`/api/groups/${userId}/my-groups`);
-      setMyGroups(result);
+      // P22ΩΩ_FRONTEND_FIX_GROUPS_ITERABLE_Ω · 2026-05-18 · STEEVE-MAX
+      // Garde défensive contre payload incorrect (array, null, undefined,
+      // ou objet sans owned_groups/member_groups). Garantit forme stricte
+      // { owned_groups: [], member_groups: [] } à tout moment.
+      const safe = (result && typeof result === 'object' && !Array.isArray(result))
+        ? {
+            owned_groups: Array.isArray(result.owned_groups) ? result.owned_groups : [],
+            member_groups: Array.isArray(result.member_groups) ? result.member_groups : [],
+          }
+        : { owned_groups: [], member_groups: [] };
+      setMyGroups(safe);
     } catch (e) {
       console.error('Error fetching groups:', e);
+      setMyGroups({ owned_groups: [], member_groups: [] });
     }
   }, [userId]);
 
@@ -370,7 +390,12 @@ export const useHuntingGroups = (userId) => {
     loading,
     myGroups,
     publicGroups,
-    allGroups: [...myGroups.owned_groups, ...myGroups.member_groups],
+    // P22ΩΩ_FRONTEND_FIX_GROUPS_ITERABLE_Ω · 2026-05-18 · STEEVE-MAX
+    // Garde défensive : spread uniquement si arrays valides.
+    allGroups: [
+      ...(Array.isArray(myGroups?.owned_groups) ? myGroups.owned_groups : []),
+      ...(Array.isArray(myGroups?.member_groups) ? myGroups.member_groups : []),
+    ],
     createGroup,
     joinGroup,
     joinByCode,

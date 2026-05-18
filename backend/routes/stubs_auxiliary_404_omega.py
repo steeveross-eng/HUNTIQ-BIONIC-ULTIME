@@ -158,11 +158,15 @@ async def sharing_received_stub(user_id: str):
     return _stub_response({"shares": [], "stub": True})
 
 
-# Shape attendue : [] direct (setSentShares(result))
+# Shape attendue : { email_shares: [], link_shares: [] } (useSharing.js:33)
 @router.get("/sharing/sent/{user_id}")
 async def sharing_sent_stub(user_id: str):
-    """Stub sharing sent — aucun partage envoyé (liste vide directe)."""
-    return _stub_response([])
+    """Stub sharing sent — objet avec arrays email_shares/link_shares."""
+    return _stub_response({
+        "email_shares": [],
+        "link_shares": [],
+        "stub": True,
+    })
 
 
 # Shape attendue : { notifications: [], unread_count: 0 }
@@ -176,11 +180,16 @@ async def sharing_notifications_user_stub(user_id: str, unread_only: bool = Fals
     })
 
 
-# Shape attendue : [] direct (setMyGroups(result))
+# Shape attendue : { owned_groups: [], member_groups: [] }
+# (vérifié par useSharing.js:373 → `[...myGroups.owned_groups, ...myGroups.member_groups]`)
 @router.get("/groups/{user_id}/my-groups")
 async def groups_my_groups_stub(user_id: str):
-    """Stub groups my-groups — aucun groupe (liste vide directe)."""
-    return _stub_response([])
+    """Stub groups my-groups — objet vide avec arrays attendus par useHuntingGroups."""
+    return _stub_response({
+        "owned_groups": [],
+        "member_groups": [],
+        "stub": True,
+    })
 
 
 # Shape attendue : { alerts: [], unread_count: 0 }
