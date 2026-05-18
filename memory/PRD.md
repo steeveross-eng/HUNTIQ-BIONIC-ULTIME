@@ -1,5 +1,5 @@
 # PRD · TERRITOIRE Ω · BIONIC HUNT/CHASSE
-**Last updated**: 2026-05-18 · BCE-4X ULTIME ABSOLU · COMMANDANT STEEVE-MAX
+**Last updated**: 2026-02-XX · BCE-4X ULTIME ABSOLU · COMMANDANT STEEVE-MAX
 
 ## ORIGINAL PROBLEM STATEMENT
 PROTOCOLE BCE-4X ULTIME ABSOLU — Stabilisation exhaustive du backend et frontend
@@ -22,6 +22,22 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_BLOC_2_5_CORRIGE_DEADLINE_GATE_Ω** (2026-02-XX) — CORRECTION CRITIQUE BLOC 2.5 :
+  - **Root cause identifiée** : le bypass du cap doctrinal 5-7 corridors n'était PAS
+    causé par `_V5_REWIRE_ACTIVE` (déjà appelé inconditionnellement ligne 1476),
+    mais par le **deadline gate global 10s** (lignes 1148-1167) qui retournait
+    `result` AVANT le V5 rewire + BLOC 2.5 dans 100% des cold-starts.
+  - **Fix** : extraction `_apply_v5_rewire_to_result` + `_apply_bloc25_hierarchy_and_cap`
+    au niveau module (juste après `map_v5_corridors_to_ui`).
+  - **Branchement** : application des deux helpers dans la branche deadline
+    AVANT le `return` ESSENTIEL_T0 → bundles dégradés respectent désormais la doctrine.
+  - **Validation live** : chevreuil/orignal/ours_noir BSL retournent 7 corridors
+    (2 veine_principale + 5 veine_secondaire), `bloc_2_5_applied=True`,
+    `v5_rewire_applied=True`, `bundle_tier=ESSENTIEL_T0`, `deadline_hit=True`.
+  - **Validation MFFP** : wapiti/dindon_sauvage BSL → 0 corridors (mask_halt préservé).
+  - **Headers** : `X-Bloc-2-5-Applied: 1` ajouté en ESSENTIEL_T0.
+  - **Tests** : 27/27 pytest doctrinaux passent (test_bloc25_hierarchy_enforce_in_v20_bundle
+    mis à jour pour valider présence des helpers module-level + marqueur DEADLINE_PATCH).
 - ✅ V5 corridors organic divergence inter-espèces
 - ✅ Zones / hotspots / salines non-fallback to "cerf" pour ours/coyote/dindon
 - ✅ Audit download endpoint `/api/v20/territoire/audit/files/{filename}`

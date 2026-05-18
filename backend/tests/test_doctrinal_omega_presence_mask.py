@@ -403,15 +403,28 @@ def test_secure_pickle_roundtrip_and_tampering():
 # =========================================================================
 
 def test_bloc25_hierarchy_enforce_in_v20_bundle():
-    """I-15 — Le bundle V20 applique BLOC 2.5 : hierarchy + cap 5-7 (OPTION B)."""
+    """I-15 — Le bundle V20 applique BLOC 2.5 : hierarchy + cap 5-7 (OPTION B).
+
+    P22ΩΩ_BLOC_2_5_CORRIGE_DEADLINE_GATE_Ω · 2026-02-XX · STEEVE-MAX
+    Helper extrait au niveau module pour s'appliquer aussi en branche
+    deadline ESSENTIEL_T0 (cf. _apply_bloc25_hierarchy_and_cap).
+    """
     import pathlib
     src = pathlib.Path(
         "/app/backend/engines/v8_institutional/v20_performance_bundle.py"
     ).read_text()
     assert "P22ΩΩ_BLOC_2_5_CORRIDORS_UNIQUES_PAR_ESPECE_Ω" in src
-    assert "_bloc25_apply_hierarchy_and_cap" in src
+    assert "_apply_bloc25_hierarchy_and_cap" in src
     assert "p22omegaomega_bloc_2_5_doctrine" in src
     assert "_CAP_MAX = 7" in src
+    # P22ΩΩ_BLOC_2_5_CORRIGE_DEADLINE_GATE_Ω : doit être appliqué AVANT
+    # le return de la branche deadline (ESSENTIEL_T0 dégradé).
+    assert "P22ΩΩ_BLOC_2_5_DEADLINE_PATCH" in src
+    # Helpers module-level (extraction de closure)
+    import importlib
+    module = importlib.import_module("engines.v8_institutional.v20_performance_bundle")
+    assert hasattr(module, "_apply_bloc25_hierarchy_and_cap")
+    assert hasattr(module, "_apply_v5_rewire_to_result")
 
 
 def test_bloc25_doctrine_applied_for_present_species():

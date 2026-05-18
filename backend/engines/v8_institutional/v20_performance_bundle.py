@@ -96,6 +96,189 @@ def map_v5_corridors_to_ui(v5_corridors_raw: list[dict]) -> list[dict]:
     return mapped
 
 
+# ═══════════════════════════════════════════════════════════════════════
+# P22ΩΩ_BLOC_2_5_HELPERS_MODULE_LEVEL_Ω · 2026-02-XX · COMMANDANT STEEVE-MAX
+# ═══════════════════════════════════════════════════════════════════════
+# Extraction module-level pour pouvoir appliquer la doctrine BLOC 2.5
+# (V5 rewire + cap 5–7 corridors + hiérarchie veines) AVANT le retour
+# court-circuité par le deadline gate global (ESSENTIEL_T0 dégradé).
+# Doctrine MFFP préservée · V30 LOCK INTACT · FUSION ADD-ONLY.
+# ═══════════════════════════════════════════════════════════════════════
+def _apply_v5_rewire_to_result(
+    result: dict,
+    v5_bundle: dict | None,
+    v5_error: str | None,
+    species: str,
+) -> dict:
+    """P22Σ_V5_BUNDLE_REWIRE_Ω — override corridors V10 par corridors V5 organic.
+
+    Si V5 dispo : map + remap V30 fallback éventuel + signature p22sigma_v5_bundle_rewire.
+    Si V5 KO    : signature p22sigma_v5_bundle_rewire.applied=False (fallback V10).
+    Idempotent : ne ré-applique pas si déjà appliqué.
+    """
+    _v5_active = v5_bundle is not None
+    # Idempotence : si déjà rewiré, ne ré-applique pas
+    if isinstance(result.get("p22sigma_v5_bundle_rewire"), dict) and \
+       result["p22sigma_v5_bundle_rewire"].get("applied") is True:
+        return result
+
+    if _v5_active:
+        v5_corridors_raw = v5_bundle.get("corridors", []) or []
+        v5_mapped = map_v5_corridors_to_ui(v5_corridors_raw)
+        # ═══ P22Ω_MULTI_FIX_A1 — REMAP V30 vers V5 si V5 vide & espèce présente ═══
+        _v30_remap_applied = False
+        if not v5_mapped and not result.get("bio_presence_mask_halt"):
+            _v30_corridors = result.get("corridors", []) or []
+            if len(_v30_corridors) >= 5:
+                _v30_sorted = sorted(
+                    _v30_corridors,
+                    key=lambda c: (c.get("intensity") or c.get("score") or 0),
+                    reverse=True,
+                )[:7]
+                v5_mapped = []
+                for _i, _c in enumerate(_v30_sorted):
+                    _hier = ("veine_principale" if _i < 2 else "veine_secondaire")
+                    _m = dict(_c)
+                    _m["id"] = _c.get("id") or f"corr_v30remap_{_i:03d}"
+                    _m["hierarchy"] = _hier
+                    _m["color"] = _HIER_COLOR_V5.get(_hier, "#FF8F00")
+                    _m["source"] = "V30_REMAP_TO_V5 (P22Ω_MULTI_FIX_A1)"
+                    _m["fusion_doctrine"] = "P22Ω_V30_REMAP_TO_V5"
+                    _m["subnet_role"] = "backbone" if _i < 2 else "subnet"
+                    v5_mapped.append(_m)
+                _v30_remap_applied = True
+                logger.info(
+                    f"[P22Ω_MULTI_FIX_A1] V30→V5 REMAP species={species} "
+                    f"n_v30={len(_v30_corridors)} → n_v5_remap={len(v5_mapped)}"
+                )
+        result["corridors"] = v5_mapped
+        result["p22sigma_v5_bundle_rewire"] = {
+            "applied": True,
+            "anchor_mode": "TERRITORY_CONTINUOUS",
+            "n_corridors": len(v5_mapped),
+            "hierarchy_counts": v5_bundle.get("hierarchy_counts"),
+            "cap_global_doctrine": v5_bundle.get("p22sigma_v5_cap_global_doctrine"),
+            "engine": v5_bundle.get("engine"),
+            "engine_version": v5_bundle.get("version"),
+            "doctrine": "P22Σ_V5_BUNDLE_REWIRE_Ω",
+            "wired_at": "v20_performance_bundle._apply_v5_rewire_to_result",
+            "optim": "V10_SINGLE_CALL_THEN_V5_REUSE",
+            "v30_remap_fallback_applied": _v30_remap_applied,
+        }
+    else:
+        result["p22sigma_v5_bundle_rewire"] = {
+            "applied": False,
+            "error": v5_error or "v5_bundle unavailable",
+            "fallback": "V10_SUPRA_LEGACY",
+        }
+    return result
+
+
+def _apply_bloc25_hierarchy_and_cap(result: dict, species: str) -> dict:
+    """P22ΩΩ_BLOC_2_5_CORRIDORS_UNIQUES_PAR_ESPECE_Ω — OPTION B.
+
+    Enforce hiérarchie + cap 5-7 + marquage EXTERNAL_INFLOW sur le bundle.
+    Idempotent · garantit ≥1 veine_principale si corridors présents.
+    No-op si bio_presence_mask_halt (espèce ABSENT, doctrine MFFP).
+    """
+    if result.get("bio_presence_mask_halt"):
+        return result  # ABSENT — doctrine MFFP, laisse 0 corridors
+
+    _corridors = result.get("corridors") or []
+    if not isinstance(_corridors, list) or len(_corridors) == 0:
+        return result
+
+    _PRINCIPAL_THRESHOLD = 0.7
+    _SECONDARY_THRESHOLD = 0.4
+    _SCORE_PRINCIPAL = 70
+    _SCORE_SECONDARY = 40
+
+    _hier_stats = {
+        "missing_filled": 0,
+        "external_inflow_marked": 0,
+        "veine_principale_promoted": 0,
+    }
+
+    # Étape 1+2+3 : enforcer hiérarchie sur chaque corridor
+    for _c in _corridors:
+        if not isinstance(_c, dict):
+            continue
+        _current_hier = _c.get("hierarchy")
+        _needs_fill = _current_hier in (None, "", "unknown", "legacy", "missing")
+        _source = (_c.get("source") or "").upper()
+        _is_external_inflow = "EXTERNAL_INFLOW" in _source
+
+        if _needs_fill or _is_external_inflow:
+            _intensity = float(_c.get("intensity") or 0.0)
+            _score = float(
+                _c.get("fused_score") or _c.get("score") or _c.get("composite_score") or 0.0
+            )
+            if _intensity >= _PRINCIPAL_THRESHOLD or _score >= _SCORE_PRINCIPAL:
+                _new_hier = "veine_principale"
+            elif _intensity >= _SECONDARY_THRESHOLD or _score >= _SCORE_SECONDARY:
+                _new_hier = "veine_secondaire"
+            else:
+                _new_hier = "capillaire"
+
+            if _needs_fill:
+                _c["hierarchy"] = _new_hier
+                _c["hierarchy_filled_by"] = "P22ΩΩ_BLOC_2_5_OPTION_B"
+                _hier_stats["missing_filled"] += 1
+            if _is_external_inflow:
+                _c["external_inflow_marked"] = True
+                _hier_stats["external_inflow_marked"] += 1
+
+    # Étape 4 : cap 5-7 corridors par espèce (top par intensity + score)
+    _CAP_MAX = 7
+    if len(_corridors) > _CAP_MAX:
+        _sorted = sorted(
+            _corridors,
+            key=lambda c: (
+                float(c.get("intensity") or 0.0),
+                float(c.get("fused_score") or c.get("score") or 0.0),
+            ),
+            reverse=True,
+        )
+        _corridors = _sorted[:_CAP_MAX]
+        result["corridors"] = _corridors
+
+    # Étape 5 : garantir ≥1 veine_principale (promotion auto)
+    _has_principal = any(c.get("hierarchy") == "veine_principale" for c in _corridors)
+    if not _has_principal and _corridors:
+        _best = max(
+            _corridors,
+            key=lambda c: (
+                float(c.get("intensity") or 0.0),
+                float(c.get("fused_score") or c.get("score") or 0.0),
+            ),
+        )
+        _best["hierarchy_promoted_from"] = _best.get("hierarchy", "capillaire")
+        _best["hierarchy"] = "veine_principale"
+        _best["hierarchy_promotion_doctrine"] = "P22ΩΩ_BLOC_2_5_AUTO_PROMOTE"
+        _hier_stats["veine_principale_promoted"] = 1
+
+    # Recompute hierarchy_counts pour traçabilité bundle
+    _hier_counts = {"veine_principale": 0, "veine_secondaire": 0, "capillaire": 0, "other": 0}
+    for _c in _corridors:
+        _h = _c.get("hierarchy") or "other"
+        if _h in _hier_counts:
+            _hier_counts[_h] += 1
+        else:
+            _hier_counts["other"] += 1
+
+    result["p22omegaomega_bloc_2_5_doctrine"] = {
+        "applied": True,
+        "doctrine": "P22ΩΩ_BLOC_2_5_CORRIDORS_UNIQUES_PAR_ESPECE_Ω",
+        "option": "B",
+        "species": species,
+        "n_corridors_final": len(_corridors),
+        "cap_max": _CAP_MAX,
+        "hierarchy_counts": _hier_counts,
+        "stats": _hier_stats,
+    }
+    return result
+
+
 # ═══ CACHE IN-MEMORY LRU TTL 24h — V11-SUPRA SCALABILITE 10K ═══
 _CACHE: "OrderedDict[str, tuple[float, dict]]" = OrderedDict()
 _CACHE_TTL_SEC = 86400
@@ -1144,12 +1327,35 @@ async def v20_territoire_bundle(
     # Si on a déjà dépassé le deadline global (V10+V5 ont pris trop de temps),
     # court-circuiter le pipeline post (RenduΩ + veineux + interzone + predictive)
     # qui consommerait 10-30s supplémentaires. On cache et retourne maintenant.
+    #
+    # P22ΩΩ_BLOC_2_5_CORRIGE_DEADLINE_GATE_Ω · 2026-02-XX · STEEVE-MAX
+    # Application OBLIGATOIRE de la doctrine BLOC 2.5 (V5 rewire + cap 5-7
+    # + hiérarchie veines) MÊME en branche dégradée ESSENTIEL_T0. Sinon
+    # le frontend reçoit ~80 corridors V10 bruts sans hiérarchie.
     _elapsed_so_far = time.time() - t0
     if _elapsed_so_far > _GLOBAL_BUNDLE_DEADLINE_SEC:
         logger.warning(
             f"[P22ΩΩ_DEADLINE] Deadline global {_GLOBAL_BUNDLE_DEADLINE_SEC}s dépassé "
             f"({_elapsed_so_far:.1f}s) après V10+V5 — skip pipeline post pour species={species}"
         )
+        # ═══ P22ΩΩ_BLOC_2_5_DEADLINE_PATCH — applique cap doctrinal AVANT return ═══
+        try:
+            result = _apply_v5_rewire_to_result(result, v5_bundle, v5_error, species)
+        except Exception as _e_v5_dl:
+            logger.error(f"[P22ΩΩ_DEADLINE_V5_REWIRE] failed: {_e_v5_dl}")
+            result["p22sigma_v5_bundle_rewire"] = {
+                "applied": False,
+                "error": f"deadline_v5_rewire_error: {_e_v5_dl}",
+                "fallback": "V10_SUPRA_LEGACY",
+            }
+        try:
+            result = _apply_bloc25_hierarchy_and_cap(result, species)
+        except Exception as _e_cap_dl:
+            logger.error(f"[P22ΩΩ_DEADLINE_BLOC25_CAP] failed: {_e_cap_dl}")
+            result["p22omegaomega_bloc_2_5_doctrine"] = {
+                "applied": False,
+                "error": f"deadline_cap_error: {_e_cap_dl}",
+            }
         result["cache"] = "MISS"
         result["served_ms"] = round(_elapsed_so_far * 1000, 2)
         result["p22omegaomega_deadline_hit"] = True
@@ -1164,6 +1370,9 @@ async def v20_territoire_bundle(
         response.headers["X-Cache"] = "MISS-ESSENTIEL-T0-DEADLINE"
         response.headers["X-Bundle-Tier"] = "ESSENTIEL_T0"
         response.headers["X-Compute-Ms"] = str(round(_elapsed_so_far * 1000, 2))
+        response.headers["X-Bloc-2-5-Applied"] = "1" if result.get(
+            "p22omegaomega_bloc_2_5_doctrine", {}
+        ).get("applied") else "0"
         return result
 
     # ═══════════════════════════════════════════════════════════════════════
@@ -1289,191 +1498,19 @@ async def v20_territoire_bundle(
     # `v5_bundle` est déjà calculé en amont via asyncio.gather().
     # ═══════════════════════════════════════════════════════════════════════
     if _V5_REWIRE_ACTIVE:
-        v5_corridors_raw = v5_bundle.get("corridors", []) or []
-        v5_mapped = map_v5_corridors_to_ui(v5_corridors_raw)
-        # ═══════════════════════════════════════════════════════════════════
-        # P22Ω_MULTI_FIX_A1 (2026-05-13 · COMMANDANT STEEVE-MAX) — REMAP V30
-        # ═══════════════════════════════════════════════════════════════════
-        # Si V5 ENGINE retourne 0 corridors MAIS espèce présente MFFP ET le
-        # pipeline V30 (result["corridors"] avant override) contient des
-        # corridors, on remappe ces V30 vers la structure V5 UI pour éviter
-        # un vide visuel total (ex: ours_noir BSL où couvert_pref strict
-        # filtrait tous les paths V5).
-        # FUSION ADD-ONLY · V30 LOCK INTACT.
-        # ═══════════════════════════════════════════════════════════════════
-        _v30_remap_applied = False
-        if not v5_mapped and not result.get("bio_presence_mask_halt"):
-            _v30_corridors = result.get("corridors", []) or []
-            if len(_v30_corridors) >= 5:
-                # Remap V30 vers structure V5 (max 7 corridors, cap doctrinal)
-                _v30_sorted = sorted(
-                    _v30_corridors,
-                    key=lambda c: (c.get("intensity") or c.get("score") or 0),
-                    reverse=True,
-                )[:7]
-                v5_mapped = []
-                for _i, _c in enumerate(_v30_sorted):
-                    _hier = ("veine_principale" if _i < 2 else "veine_secondaire")
-                    _m = dict(_c)
-                    _m["id"] = _c.get("id") or f"corr_v30remap_{_i:03d}"
-                    _m["hierarchy"] = _hier
-                    _m["color"] = _HIER_COLOR_V5.get(_hier, "#FF8F00")
-                    _m["source"] = "V30_REMAP_TO_V5 (P22Ω_MULTI_FIX_A1)"
-                    _m["fusion_doctrine"] = "P22Ω_V30_REMAP_TO_V5"
-                    _m["subnet_role"] = "backbone" if _i < 2 else "subnet"
-                    v5_mapped.append(_m)
-                _v30_remap_applied = True
-                logger.info(
-                    f"[P22Ω_MULTI_FIX_A1] V30→V5 REMAP species={species} "
-                    f"n_v30={len(_v30_corridors)} → n_v5_remap={len(v5_mapped)}"
-                )
-        result["corridors"] = v5_mapped
-        result["p22sigma_v5_bundle_rewire"] = {
-            "applied": True,
-            "anchor_mode": "TERRITORY_CONTINUOUS",
-            "n_corridors": len(v5_mapped),
-            "hierarchy_counts": v5_bundle.get("hierarchy_counts"),
-            "cap_global_doctrine": v5_bundle.get("p22sigma_v5_cap_global_doctrine"),
-            "engine": v5_bundle.get("engine"),
-            "engine_version": v5_bundle.get("version"),
-            "doctrine": "P22Σ_V5_BUNDLE_REWIRE_Ω",
-            "wired_at": "v20_performance_bundle.v20_territoire_bundle",
-            "optim": "V10_SINGLE_CALL_THEN_V5_REUSE",
-            "v30_remap_fallback_applied": _v30_remap_applied,
-        }
+        result = _apply_v5_rewire_to_result(result, v5_bundle, v5_error, species)
     else:
-        # Fallback V10 : on garde le pipeline legacy + signal d'échec
-        result["p22sigma_v5_bundle_rewire"] = {
-            "applied": False,
-            "error": v5_error or "v5_bundle unavailable",
-            "fallback": "V10_SUPRA_LEGACY",
-        }
+        result = _apply_v5_rewire_to_result(result, None, v5_error, species)
         # Appliquer RENDUΩ uniquement en fallback V10
         result = apply_renduomega_to_bundle(result)
     # ═══════════════════════════════════════════════════════════════════════
     # P22ΩΩ_BLOC_2_5_CORRIDORS_UNIQUES_PAR_ESPECE_Ω · 2026-05-18 · STEEVE-MAX
     # ENFORCE HIÉRARCHIE + CAP 5-7 PAR ESPÈCE + MARQUAGE EXTERNAL_INFLOW
-    # ─────────────────────────────────────────────────────────────────────
-    # Doctrine OPTION B : garantir que CHAQUE corridor retourné par le bundle
-    # V20 (qu'il vienne de V5 organic, V30 remap, ou V10 fallback) possède
-    # un champ `hierarchy` non-null + cap doctrinal 5-7 corridors par espèce
-    # PRESENT. Espèces ABSENTES (mask halt) sont laissées à 0 corridors.
-    #
-    # ALGORITHME :
-    #   1. Si bio_presence_mask_halt → no-op (espèce ABSENT, doctrine MFFP)
-    #   2. Mapper EXTERNAL_INFLOW_* sources → hiérarchie selon intensité
-    #   3. Pour chaque corridor sans `hierarchy` (= unknown/missing/legacy) :
-    #      → si intensity > 0.7 OU score > 70 → veine_principale
-    #      → si intensity > 0.4 OU score > 40 → veine_secondaire
-    #      → sinon → capillaire
-    #   4. Trier par (intensity desc, score desc), garder TOP 7 corridors
-    #      pour espèce PRESENT
-    #   5. Garantir ≥1 veine_principale (promotion auto P22ΩΩ_BLOC_2_4)
+    # P22ΩΩ_BLOC_2_5_CORRIGE_DEADLINE_GATE_Ω · 2026-02-XX · STEEVE-MAX
+    # Helper extrait au niveau module pour pouvoir s'appliquer aussi dans
+    # la branche deadline ESSENTIEL_T0 (cf. _apply_bloc25_hierarchy_and_cap).
     # ═══════════════════════════════════════════════════════════════════════
-    def _bloc25_apply_hierarchy_and_cap(_result: dict, _species: str) -> dict:
-        """OPTION B — propagation hiérarchie + cap 5-7 + marquage EXTERNAL_INFLOW."""
-        if _result.get("bio_presence_mask_halt"):
-            return _result  # ABSENT — doctrine MFFP, laisse 0 corridors
-
-        _corridors = _result.get("corridors") or []
-        if not isinstance(_corridors, list) or len(_corridors) == 0:
-            return _result
-
-        _PRINCIPAL_THRESHOLD = 0.7
-        _SECONDARY_THRESHOLD = 0.4
-        _SCORE_PRINCIPAL = 70
-        _SCORE_SECONDARY = 40
-
-        _hier_stats = {
-            "missing_filled": 0,
-            "external_inflow_marked": 0,
-            "veine_principale_promoted": 0,
-        }
-
-        # Étape 1+2+3 : enforcer hiérarchie sur chaque corridor
-        for _c in _corridors:
-            if not isinstance(_c, dict):
-                continue
-
-            _current_hier = _c.get("hierarchy")
-            _needs_fill = _current_hier in (None, "", "unknown", "legacy", "missing")
-
-            _source = (_c.get("source") or "").upper()
-            _is_external_inflow = "EXTERNAL_INFLOW" in _source
-
-            if _needs_fill or _is_external_inflow:
-                _intensity = float(_c.get("intensity") or 0.0)
-                _score = float(
-                    _c.get("fused_score") or _c.get("score") or _c.get("composite_score") or 0.0
-                )
-
-                if _intensity >= _PRINCIPAL_THRESHOLD or _score >= _SCORE_PRINCIPAL:
-                    _new_hier = "veine_principale"
-                elif _intensity >= _SECONDARY_THRESHOLD or _score >= _SCORE_SECONDARY:
-                    _new_hier = "veine_secondaire"
-                else:
-                    _new_hier = "capillaire"
-
-                if _needs_fill:
-                    _c["hierarchy"] = _new_hier
-                    _c["hierarchy_filled_by"] = "P22ΩΩ_BLOC_2_5_OPTION_B"
-                    _hier_stats["missing_filled"] += 1
-
-                if _is_external_inflow:
-                    _c["external_inflow_marked"] = True
-                    _hier_stats["external_inflow_marked"] += 1
-
-        # Étape 4 : cap 5-7 corridors par espèce (top par intensity + score)
-        _CAP_MAX = 7
-        if len(_corridors) > _CAP_MAX:
-            _sorted = sorted(
-                _corridors,
-                key=lambda c: (
-                    float(c.get("intensity") or 0.0),
-                    float(c.get("fused_score") or c.get("score") or 0.0),
-                ),
-                reverse=True,
-            )
-            _corridors = _sorted[:_CAP_MAX]
-            _result["corridors"] = _corridors
-
-        # Étape 5 : garantir ≥1 veine_principale (promotion auto)
-        _has_principal = any(c.get("hierarchy") == "veine_principale" for c in _corridors)
-        if not _has_principal and _corridors:
-            _best = max(
-                _corridors,
-                key=lambda c: (
-                    float(c.get("intensity") or 0.0),
-                    float(c.get("fused_score") or c.get("score") or 0.0),
-                ),
-            )
-            _best["hierarchy_promoted_from"] = _best.get("hierarchy", "capillaire")
-            _best["hierarchy"] = "veine_principale"
-            _best["hierarchy_promotion_doctrine"] = "P22ΩΩ_BLOC_2_5_AUTO_PROMOTE"
-            _hier_stats["veine_principale_promoted"] = 1
-
-        # Recompute hierarchy_counts pour traçabilité bundle
-        _hier_counts = {"veine_principale": 0, "veine_secondaire": 0, "capillaire": 0, "other": 0}
-        for _c in _corridors:
-            _h = _c.get("hierarchy") or "other"
-            if _h in _hier_counts:
-                _hier_counts[_h] += 1
-            else:
-                _hier_counts["other"] += 1
-
-        _result["p22omegaomega_bloc_2_5_doctrine"] = {
-            "applied": True,
-            "doctrine": "P22ΩΩ_BLOC_2_5_CORRIDORS_UNIQUES_PAR_ESPECE_Ω",
-            "option": "B",
-            "species": _species,
-            "n_corridors_final": len(_corridors),
-            "cap_max": _CAP_MAX,
-            "hierarchy_counts": _hier_counts,
-            "stats": _hier_stats,
-        }
-        return _result
-
-    result = _bloc25_apply_hierarchy_and_cap(result, species)
+    result = _apply_bloc25_hierarchy_and_cap(result, species)
     # ═══════════════════════════════════════════════════════════════════════
     bv = validate_bundle({
         "zones": result["zones"],
