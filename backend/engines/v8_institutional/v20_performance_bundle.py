@@ -1351,6 +1351,130 @@ async def v20_territoire_bundle(
         # Appliquer RENDUΩ uniquement en fallback V10
         result = apply_renduomega_to_bundle(result)
     # ═══════════════════════════════════════════════════════════════════════
+    # P22ΩΩ_BLOC_2_5_CORRIDORS_UNIQUES_PAR_ESPECE_Ω · 2026-05-18 · STEEVE-MAX
+    # ENFORCE HIÉRARCHIE + CAP 5-7 PAR ESPÈCE + MARQUAGE EXTERNAL_INFLOW
+    # ─────────────────────────────────────────────────────────────────────
+    # Doctrine OPTION B : garantir que CHAQUE corridor retourné par le bundle
+    # V20 (qu'il vienne de V5 organic, V30 remap, ou V10 fallback) possède
+    # un champ `hierarchy` non-null + cap doctrinal 5-7 corridors par espèce
+    # PRESENT. Espèces ABSENTES (mask halt) sont laissées à 0 corridors.
+    #
+    # ALGORITHME :
+    #   1. Si bio_presence_mask_halt → no-op (espèce ABSENT, doctrine MFFP)
+    #   2. Mapper EXTERNAL_INFLOW_* sources → hiérarchie selon intensité
+    #   3. Pour chaque corridor sans `hierarchy` (= unknown/missing/legacy) :
+    #      → si intensity > 0.7 OU score > 70 → veine_principale
+    #      → si intensity > 0.4 OU score > 40 → veine_secondaire
+    #      → sinon → capillaire
+    #   4. Trier par (intensity desc, score desc), garder TOP 7 corridors
+    #      pour espèce PRESENT
+    #   5. Garantir ≥1 veine_principale (promotion auto P22ΩΩ_BLOC_2_4)
+    # ═══════════════════════════════════════════════════════════════════════
+    def _bloc25_apply_hierarchy_and_cap(_result: dict, _species: str) -> dict:
+        """OPTION B — propagation hiérarchie + cap 5-7 + marquage EXTERNAL_INFLOW."""
+        if _result.get("bio_presence_mask_halt"):
+            return _result  # ABSENT — doctrine MFFP, laisse 0 corridors
+
+        _corridors = _result.get("corridors") or []
+        if not isinstance(_corridors, list) or len(_corridors) == 0:
+            return _result
+
+        _PRINCIPAL_THRESHOLD = 0.7
+        _SECONDARY_THRESHOLD = 0.4
+        _SCORE_PRINCIPAL = 70
+        _SCORE_SECONDARY = 40
+
+        _hier_stats = {
+            "missing_filled": 0,
+            "external_inflow_marked": 0,
+            "veine_principale_promoted": 0,
+        }
+
+        # Étape 1+2+3 : enforcer hiérarchie sur chaque corridor
+        for _c in _corridors:
+            if not isinstance(_c, dict):
+                continue
+
+            _current_hier = _c.get("hierarchy")
+            _needs_fill = _current_hier in (None, "", "unknown", "legacy", "missing")
+
+            _source = (_c.get("source") or "").upper()
+            _is_external_inflow = "EXTERNAL_INFLOW" in _source
+
+            if _needs_fill or _is_external_inflow:
+                _intensity = float(_c.get("intensity") or 0.0)
+                _score = float(
+                    _c.get("fused_score") or _c.get("score") or _c.get("composite_score") or 0.0
+                )
+
+                if _intensity >= _PRINCIPAL_THRESHOLD or _score >= _SCORE_PRINCIPAL:
+                    _new_hier = "veine_principale"
+                elif _intensity >= _SECONDARY_THRESHOLD or _score >= _SCORE_SECONDARY:
+                    _new_hier = "veine_secondaire"
+                else:
+                    _new_hier = "capillaire"
+
+                if _needs_fill:
+                    _c["hierarchy"] = _new_hier
+                    _c["hierarchy_filled_by"] = "P22ΩΩ_BLOC_2_5_OPTION_B"
+                    _hier_stats["missing_filled"] += 1
+
+                if _is_external_inflow:
+                    _c["external_inflow_marked"] = True
+                    _hier_stats["external_inflow_marked"] += 1
+
+        # Étape 4 : cap 5-7 corridors par espèce (top par intensity + score)
+        _CAP_MAX = 7
+        if len(_corridors) > _CAP_MAX:
+            _sorted = sorted(
+                _corridors,
+                key=lambda c: (
+                    float(c.get("intensity") or 0.0),
+                    float(c.get("fused_score") or c.get("score") or 0.0),
+                ),
+                reverse=True,
+            )
+            _corridors = _sorted[:_CAP_MAX]
+            _result["corridors"] = _corridors
+
+        # Étape 5 : garantir ≥1 veine_principale (promotion auto)
+        _has_principal = any(c.get("hierarchy") == "veine_principale" for c in _corridors)
+        if not _has_principal and _corridors:
+            _best = max(
+                _corridors,
+                key=lambda c: (
+                    float(c.get("intensity") or 0.0),
+                    float(c.get("fused_score") or c.get("score") or 0.0),
+                ),
+            )
+            _best["hierarchy_promoted_from"] = _best.get("hierarchy", "capillaire")
+            _best["hierarchy"] = "veine_principale"
+            _best["hierarchy_promotion_doctrine"] = "P22ΩΩ_BLOC_2_5_AUTO_PROMOTE"
+            _hier_stats["veine_principale_promoted"] = 1
+
+        # Recompute hierarchy_counts pour traçabilité bundle
+        _hier_counts = {"veine_principale": 0, "veine_secondaire": 0, "capillaire": 0, "other": 0}
+        for _c in _corridors:
+            _h = _c.get("hierarchy") or "other"
+            if _h in _hier_counts:
+                _hier_counts[_h] += 1
+            else:
+                _hier_counts["other"] += 1
+
+        _result["p22omegaomega_bloc_2_5_doctrine"] = {
+            "applied": True,
+            "doctrine": "P22ΩΩ_BLOC_2_5_CORRIDORS_UNIQUES_PAR_ESPECE_Ω",
+            "option": "B",
+            "species": _species,
+            "n_corridors_final": len(_corridors),
+            "cap_max": _CAP_MAX,
+            "hierarchy_counts": _hier_counts,
+            "stats": _hier_stats,
+        }
+        return _result
+
+    result = _bloc25_apply_hierarchy_and_cap(result, species)
+    # ═══════════════════════════════════════════════════════════════════════
     bv = validate_bundle({
         "zones": result["zones"],
         "corridors": result["corridors"],

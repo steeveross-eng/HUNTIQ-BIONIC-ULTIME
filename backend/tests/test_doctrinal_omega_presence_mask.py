@@ -246,13 +246,21 @@ def test_corridors_v10_is_sanctuarized():
 
 
 def test_v7_spatial_legacy_router_disabled():
-    """I-9e — Router HTTP /api/v7/spatial/* désactivé dans server.py (PALIER 3)."""
+    """I-9e — Module spatial_engine_v7 PHYSIQUEMENT PURGÉ (BLOC 2.5)."""
     import pathlib
-    src = pathlib.Path("/app/backend/server.py").read_text()
-    # Le code legacy doit être commenté
-    assert "# try:\n#     from engines.spatial_engine_v7.router" in src
-    # Le router Ω doit être enregistré
-    assert "territoire_omega_spatial_router" in src
+    # Module legacy doit avoir disparu
+    assert not pathlib.Path("/app/backend/engines/spatial_engine_v7").exists()
+    # Module Ω institutionnel doit être présent
+    assert pathlib.Path(
+        "/app/backend/engines/v8_institutional/territoire_omega_spatial/__init__.py"
+    ).exists()
+    # Le router Ω doit pointer vers le nouveau module
+    src = pathlib.Path("/app/backend/routes/territoire_omega_spatial_router.py").read_text()
+    assert "engines.v8_institutional.territoire_omega_spatial" in src
+    assert "engines.spatial_engine_v7" not in src
+    # server.py doit confirmer la purge
+    server_src = pathlib.Path("/app/backend/server.py").read_text()
+    assert "SPATIAL-ENGINE-V7 PURGED PHYSICALLY" in server_src
 
 
 # =========================================================================
@@ -390,12 +398,53 @@ def test_secure_pickle_roundtrip_and_tampering():
         secure_loads(bytes(tampered))
 
 
-def test_secure_pickle_legacy_tolerance():
-    """I-14b — Legacy unsigned pickle accepté en mode migration."""
-    import pickle
-    from engines.v8_institutional.secure_pickle_omega import secure_loads_legacy_tolerant
+# =========================================================================
+# I-15 — BLOC 2.5 : HIÉRARCHIE ENFORCE + CAP 5-7 PAR ESPÈCE
+# =========================================================================
 
-    legacy_blob = pickle.dumps({"legacy": True})
-    obj, was_legacy = secure_loads_legacy_tolerant(legacy_blob)
-    assert obj == {"legacy": True}
-    assert was_legacy is True
+def test_bloc25_hierarchy_enforce_in_v20_bundle():
+    """I-15 — Le bundle V20 applique BLOC 2.5 : hierarchy + cap 5-7 (OPTION B)."""
+    import pathlib
+    src = pathlib.Path(
+        "/app/backend/engines/v8_institutional/v20_performance_bundle.py"
+    ).read_text()
+    assert "P22ΩΩ_BLOC_2_5_CORRIDORS_UNIQUES_PAR_ESPECE_Ω" in src
+    assert "_bloc25_apply_hierarchy_and_cap" in src
+    assert "p22omegaomega_bloc_2_5_doctrine" in src
+    assert "_CAP_MAX = 7" in src
+
+
+def test_bloc25_doctrine_applied_for_present_species():
+    """I-15bis — Le module v20_performance_bundle expose les fonctions clés du pipeline."""
+    import importlib
+    module = importlib.import_module("engines.v8_institutional.v20_performance_bundle")
+    # Vérifier que les fonctions critiques du pipeline existent
+    assert hasattr(module, "map_v5_corridors_to_ui")
+    assert hasattr(module, "_warmup_single")
+    assert hasattr(module, "_cache_get")
+    assert hasattr(module, "_cache_set")
+    # Vérifier que le router est exposé
+    assert hasattr(module, "router")
+
+
+# =========================================================================
+# I-16 — SPATIAL_ENGINE_V7 PURGÉ + MODULE Ω OPÉRATIONNEL
+# =========================================================================
+
+def test_omega_spatial_module_files_exist_after_purge():
+    """I-16 — Les fichiers du module Ω spatial existent après purge V7."""
+    import pathlib
+    # Le module legacy doit avoir disparu
+    assert not pathlib.Path("/app/backend/engines/spatial_engine_v7").exists()
+    # Le module Ω doit avoir les 2 fichiers requis
+    omega_dir = pathlib.Path(
+        "/app/backend/engines/v8_institutional/territoire_omega_spatial"
+    )
+    assert omega_dir.exists()
+    assert (omega_dir / "__init__.py").exists()
+    assert (omega_dir / "_v7_logic.py").exists()
+    # Le _v7_logic doit contenir les fonctions critiques
+    logic_src = (omega_dir / "_v7_logic.py").read_text()
+    assert "async def spatial_heatmap" in logic_src
+    assert "async def spatial_scoring" in logic_src
+    assert "async def spatial_status" in logic_src

@@ -818,21 +818,14 @@ try:
 except Exception as e:
     logger.warning(f"Nutrition Engine V7 not loaded: {e}")
 
-# SPATIAL-ENGINE-V7 — P22ΩΩ_PALIER_3_MIGRATION_V7_SPATIAL_Ω · 2026-05-18 · STEEVE-MAX
-# Router HTTP /api/v7/spatial/* DÉSACTIVÉ — endpoints exposés désormais via
-# /api/v20/territoire/spatial/{heatmap,score,status} (router Ω proxy).
-# Le module Python `engines.spatial_engine_v7.router` reste IMPORTÉ par le router Ω
-# pour la délégation métier (logique scoring V7 préservée intégralement, V30_LOCK).
-# Pour réactiver le routing HTTP V7 legacy : décommenter les 2 lignes ci-dessous.
-# try:
-#     from engines.spatial_engine_v7.router import router as spatial_v7_router
-#     app.include_router(spatial_v7_router)
-#     logger.info("✓ SPATIAL-ENGINE-V7 registered (/api/v7/spatial) — 6 endpoints")
-# except Exception as e:
-#     logger.warning(f"Spatial Engine V7 not loaded: {e}")
+# SPATIAL-ENGINE-V7 — P22ΩΩ_BLOC_2_5_CORRIDORS_UNIQUES_PAR_ESPECE_Ω · 2026-05-18 · STEEVE-MAX
+# Module engines/spatial_engine_v7/ PURGÉ PHYSIQUEMENT (directive 5).
+# Logique métier MIGRÉE INLINE vers engines/v8_institutional/territoire_omega_spatial/
+# (avec sous-module _v7_logic.py préservant le scoring V7.2 identique).
+# Endpoints exposés via /api/v20/territoire/spatial/{heatmap,score,status} (router Ω).
 logger.info(
-    "[P22ΩΩ.PALIER_3] SPATIAL-ENGINE-V7 HTTP router DISABLED — "
-    "remplacé par /api/v20/territoire/spatial/* (Ω proxy)"
+    "[P22ΩΩ.BLOC_2_5] SPATIAL-ENGINE-V7 PURGED PHYSICALLY — "
+    "logique migrée vers engines/v8_institutional/territoire_omega_spatial/"
 )
 
 # SUPRA-ENGINE-V7 — Moteur decisionnel central V7

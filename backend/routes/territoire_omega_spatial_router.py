@@ -41,8 +41,10 @@ from modules.camera_engine.dependencies import get_camera_db
 from modules.roles_engine.v1.dependencies import get_current_user_with_role
 from modules.roles_engine.v1.models import UserWithRole
 
-# Délégation directe aux fonctions V7 (V30_LOCK : aucune modification métier).
-from engines.spatial_engine_v7.router import (
+# P22ΩΩ_BLOC_2_5_CORRIDORS_UNIQUES_PAR_ESPECE_Ω · 2026-05-18 · STEEVE-MAX
+# Délégation directe au module institutionnel Ω (migré depuis spatial_engine_v7).
+# Le module legacy engines/spatial_engine_v7/ a été PURGÉ physiquement.
+from engines.v8_institutional.territoire_omega_spatial import (
     spatial_heatmap as _v7_spatial_heatmap,
     spatial_scoring as _v7_spatial_scoring,
     spatial_status as _v7_spatial_status,
