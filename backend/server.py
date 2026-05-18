@@ -162,18 +162,28 @@ async def lifespan(app: FastAPI):
         from engines.v8_institutional.v20_performance_bundle import _warmup_single
 
         async def _prewarm_canonical_omega():
-            """Prewarm async non-bloquant — 1 espèce canonique BSL."""
+            """Prewarm async non-bloquant — 2 espèces canoniques BSL séquentiel."""
             try:
-                # Waypoint canonique BSL (Bas-Saint-Laurent, QC) — espèce primaire
-                # du COMMANDANT pour validation visuelle TERRITOIRE Ω.
-                _t = await _warmup_single(
-                    lat=48.206657,
-                    lon=-68.382422,
-                    species="orignal",
-                )
+                # P22ΩΩ_PREWARM_BIS · 2026-05-18 · COMMANDANT STEEVE-MAX
+                # Étendu à chevreuil (alias frontend `cerf` = default
+                # MonTerritoireBionicPage) + orignal (espèce primaire de
+                # validation visuelle).
+                # Exécution SÉQUENTIELLE (1 par 1) pour ne pas saturer le
+                # single-worker uvicorn — chaque _warmup_single ~50s.
+                _waypoint = (48.206657, -68.382422)  # Bas-Saint-Laurent QC canonique
+                for _species in ("chevreuil", "orignal"):
+                    _t = await _warmup_single(
+                        lat=_waypoint[0],
+                        lon=_waypoint[1],
+                        species=_species,
+                    )
+                    logger.info(
+                        f"[P22ΩΩ_PREWARM_SYNCHRONE_BETA] Bundle '{_species}' warmed in "
+                        f"{_t:.1f}s @ {_waypoint[0]},{_waypoint[1]} — cache HIT actif"
+                    )
                 logger.info(
-                    f"[P22ΩΩ_PREWARM_SYNCHRONE_BETA] Canonical bundle warmed in {_t:.1f}s "
-                    f"(orignal @ 48.206657, -68.382422) — first user hit will be cache HIT"
+                    "[P22ΩΩ_PREWARM_SYNCHRONE_BETA] Prewarm complet pour "
+                    "(chevreuil, orignal) — first user hit = cache HIT garanti"
                 )
             except Exception as _e:
                 logger.warning(f"[P22ΩΩ_PREWARM_SYNCHRONE_BETA] Warmup failed: {_e}")

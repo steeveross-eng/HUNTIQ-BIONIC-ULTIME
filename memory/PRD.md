@@ -1,5 +1,5 @@
 # PRD · TERRITOIRE Ω · BIONIC HUNT/CHASSE
-**Last updated**: 2026-05-14 · BCE-4X ULTIME ABSOLU · COMMANDANT STEEVE-MAX
+**Last updated**: 2026-05-18 · BCE-4X ULTIME ABSOLU · COMMANDANT STEEVE-MAX
 
 ## ORIGINAL PROBLEM STATEMENT
 PROTOCOLE BCE-4X ULTIME ABSOLU — Stabilisation exhaustive du backend et frontend
@@ -43,6 +43,22 @@ Persona BCE-4X non-déviante.
   - États visuels discrets (cyan running → emerald done)
   - Non-bloquant, position fixed bottom-4 right-4
   - 0-cold-start UX pour Premium → argument conversion
+- ✅ **P22ΩΩ_STUBS_AUXILIAIRES_404** (2026-05-18) — Élimination 404 console :
+  - Nouveau router `/app/backend/routes/stubs_auxiliary_404_omega.py`
+  - 11 stubs 200 OK pour endpoints orphelins frontend (non-bloquants documentés)
+  - Couverts : seo/meta, bdre/dashboard, bdre/sources, legal-time/status,
+    legal-time/upcoming, sharing/notifications/anonymous, sharing/received,
+    sharing/sent, sharing/notifications/{user}, groups/{user}/my-groups,
+    zones/alerts
+  - Cache-Control public 300s, shapes EXACTES respectées (vérifiées par grep
+    frontend hooks/useSharing.js, NotificationService.js, DashboardPage.jsx)
+  - Latence : <10ms localhost / 90-264ms externe Cloudflare
+- ✅ **P22ΩΩ_PREWARM_SYNCHRONE_BETA** (2026-05-18) — Élimination cold-start 12s :
+  - Lifespan startup déclenche prewarm background non-bloquant
+  - 2 espèces canoniques : chevreuil (default frontend `cerf` alias) + orignal
+  - Waypoint BSL (48.206657, -68.382422) — référence COMMANDANT
+  - Premier hit utilisateur = cache HIT 130-190ms (au lieu de 12-50s cold)
+  - Survit aux restarts via disk cache `/app/backend/cache/territoire_bundle.pkl`
 
 ## PENDING / KNOWN ISSUES
 - ⚠️ **Single-worker uvicorn** : code SYNC dans `compute_territoire_v10` (1 await,

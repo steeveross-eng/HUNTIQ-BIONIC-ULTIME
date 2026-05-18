@@ -142,6 +142,59 @@ async def sharing_notifications_anonymous_stub():
 
 
 # ──────────────────────────────────────────────────────────────────────────
+# P22OMEGAOMEGA_STUBS_AUXILIAIRES_404_BIS · 2026-05-18 · COMMANDANT STEEVE-MAX
+# Extension : 5 endpoints additionnels détectés en console (DevTools)
+#   - /api/sharing/received/{user_id}        ← useSharing.js:113
+#   - /api/sharing/sent/{user_id}            ← useSharing.js:125
+#   - /api/sharing/notifications/{user_id}   ← useSharing.js:400
+#   - /api/groups/{user_id}/my-groups        ← useSharing.js:217
+#   - /api/zones/alerts?user_id=...          ← ZoneFavorites.jsx:52
+# ──────────────────────────────────────────────────────────────────────────
+
+# Shape attendue : { shares: [] }
+@router.get("/sharing/received/{user_id}")
+async def sharing_received_stub(user_id: str):
+    """Stub sharing received — aucun partage reçu."""
+    return _stub_response({"shares": [], "stub": True})
+
+
+# Shape attendue : [] direct (setSentShares(result))
+@router.get("/sharing/sent/{user_id}")
+async def sharing_sent_stub(user_id: str):
+    """Stub sharing sent — aucun partage envoyé (liste vide directe)."""
+    return _stub_response([])
+
+
+# Shape attendue : { notifications: [], unread_count: 0 }
+@router.get("/sharing/notifications/{user_id}")
+async def sharing_notifications_user_stub(user_id: str, unread_only: bool = False):
+    """Stub sharing notifications par user — aucune notification."""
+    return _stub_response({
+        "notifications": [],
+        "unread_count": 0,
+        "stub": True,
+    })
+
+
+# Shape attendue : [] direct (setMyGroups(result))
+@router.get("/groups/{user_id}/my-groups")
+async def groups_my_groups_stub(user_id: str):
+    """Stub groups my-groups — aucun groupe (liste vide directe)."""
+    return _stub_response([])
+
+
+# Shape attendue : { alerts: [], unread_count: 0 }
+@router.get("/zones/alerts")
+async def zones_alerts_stub(user_id: str | None = None):
+    """Stub zones alerts — aucune alerte."""
+    return _stub_response({
+        "alerts": [],
+        "unread_count": 0,
+        "stub": True,
+    })
+
+
+# ──────────────────────────────────────────────────────────────────────────
 # HEALTHCHECK STUB — pour validation d'intégration
 # ──────────────────────────────────────────────────────────────────────────
 @router.get("/stubs-auxiliary/healthz")
@@ -159,6 +212,11 @@ async def stubs_auxiliary_healthz():
             "GET /api/v1/notification/legal-time/status",
             "GET /api/v1/notification/legal-time/upcoming",
             "GET /api/sharing/notifications/anonymous",
+            "GET /api/sharing/received/{user_id}",
+            "GET /api/sharing/sent/{user_id}",
+            "GET /api/sharing/notifications/{user_id}",
+            "GET /api/groups/{user_id}/my-groups",
+            "GET /api/zones/alerts",
         ],
         "status": "ACTIVE",
     })
