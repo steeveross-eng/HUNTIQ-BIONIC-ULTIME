@@ -193,6 +193,29 @@ Persona BCE-4X non-déviante.
     - `registry_exec_authorized=True`, `hashes_conforme=True`
     - Endpoints critiques (`/health`, `/bundle`, `/especes/list`) → 200 OK
     - V30_LOCK respecté · aucune modification fonctionnelle
+- ✅ **P22ΩΩ_EXTRACTION_PHASE_A_RELOCALISATION_SALINES** (2026-05-18) — Migration V8-PHASE-A vers Ω:
+  - **Nouveau module Ω** `engines/v8_institutional/territoire_omega_relocalisation_salines.py` (388 L)
+    - Extraction PURE de la logique métier (zéro modification fonctionnelle)
+    - Fonctions : `compute_relocalisation_omega()`, `compute_salines_placement_omega()`, `status_omega()`
+    - Feature flags : `FEATURE_FLAG_RELOCALISATION`, `FEATURE_FLAG_SALINES`
+    - Conservation des appels à `engines.v8_national.exclusion_engine` (toujours actif)
+  - **Nouveau router** `routes/territoire_omega_reloc_salines_router.py` (84 L)
+    - `GET /api/v20/territoire/relocalisation`
+    - `GET /api/v20/territoire/salines-placement`
+    - `GET /api/v20/territoire/relocalisation-salines/status`
+  - **Re-câblage frontend** `hooks/usePhaseAV8.js` :
+    - `/api/v8/map/relocalisation` → `/api/v20/territoire/relocalisation`
+    - `/api/v8/map/salines` → `/api/v20/territoire/salines-placement`
+    - Shape de retour STRICTEMENT identique (validation Playwright précédente)
+    - Nom hook conservé pour stabilité imports (1 consommateur MonTerritoireBionicPage.jsx)
+  - **Suppression physique** : `engines/v8_national/phase_a_engines.py` retiré (déjà supprimé en PALIER 1)
+  - **server.py** : log de migration mis à jour, router institutionnel enregistré
+  - **Validation triple** :
+    - localhost : status 200, relocalisation 16 candidats / 3 retournés, salines 10/4
+    - externe (proxy K8s) : relocalisation 223ms 200 OK, salines 187ms 200 OK
+    - endpoints legacy V8 : toujours 404 (préservé conformément à la doctrine)
+  - **2 derniers 404 console DevTools éliminés** : `/api/v8/map/relocalisation` + `/salines`
+  - **V30_LOCK** respecté · aucune modification fonctionnelle TERRITOIRE Ω
 
 ## PENDING / KNOWN ISSUES
 - ⚠️ **Single-worker uvicorn** : code SYNC dans `compute_territoire_v10` (1 await,

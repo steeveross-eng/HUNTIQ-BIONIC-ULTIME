@@ -1,9 +1,17 @@
 /**
- * usePhaseAV8 — Hook Phase A V8 (Relocalisation + Salines)
+ * usePhaseAV8 — Hook TERRITOIRE-Ω Relocalisation + Salines
  * =========================================================
- * V8-FRONTEND-PHASE-A-Omega
- * Consomme /api/v8/map/relocalisation et /api/v8/map/salines
- * ZERO dependance V6. Cache 30s. Abort automatique.
+ *
+ * P22ΩΩ_EXTRACTION_PHASE_A_RELOCALISATION_SALINES · 2026-05-18 · STEEVE-MAX
+ *
+ * MIGRATION INSTITUTIONNELLE :
+ *   - Ancien : /api/v8/map/relocalisation + /api/v8/map/salines (V8-PHASE-A, 404 depuis 2026-05-12)
+ *   - Nouveau : /api/v20/territoire/relocalisation + /api/v20/territoire/salines-placement (Ω)
+ *
+ * Le nom du hook (`usePhaseAV8`) est conservé pour stabilité d'import frontend.
+ * Le comportement extérieur est strictement identique (même shape de retour).
+ *
+ * Cache 30s · Abort automatique · ZERO dépendance V6.
  */
 import { useState, useCallback, useRef, useEffect } from 'react';
 
@@ -38,19 +46,20 @@ const usePhaseAV8 = () => {
     setError(null);
 
     try {
+      // P22ΩΩ_EXTRACTION_PHASE_A_RELOCALISATION_SALINES — endpoints Ω
       const [relocRes, salinesRes] = await Promise.all([
         fetch(
-          `${API}/api/v8/map/relocalisation?lat=${lat}&lon=${lon}&species=${species}&month=${m}&wind_deg=${windDeg}&radius_m=800&n_candidates=16`,
+          `${API}/api/v20/territoire/relocalisation?lat=${lat}&lon=${lon}&species=${species}&month=${m}&wind_deg=${windDeg}&radius_m=800&n_candidates=16`,
           { signal }
         ),
         fetch(
-          `${API}/api/v8/map/salines?lat=${lat}&lon=${lon}&species=${species}&month=${m}&n_salines=4&min_distance_m=300`,
+          `${API}/api/v20/territoire/salines-placement?lat=${lat}&lon=${lon}&species=${species}&month=${m}&n_salines=4&min_distance_m=300`,
           { signal }
         ),
       ]);
 
       if (!relocRes.ok || !salinesRes.ok) {
-        setError('Erreur serveur Phase A');
+        setError('Erreur serveur TERRITOIRE-Ω Relocalisation/Salines');
         return;
       }
 
@@ -67,7 +76,7 @@ const usePhaseAV8 = () => {
       }
     } catch (err) {
       if (err.name === 'AbortError') return;
-      console.error('[V8-PHASE-A]', err);
+      console.error('[TERRITOIRE-Ω-RELOC-SALINES]', err);
       setError(err.message);
     } finally {
       setLoading(false);

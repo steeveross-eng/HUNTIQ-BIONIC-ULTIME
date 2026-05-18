@@ -878,17 +878,24 @@ except Exception as e:
 # Module engines/v8_national/map_bundle.py supprimé physiquement (PALIER 1).
 logger.info("[P22ΩΩ.PALIER_1] V8-MAP-BUNDLE PURGED — engines/v8_national/map_bundle.py removed")
 
-# V8-PHASE-A — DÉSACTIVÉ par P22Ω.PURGE_LEGACY.REMOVE V8 · 2026-05-12T14:30Z
-# Directive COMMANDANT STEEVE-MAX : éradication V8 legacy après wire-up V5 réussi.
-# L'endpoint /api/v8/map/relocalisation renvoyait HTTP 422 (route encore enregistrée)
-# malgré P22Ω_CORRIDORS_RESTORE_V90 → désactivation définitive du router.
-# try:
-#     from engines.v8_national.phase_a_engines import router as phase_a_router
-#     app.include_router(phase_a_router)
-#     logger.info("V8-PHASE-A registered (/api/v8/map) — Relocalisation + Salines")
-# except Exception as e:
-#     logger.warning(f"V8 Phase A not loaded: {e}")
-logger.info("[P22Ω.PURGE_LEGACY] V8-PHASE-A DISABLED — /api/v8/map/relocalisation eradicated")
+# V8-PHASE-A — P22ΩΩ_EXTRACTION_PHASE_A_RELOCALISATION_SALINES · 2026-05-18 · STEEVE-MAX
+# Logique métier MIGRÉE vers engines/v8_institutional/territoire_omega_relocalisation_salines.py
+# Exposée via /api/v20/territoire/{relocalisation,salines-placement}.
+# Module legacy engines/v8_national/phase_a_engines.py supprimé physiquement.
+try:
+    from routes.territoire_omega_reloc_salines_router import (
+        router as territoire_omega_reloc_salines_router,
+    )
+    app.include_router(territoire_omega_reloc_salines_router)
+    logger.info(
+        "✓ TERRITOIRE-Ω-RELOCALISATION-SALINES registered — "
+        "/api/v20/territoire/{relocalisation,salines-placement} "
+        "(migrated from V8-PHASE-A)"
+    )
+except Exception as e:
+    logger.warning(f"TERRITOIRE-Ω Relocalisation+Salines router not loaded: {e}")
+
+logger.info("[P22ΩΩ.EXTRACTION] V8-PHASE-A MIGRATED → /api/v20/territoire/{relocalisation,salines-placement}")
 
 # V8-PHASE-B — P22ΩΩ_PALIERS_1_4_PURGE_IMMEDIATE_Ω · 2026-05-18 · STEEVE-MAX
 # Module engines/v8_national/phase_b_engines.py supprimé physiquement (PALIER 1).
