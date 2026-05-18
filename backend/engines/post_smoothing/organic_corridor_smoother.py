@@ -875,6 +875,37 @@ async def generate_smoothed(request: Request):
         payload = smooth_bundle(payload)
 
     # ═══════════════════════════════════════════════════════════════════════
+    # P22ΩΩ_FIX_PRESENCE_MASK_BYPASS_ORGANIC_GENERATE · 2026-05-18 · STEEVE-MAX
+    # ─────────────────────────────────────────────────────────────────────
+    # RÉ-APPLICATION DU MASQUE APRÈS smooth_bundle (idempotent).
+    #
+    # JUSTIFICATION DOCTRINALE :
+    # smooth_bundle invoque draft_external_inflow_to_smoother (P1.2) qui
+    # injecte 12-24 corridors EXTERNAL_INFLOW_X200_P1_2 sur la couronne 700-
+    # 800 m APRÈS le mask initial (ligne 863). Ces corridors externes ne
+    # respectaient pas le verdict ABSENT du presence-mask, créant un bypass
+    # doctrinal (ex: 16 corridors wapiti @ BSL alors que wapiti=ABSENT).
+    #
+    # La fonction apply_presence_mask_to_bundle est IDÉMPOTENTE : si halt
+    # est déjà True, elle ré-effectue la purge à 0 sans surprise.
+    # ═══════════════════════════════════════════════════════════════════════
+    if isinstance(payload, dict):
+        try:
+            from engines.v8_institutional.species_presence_mask_omega import (
+                apply_presence_mask_to_bundle,
+            )
+            payload = apply_presence_mask_to_bundle(
+                payload,
+                species=body.get("species", "orignal"),
+                lat=body.get("lat"),
+                lng=body.get("lon"),
+            )
+            payload["bio_presence_mask_reapplied_post_smoother"] = True
+        except Exception as _e_mask2:
+            payload["bio_presence_mask_reapplied_post_smoother"] = False
+            payload["bio_presence_mask_reapply_error"] = str(_e_mask2)
+
+    # ═══════════════════════════════════════════════════════════════════════
     # P22Σ_V5 — CAP GLOBAL TERRITOIRE FINAL (post-smoother)
     # (2026-05-12 · COMMANDANT STEEVE-MAX)
     # Le smoother injecte des external_inflow_entry_node_* après notre cap

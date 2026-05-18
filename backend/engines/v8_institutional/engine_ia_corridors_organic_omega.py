@@ -1604,6 +1604,48 @@ def _organic_cache_set(key: str, data: dict) -> None:
     _ORGANIC_CACHE[key] = (time.time(), data)
 
 
+# ═══════════════════════════════════════════════════════════════════════
+# P22ΩΩ_FIX_PRESENCE_MASK_BYPASS_ORGANIC_GENERATE · 2026-05-18 · STEEVE-MAX
+# ═══════════════════════════════════════════════════════════════════════
+# Helper centralisé d'application du SPECIES_PRESENCE_MASK_Ω (XVIII-BIO)
+# sur les payloads sortants des endpoints du pipeline V5 ORGANIC.
+#
+# CONTEXTE DOCTRINAL :
+# Le bundle V20 principal et le smoother appliquent déjà le masque, mais
+# l'endpoint POST /corridors-organic/generate (et ses dérivés network-
+# hierarchy / seal-baseline) appelaient `generate_organic_corridors`
+# directement SANS filtrage, ce qui permettait à des corridors d'espèces
+# biologiquement ABSENTES (ex: wapiti @ BSL) d'être retournés au frontend.
+#
+# CORRECTION : injection AVAL du masque, AVANT cache_set, sans toucher
+# au générateur lui-même (V30_LOCK respecté).
+# ═══════════════════════════════════════════════════════════════════════
+def _apply_organic_presence_mask(payload: dict, lat: float, lon: float,
+                                  species: str) -> dict:
+    """Applique apply_presence_mask_to_bundle() avec soft-fail institutionnel.
+
+    En cas d'erreur d'import ou d'exécution, le payload est annoté
+    `bio_presence_mask_applied=False` + `bio_presence_mask_error=<msg>`
+    mais n'est pas modifié (fail-open pour ne pas casser le pipeline).
+    """
+    if not isinstance(payload, dict):
+        return payload
+    try:
+        from engines.v8_institutional.species_presence_mask_omega import (
+            apply_presence_mask_to_bundle,
+        )
+        # Garantir un waypoint cohérent pour le masque (utilisé par certains
+        # codes-chemins du masque qui lisent bundle['waypoint']).
+        payload.setdefault("waypoint", {"lat": lat, "lng": lon})
+        return apply_presence_mask_to_bundle(
+            payload, species=species, lat=lat, lng=lon,
+        )
+    except Exception as _e:
+        payload["bio_presence_mask_applied"] = False
+        payload["bio_presence_mask_error"] = str(_e)
+        return payload
+
+
 @router.post("/generate")
 async def organic_generate(body: GenerateOrganicBody):
     """Génère le réseau ORGANIC complet (corridors + hiérarchie + fusion).
@@ -1613,6 +1655,10 @@ async def organic_generate(body: GenerateOrganicBody):
 
     P22Σ_ORGANIC_CACHE_TOLERANT_Ω · 2026-05-13 · cache LRU TTL 24h
     avec key tolérante (lat:.3f, lon:.3f, species, month, wind/15°, anchor_mode).
+
+    P22ΩΩ_FIX_PRESENCE_MASK_BYPASS_ORGANIC_GENERATE · 2026-05-18 · STEEVE-MAX
+    Application du presence-mask XVIII-BIO AVANT mise en cache pour éliminer
+    le bypass doctrinal (ex: wapiti @ BSL).
     """
     cache_key = _organic_cache_key(body.lat, body.lon, body.species,
                                      body.month, body.wind_deg, body.anchor_mode)
@@ -1628,6 +1674,9 @@ async def organic_generate(body: GenerateOrganicBody):
         body.wind_deg, body.wind_speed,
         anchor_mode=body.anchor_mode,
     )
+    # P22ΩΩ_FIX_PRESENCE_MASK_BYPASS_ORGANIC_GENERATE — masquage AVAL
+    # Le cache stockera désormais un payload DÉJÀ masqué (idempotent).
+    result = _apply_organic_presence_mask(result, body.lat, body.lon, body.species)
     _organic_cache_set(cache_key, result)
     if isinstance(result, dict):
         result["cache"] = "MISS"
@@ -1648,8 +1697,15 @@ async def organic_validate(body: ValidateOrganicBody):
 async def organic_network_hierarchy(
     lat: float = 45.10, lon: float = -72.80, species: str = "chevreuil",
 ):
-    """Retourne uniquement la hiérarchie du réseau (sans les paths complets)."""
+    """Retourne uniquement la hiérarchie du réseau (sans les paths complets).
+
+    P22ΩΩ_FIX_PRESENCE_MASK_BYPASS_ORGANIC_GENERATE · 2026-05-18 · STEEVE-MAX
+    Application du presence-mask AVANT extraction de la hiérarchie pour
+    éviter de retourner des corridors d'espèces ABSENTES.
+    """
     bundle = await generate_organic_corridors(lat, lon, species)
+    # Masquage doctrinal AVAL
+    bundle = _apply_organic_presence_mask(bundle, lat, lon, species)
     return {
         "engine": ENGINE_NAME,
         "version": ENGINE_VERSION,
@@ -1666,6 +1722,8 @@ async def organic_network_hierarchy(
             }
             for c in bundle["corridors"]
         ],
+        "bio_presence_mask_applied": bundle.get("bio_presence_mask_applied", False),
+        "bio_presence_mask_halt": bundle.get("bio_presence_mask_halt", False),
     }
 
 
@@ -1677,8 +1735,23 @@ class SealBaselineBody(BaseModel):
 
 @router.post("/seal-baseline")
 async def organic_seal_baseline(body: SealBaselineBody):
-    """Scelle la baseline TERRITOIRE_OMEGA_STABLE à partir d'un waypoint de référence."""
+    """Scelle la baseline TERRITOIRE_OMEGA_STABLE à partir d'un waypoint de référence.
+
+    P22ΩΩ_FIX_PRESENCE_MASK_BYPASS_ORGANIC_GENERATE · 2026-05-18 · STEEVE-MAX
+    Application du presence-mask AVANT scellement. Le scellement d'une
+    baseline contenant des corridors d'espèce ABSENTE serait doctrinalement
+    invalide.
+    """
     bundle = await generate_organic_corridors(body.lat, body.lon, body.species)
+    # Masquage doctrinal AVAL — interdit le scellement d'une baseline
+    # contenant des corridors d'espèce ABSENT du territoire.
+    bundle = _apply_organic_presence_mask(bundle, body.lat, body.lon, body.species)
+    if bundle.get("bio_presence_mask_halt"):
+        return {
+            "sealed": False,
+            "reason": "species_absent_from_territory",
+            "bio_presence_mask_stats": bundle.get("bio_presence_mask_stats"),
+        }
     # Validation préalable — refus de sceller si non conforme
     v = validate_organic(bundle)
     if not v["conforme"]:

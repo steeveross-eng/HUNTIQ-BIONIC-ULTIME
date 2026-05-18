@@ -85,6 +85,28 @@ Persona BCE-4X non-déviante.
     garde défensive systematique — validation `Array.isArray` + fallback objet vide en cas d'erreur
   - **Validation Playwright** : page TERRITOIRE Ω complètement hydratée, HUD + carte + panels
     actifs, AUCUN crash, score 100/100 corridors 55/55
+- ✅ **P22ΩΩ_FIX_PRESENCE_MASK_BYPASS_ORGANIC_GENERATE** (2026-05-18) — Correction
+  doctrinale du bypass SPECIES_PRESENCE_MASK_Ω (XVIII-BIO) :
+  - **Symptôme** : 16 corridors wapiti générés @ BSL (48.2, -68.4) alors que
+    wapiti=ABSENT par registre MFFP 2024 (3 rectangles intro Mauricie/Portneuf/Outaouais)
+  - **Root cause** : double bypass identifié
+    1. `engine_ia_corridors_organic_omega.py:1607 organic_generate` n'invoquait pas
+       le presence_mask (mais l'endpoint était shadowé par le smoother)
+    2. `organic_corridor_smoother.py:863-875` appliquait le mask AVANT `smooth_bundle`,
+       qui ré-injectait 16 corridors EXTERNAL_INFLOW_X200_P1_2 via
+       `draft_external_inflow_to_smoother` (couronne 700-800m, P1.2 X200)
+  - **Fix patché** : 4 modifications
+    - `engine_ia_corridors_organic_omega.py:1607,1648,1678` : injection
+      `_apply_organic_presence_mask()` dans `organic_generate`, `network-hierarchy`,
+      `seal-baseline` (V30_LOCK respecté, masquage AVAL uniquement)
+    - `organic_corridor_smoother.py:877` : **ré-application** idempotente du
+      `apply_presence_mask_to_bundle` APRÈS `smooth_bundle` (flag
+      `bio_presence_mask_reapplied_post_smoother=True`)
+  - **Validation triple** :
+    - wapiti @ BSL (ABSENT) → **0 corridors** ✅ halt=True ✅
+    - chevreuil @ BSL (PRESENT) → 81 corridors ✅ halt=False ✅ (aucune régression)
+    - wapiti @ Mauricie (PRESENT zone intro) → 89 corridors ✅ halt=False ✅
+  - Cache `_ORGANIC_CACHE` et `_SMOOTHER_CACHE` purgés via restart backend (in-memory)
 
 ## PENDING / KNOWN ISSUES
 - ⚠️ **Single-worker uvicorn** : code SYNC dans `compute_territoire_v10` (1 await,
