@@ -59,6 +59,21 @@ Persona BCE-4X non-déviante.
   - Waypoint BSL (48.206657, -68.382422) — référence COMMANDANT
   - Premier hit utilisateur = cache HIT 130-190ms (au lieu de 12-50s cold)
   - Survit aux restarts via disk cache `/app/backend/cache/territoire_bundle.pkl`
+- ✅ **P22ΩΩ_CLEANUP_3D_MVT_EDGE** (2026-05-18) — Allègement structurel post-1-worker :
+  - Suite à décision plateforme : --workers 4 refusé → doctrine 1-worker confirmée
+  - **Supprimés backend** : `engines/mesh_3d_omega/` (3 fichiers, 32.5 KB),
+    `engines/terrain_3d_omega/` (2 fichiers), `engines/v8_institutional/v20_3d_overlays_omega.py`,
+    `engines/v8_institutional/v20_mvt_tiles.py`, 2 tests associés
+  - **Supprimés frontend** : `components/territoire/CesiumTerritoireViewer.jsx`
+  - **Modifs server.py** : 3 blocs `include_router` retirés, X199 catalogue passé de 5 à 4 engines
+  - **Modifs sla_baseline_omega.py** : sections MVT remplacées par stubs 0.0ms
+  - **Modifs predictive_omega/router.py** : import terrain_3d → stub no-op interne
+  - **Modifs MonTerritoireBionicPage.jsx** : import / useState / props / overlay 3D retirés
+  - **Modifs TerritoireToolbar.jsx** : props show3DViewer + bouton "3D" retirés
+  - **`.env` frontend** : `REACT_APP_CESIUM_ION_TOKEN` retiré
+  - **Routes nouvellement 404** : 17 routes 3D/MVT (mesh-3d/*, tiles/*, corridors/active,
+    zones/active, points-interet/active, buffer-600m, terrain-3d/compute)
+  - **Routes préservées** : bundle V20 (cache HIT 193ms externe), santé, espèces, 11 stubs P0a
 
 ## PENDING / KNOWN ISSUES
 - ⚠️ **Single-worker uvicorn** : code SYNC dans `compute_territoire_v10` (1 await,

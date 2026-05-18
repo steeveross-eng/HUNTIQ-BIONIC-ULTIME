@@ -121,8 +121,8 @@ export function TerritoireToolbar({
   showInspectionBioPanel, setShowInspectionBioPanel,
   showPhaseA, setShowPhaseA,
   showPhaseC, setShowPhaseC,
-  // CARTE_3D_INTEGRATION_SOUS_HEADER_Ω (2026-05-11 · STEEVE-MAX)
-  show3DViewer, setShow3DViewer,
+  // P22ΩΩ_CLEANUP_3D_MVT_EDGE · 2026-05-18 · STEEVE-MAX
+  // Props show3DViewer/setShow3DViewer SUPPRIMÉES — Cesium 3D retiré.
   // Legacy props accepted but ignored
   ...rest
 }) {
@@ -250,16 +250,9 @@ export function TerritoireToolbar({
         <PressButton active={showPhaseC} onClick={() => setShowPhaseC && setShowPhaseC(p => !p)} icon={Eye} label="Contam" activeColor="#FF7043" testId="toolbar-contam-btn" />
         {SEP}
 
-        {/* CARTE_3D_INTEGRATION_SOUS_HEADER_Ω (2026-05-11 · STEEVE-MAX) */}
-        {/* Bouton 3D — ouvre le viewer Cesium en modal plein écran */}
-        <PressButton
-          active={!!show3DViewer}
-          onClick={() => setShow3DViewer && setShow3DViewer(v => !v)}
-          icon={Box} label="3D" activeColor="#FF6A00"
-          testId="toggle-3d-modal-btn"
-          title="Vue 3D Cesium · Territoire · buffer 600 m · tilt 55°"
-        />
-        {SEP}
+        {/* P22ΩΩ_CLEANUP_3D_MVT_EDGE · 2026-05-18 · COMMANDANT STEEVE-MAX
+         *  Bouton "3D" SUPPRIMÉ — CesiumTerritoireViewer retiré (doctrine 1-worker).
+         */}
 
         {/* CURSEUR BIONIC */}
         <PressButton active={showCursorBionic} onClick={() => setShowCursorBionic(v => !v)} icon={Binoculars} label="Curseur" activeColor="#4A7A2E" testId="toggle-curseur-bionic" />

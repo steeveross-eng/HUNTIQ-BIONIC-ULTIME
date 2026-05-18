@@ -20,7 +20,11 @@ from fastapi.responses import JSONResponse
 
 from engines.x199_commons import is_x199_authorized, unauthorized_response
 from engines.ecoforestry_omega.router import compute_ecoforestry
-from engines.terrain_3d_omega.router import compute_terrain_3d
+# P22ΩΩ_CLEANUP_3D_MVT_EDGE · 2026-05-18 · COMMANDANT STEEVE-MAX
+# engines.terrain_3d_omega SUPPRIMÉ — stub no-op pour conserver predictive_omega.
+def compute_terrain_3d(_triangle):
+    """Stub no-op post-cleanup 3D — retourne valeurs neutres pour pente/exposition."""
+    return {"slope_deg": 0.0, "aspect_cardinal": "N", "elevation_m": 0.0}
 from engines.legal_time_omega.router import is_legal
 
 FEATURE_FLAG_ACTIVE: bool = True

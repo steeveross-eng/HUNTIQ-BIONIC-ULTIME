@@ -114,45 +114,12 @@ def test_fusion_multi_source():
 
 
 # ─────────────────────────────────────────────────────────────────────
-# #3 — TERRAIN_3D_Ω
+# #3 — TERRAIN_3D_Ω  · SUPPRIMÉ
+# P22ΩΩ_CLEANUP_3D_MVT_EDGE · 2026-05-18 · STEEVE-MAX
+# engines.terrain_3d_omega retiré du codebase (doctrine 1-worker).
+# Tests test_terrain_3d_flag_on / test_slope_aspect_* / test_slope_classification
+# supprimés en bloc.
 # ─────────────────────────────────────────────────────────────────────
-def test_terrain_3d_flag_on():
-    from engines.terrain_3d_omega.router import FEATURE_FLAG_ACTIVE
-    assert FEATURE_FLAG_ACTIVE is True
-
-
-def test_slope_aspect_known_plane_no_slope():
-    from engines.terrain_3d_omega.router import slope_aspect_from_triangle
-    # Plan horizontal : 3 points même altitude
-    r = slope_aspect_from_triangle(
-        [48.0, -68.0, 200.0],
-        [48.001, -68.0, 200.0],
-        [48.0, -67.999, 200.0],
-    )
-    assert r["slope_deg"] < 0.5
-
-
-def test_slope_aspect_known_north_facing():
-    from engines.terrain_3d_omega.router import slope_aspect_from_triangle
-    # Élévation qui monte vers le sud (lat plus basse) → pente exposée sud-nord
-    # Notre triangle : p0 origine, p1 au nord plus haut, p2 à l'est même altitude
-    r = slope_aspect_from_triangle(
-        [48.0, -68.0, 200.0],
-        [48.001, -68.0, 210.0],   # nord plus haut
-        [48.0, -67.999, 200.0],
-    )
-    assert r["slope_deg"] > 0
-    # descendant vers le sud → aspect sud (S, SE ou SW)
-    assert r["aspect_cardinal"] in ("S", "SE", "SW")
-
-
-def test_slope_classification():
-    from engines.terrain_3d_omega.router import classify_slope
-    assert classify_slope(1) == "flat"
-    assert classify_slope(5) == "gentle"
-    assert classify_slope(15) == "moderate"
-    assert classify_slope(25) == "steep"
-    assert classify_slope(40) == "very_steep"
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -230,12 +197,10 @@ def test_x199_engines_do_not_import_v30():
     before = {m for m in sys.modules if m.startswith("engines.v8_institutional")}
     from engines.ecoforestry_omega.router import compute_ecoforestry
     from engines.advanced_geospatial_omega.router import compute_advanced_geospatial
-    from engines.terrain_3d_omega.router import compute_terrain_3d
     from engines.legal_time_omega.router import compute_legal_time
     from engines.predictive_omega.router import compute_predictive
     compute_ecoforestry(48.2, -68.3, 10)
     compute_advanced_geospatial(48.2, -68.3)
-    compute_terrain_3d([])
     compute_legal_time("orignal", "2026-10-01")
     compute_predictive(48.2, -68.3, "orignal", "2026-10-01", 7)
     after = {m for m in sys.modules if m.startswith("engines.v8_institutional")}
@@ -244,6 +209,8 @@ def test_x199_engines_do_not_import_v30():
 
 # ─────────────────────────────────────────────────────────────────────
 # AUDIT CONTINU Ω — tous les engines reportent ready/authorized
+# P22ΩΩ_CLEANUP_3D_MVT_EDGE · 2026-05-18 · STEEVE-MAX
+# terrain_3d retiré — 4 engines au lieu de 5.
 # ─────────────────────────────────────────────────────────────────────
 def test_audit_all_5_engines_authorized(monkeypatch):
     monkeypatch.setenv("X199_ACTIVATION_AUTHORIZED_BY_COMMANDANT", "true")
@@ -251,8 +218,7 @@ def test_audit_all_5_engines_authorized(monkeypatch):
     from engines.x199_commons import is_x199_authorized
     from engines.ecoforestry_omega.router import FEATURE_FLAG_ACTIVE as f1
     from engines.advanced_geospatial_omega.router import FEATURE_FLAG_ACTIVE as f2
-    from engines.terrain_3d_omega.router import FEATURE_FLAG_ACTIVE as f3
     from engines.legal_time_omega.router import FEATURE_FLAG_ACTIVE as f4
     from engines.predictive_omega.router import FEATURE_FLAG_ACTIVE as f5
-    for flag, name in [(f1, "eco"), (f2, "geo"), (f3, "3d"), (f4, "leg"), (f5, "pred")]:
+    for flag, name in [(f1, "eco"), (f2, "geo"), (f4, "leg"), (f5, "pred")]:
         assert is_x199_authorized(flag)["authorized"] is True, f"{name} non autorisé"

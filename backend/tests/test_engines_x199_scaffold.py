@@ -19,11 +19,12 @@ ENGINES_P0_ACTIVE = [
 # Engines X199 étendus qui DOIVENT rester OFF
 ENGINES_X199_OFF = [
     ("ecoforestry_omega",        "/api/v7-ultime/ecoforestry/compute"),
-    ("terrain_3d_omega",         "/api/v7-ultime/terrain-3d/compute"),
     ("legal_time_omega",         "/api/v7-ultime/legal-time/compute"),
     ("predictive_omega",         "/api/v7-ultime/predictive/compute"),
     ("advanced_geospatial_omega","/api/v7-ultime/advanced-geospatial/compute"),
 ]
+# P22ΩΩ_CLEANUP_3D_MVT_EDGE · 2026-05-18 · STEEVE-MAX
+# terrain_3d_omega (X199 #3) retiré — doctrine 1-worker.
 
 
 @pytest.mark.parametrize("slug,prefix", ENGINES_P0_ACTIVE + ENGINES_X199_OFF)

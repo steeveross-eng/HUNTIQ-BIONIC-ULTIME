@@ -957,13 +957,9 @@ try:
 except Exception as e:
     logger.warning(f"V20 Performance bundle not loaded: {e}")
 
-# V20 MVT TILES — tile-filtered GeoJSON pour corridors/zones/contamination (CDN scalable 5000+)
-try:
-    from engines.v8_institutional.v20_mvt_tiles import router as v20_mvt_router
-    app.include_router(v20_mvt_router)
-    logger.info("V20-MVT-TILES registered (/api/v20/territoire/tiles) — zoom 12-16, TTL 24h")
-except Exception as e:
-    logger.warning(f"V20 MVT tiles not loaded: {e}")
+# P22ΩΩ_CLEANUP_3D_MVT_EDGE · 2026-05-18 · COMMANDANT STEEVE-MAX
+# Block V20-MVT-TILES SUPPRIMÉ — module v20_mvt_tiles.py retiré (doctrine 1-worker
+# minimaliste, zéro consommation frontend confirmée par grep exhaustif).
 
 # SELF-AUDIT-Omega — validation institutionnelle TERRITOIRE-V12 au demarrage
 try:
@@ -1178,14 +1174,9 @@ try:
 except Exception as e:
     logger.warning(f"CHAINE_Ω_CASCADE not loaded: {e}")
 
-# ENGINE_MESH_3D_Ω · PHASE 3 (2026-05-10 · STEEVE-MAX)
-# Cesium 3D Tiles + glTF + draping SPECTRAL/TERRAIN_HR/GIS
-try:
-    from engines.mesh_3d_omega.router import router as mesh_3d_router
-    app.include_router(mesh_3d_router)
-    logger.info("ENGINE_MESH_3D_Ω registered (/api/v20/mesh-3d) — PHASE_3 3D Cesium+glTF")
-except Exception as e:
-    logger.warning(f"ENGINE_MESH_3D_Ω not loaded: {e}")
+# P22ΩΩ_CLEANUP_3D_MVT_EDGE · 2026-05-18 · COMMANDANT STEEVE-MAX
+# Block ENGINE_MESH_3D_Ω SUPPRIMÉ — engines/mesh_3d_omega/ retiré (doctrine
+# 1-worker minimaliste, Cesium 3D Viewer abandonné).
 
 # ENGINE_SUPER_RESOLUTION_Ω · NEW_ENGINE_4 (2026-05-10 · STEEVE-MAX)
 # Lanczos x4 + scaffold Real-ESRGAN compatible
@@ -1196,14 +1187,9 @@ try:
 except Exception as e:
     logger.warning(f"ENGINE_SUPER_RESOLUTION_Ω not loaded: {e}")
 
-# V20_3D_OVERLAYS_Ω · CARTE_3D_INTEGRATION_SOUS_HEADER_Ω (2026-05-11 · STEEVE-MAX)
-# 4 endpoints alimentant le viewer Cesium 3D — réutilise le bundle V20 (zéro mock)
-try:
-    from engines.v8_institutional.v20_3d_overlays_omega import router as v20_3d_overlays_router
-    app.include_router(v20_3d_overlays_router)
-    logger.info("V20_3D_OVERLAYS_Ω registered — /api/v20/{corridors,zones,points-interet}/active + /api/v20/territoire/buffer-600m")
-except Exception as e:
-    logger.warning(f"V20_3D_OVERLAYS_Ω not loaded: {e}")
+# P22ΩΩ_CLEANUP_3D_MVT_EDGE · 2026-05-18 · COMMANDANT STEEVE-MAX
+# Block V20_3D_OVERLAYS_Ω SUPPRIMÉ — module v20_3d_overlays_omega.py retiré
+# (alimentait CesiumTerritoireViewer, lui-même supprimé en frontend).
 
 # AUDIT_SUPRA_CORRIDORS_Ω · Rapport HTTPS téléchargeable (2026-05-11 · STEEVE-MAX)
 # Sert /app/memory/AUDIT_SUPRA_CORRIDORS_V90.md sans auth · sans compression
@@ -1395,11 +1381,12 @@ try:
 except Exception as e:
     logger.warning(f"Pipeline preview router not loaded: {e}")
 
-# ═══ PHASE X199 ACTIVATION — 5 engines étendus (ordre institutionnel) ═══
+# ═══ PHASE X199 ACTIVATION — 4 engines étendus (ordre institutionnel, terrain_3d retiré) ═══
+# P22ΩΩ_CLEANUP_3D_MVT_EDGE · 2026-05-18 · STEEVE-MAX
+# ENGINE_3D_TERRAIN_Ω (X199 #3) SUPPRIMÉ — engines/terrain_3d_omega/ retiré.
 for _slug, _label in [
     ("ecoforestry_omega",         "ENGINE_ECOFORESTRY_Ω (X199 #1 — racine)"),
     ("advanced_geospatial_omega", "ENGINE_ADVANCED_GEOSPATIAL_Ω (X199 #2)"),
-    ("terrain_3d_omega",          "ENGINE_3D_TERRAIN_Ω (X199 #3)"),
     ("legal_time_omega",          "ENGINE_LEGAL_TIME_Ω (X199 #4 — racine)"),
     ("predictive_omega",          "ENGINE_PREDICTIVE_Ω (X199 #5 — dépendant de 1-4)"),
 ]:

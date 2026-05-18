@@ -145,27 +145,29 @@ Les audits successifs (avec leur perf_guard) sont persistes dans `/app/memory/SE
 # Purge caches (pour forcer cold measurement)
 # ═══════════════════════════════════════════════════════════════════
 def _purge_caches_inprocess():
-    """Purge local LRU (bundle + MVT) pour forcer cold. Redis non touche."""
+    """Purge local LRU (bundle uniquement post-CLEANUP_3D_MVT_EDGE). Redis non touche.
+
+    P22ΩΩ_CLEANUP_3D_MVT_EDGE · 2026-05-18 · STEEVE-MAX
+    Section MVT supprimée — v20_mvt_tiles.py retiré (doctrine 1-worker).
+    """
     try:
         from engines.v8_institutional import v20_performance_bundle as pb
         pb._CACHE.clear()
     except Exception as e:
         logger.debug(f"purge bundle cache failed: {e}")
-    try:
-        from engines.v8_institutional import v20_mvt_tiles as mt
-        mt._TILE_CACHE.clear()
-    except Exception as e:
-        logger.debug(f"purge tile cache failed: {e}")
 
 
 # ═══════════════════════════════════════════════════════════════════
 # Collecte IN-PROCESS (appel direct engine, bypass FastAPI)
 # ═══════════════════════════════════════════════════════════════════
 async def collect_metrics_inprocess() -> dict:
-    """Mesure directe compute_territoire_v10 + tile route function."""
+    """Mesure directe compute_territoire_v10.
+
+    P22ΩΩ_CLEANUP_3D_MVT_EDGE · 2026-05-18 · STEEVE-MAX
+    Section MVT retirée — mvt_cold_ms / mvt_warm_ms retournent 0.0.
+    """
     from engines.v8_institutional.territoire_v10_supra import compute_territoire_v10
     from engines.v8_institutional import v20_performance_bundle as pb
-    from engines.v8_institutional import v20_mvt_tiles as mt
 
     _purge_caches_inprocess()
 
@@ -187,27 +189,9 @@ async def collect_metrics_inprocess() -> dict:
     bundle_warm_ms = round((time.time() - t0) * 1000, 2)
     assert cached is not None, "baseline: bundle warm cache miss apres set"
 
-    # --- MVT cold (corridors) --- tile cache purged; bundle cache warm so this isolates tile compute
-    mt._TILE_CACHE.clear()
-    tile_key = f"corridors_{_REF_TILE_Z}_{_REF_TILE_X}_{_REF_TILE_Y}_{_REF_LAT:.3f}_{_REF_LON:.3f}_{_REF_SPECIES}_{_REF_MONTH}_{_REF_HOUR}_{int(_REF_WIND_DEG/15)*15%360}"
-    t0 = time.time()
-    # Build features like tile endpoint does (use already-warm bundle)
-    bounds = mt._tile_bounds(_REF_TILE_Z, _REF_TILE_X, _REF_TILE_Y)
-    bundle = await mt._get_bundle(_REF_LAT, _REF_LON, _REF_SPECIES, _REF_MONTH, _REF_HOUR, _REF_WIND_DEG)
-    features = []
-    for c in bundle.get("corridors", []):
-        path = c.get("path") or []
-        if path and mt._path_intersects_bbox(path, bounds):
-            features.append({"type": "Feature", "properties": {"layer": "corridors"}})
-    tile_payload = {"type": "FeatureCollection", "features": features, "count": len(features)}
-    mvt_cold_ms = round((time.time() - t0) * 1000, 2)
-    mt._cache_set(tile_key, tile_payload)
-
-    # --- MVT warm ---
-    t0 = time.time()
-    cached_tile = mt._cache_get(tile_key)
-    mvt_warm_ms = round((time.time() - t0) * 1000, 2)
-    assert cached_tile is not None, "baseline: tile warm cache miss apres set"
+    # MVT supprimé (P22ΩΩ_CLEANUP_3D_MVT_EDGE) — retourner zéros
+    mvt_cold_ms = 0.0
+    mvt_warm_ms = 0.0
 
     return {
         "bundle_cold_ms": bundle_cold_ms,
@@ -246,28 +230,9 @@ async def collect_metrics_http(base_url: str = None, purge: bool = True) -> dict
         bundle_warm_ms = round((time.time() - t0) * 1000, 2)
         r.raise_for_status()
 
-        # MVT cold (purge tile cache cote serveur via module)
-        try:
-            from engines.v8_institutional import v20_mvt_tiles as mt
-            mt._TILE_CACHE.clear()
-        except Exception:
-            pass
-        t0 = time.time()
-        r = await client.get(
-            f"{base_url}/api/v20/territoire/tiles/corridors/{_REF_TILE_Z}/{_REF_TILE_X}/{_REF_TILE_Y}.json",
-            params=common_q,
-        )
-        mvt_cold_ms = round((time.time() - t0) * 1000, 2)
-        r.raise_for_status()
-
-        # MVT warm
-        t0 = time.time()
-        r = await client.get(
-            f"{base_url}/api/v20/territoire/tiles/corridors/{_REF_TILE_Z}/{_REF_TILE_X}/{_REF_TILE_Y}.json",
-            params=common_q,
-        )
-        mvt_warm_ms = round((time.time() - t0) * 1000, 2)
-        r.raise_for_status()
+        # MVT supprimé (P22ΩΩ_CLEANUP_3D_MVT_EDGE · 2026-05-18 · STEEVE-MAX)
+        mvt_cold_ms = 0.0
+        mvt_warm_ms = 0.0
 
     return {
         "bundle_cold_ms": bundle_cold_ms,

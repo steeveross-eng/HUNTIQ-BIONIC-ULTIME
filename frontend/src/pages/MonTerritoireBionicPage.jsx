@@ -47,8 +47,8 @@ import { useAuth } from '@/components/GlobalAuth';
 import PlacesSidePanel from '@/components/territoire/PlacesSidePanel';
 // PHASE_XII_SUPRA_DIAGNOSTIC_V30_STATUS_Ω — panel institutionnel lecture seule
 import StatutCorridorsOmegaPanel from '@/components/territoire/StatutCorridorsOmegaPanel';
-// PHASE_3_3D_OMEGA · Cesium viewer (chargé via CDN ESM, 0B disque)
-import CesiumTerritoireViewer from '@/components/territoire/CesiumTerritoireViewer';
+// P22ΩΩ_CLEANUP_3D_MVT_EDGE · 2026-05-18 · COMMANDANT STEEVE-MAX
+// CesiumTerritoireViewer SUPPRIMÉ — doctrine 1-worker minimaliste.
 import HudTerritoireUltime from '@/components/territoire/HudTerritoireUltime';import LayersOmegaSyncPanel from '@/components/territoire/LayersOmegaSyncPanel';
 import LayersPanelOmegaUnified from '@/components/territoire/LayersPanelOmegaUnified';
 import RenduOmegaIntegralCertifier from '@/components/territoire/RenduOmegaIntegralCertifier';
@@ -140,8 +140,8 @@ const MonTerritoireBionicPage = ({ pageMode = 'analyse-bionic' } = {}) => {
     ? 'Carte TERRITOIRE Ω'
     : 'Analyse Territoire BIONIC';
 
-  // ═══ PHASE_3_3D_OMEGA — VUE 3D Cesium (overlay modal) ═══
-  const [show3DViewer, setShow3DViewer] = useState(false);
+  // P22ΩΩ_CLEANUP_3D_MVT_EDGE · 2026-05-18 · COMMANDANT STEEVE-MAX
+  // VUE 3D Cesium SUPPRIMÉE — doctrine 1-worker minimaliste.
 
   // ═══ HOTSPOT DEEP LINK — lecture des query params ═══
   const hotspotDeepLink = useRef({
@@ -1330,7 +1330,6 @@ const MonTerritoireBionicPage = ({ pageMode = 'analyse-bionic' } = {}) => {
         showInspectionBioPanel={showInspectionBioPanel} setShowInspectionBioPanel={setShowInspectionBioPanel}
         showPhaseA={showPhaseA} setShowPhaseA={setShowPhaseA}
         showPhaseC={showPhaseC} setShowPhaseC={setShowPhaseC}
-        show3DViewer={show3DViewer} setShow3DViewer={setShow3DViewer}
       />
 
       {/* ════════════════════════════════════════════════════════════════
@@ -1843,65 +1842,11 @@ const MonTerritoireBionicPage = ({ pageMode = 'analyse-bionic' } = {}) => {
         style={{ display: 'none' }}
       />
 
-      {/* ═══ PHASE_3_3D_OMEGA — OVERLAY CESIUM ═══
-       *  CARTE_3D_INTEGRATION_SOUS_HEADER_Ω (2026-05-11 · STEEVE-MAX) :
-       *  Le bouton "3D" flottant a été migré dans la TerritoireToolbar
-       *  (sous-header). Voir <PressButton testId="toggle-3d-modal-btn">.
+      {/* P22ΩΩ_CLEANUP_3D_MVT_EDGE · 2026-05-18 · COMMANDANT STEEVE-MAX
+       *  Overlay Cesium 3D SUPPRIMÉ — doctrine 1-worker minimaliste.
+       *  CesiumTerritoireViewer, mesh_3d_omega, v20_3d_overlays_omega, v20_mvt_tiles
+       *  retirés du codebase. Bouton 3D également retiré de TerritoireToolbar.
        */}
-      {show3DViewer && (
-        <div
-          data-testid="cesium-overlay-modal"
-          onClick={(e) => { if (e.target === e.currentTarget) setShow3DViewer(false); }}
-          style={{
-            position: 'fixed', inset: 0, zIndex: 9998,
-            background: '#000',
-            display: 'flex', alignItems: 'stretch', justifyContent: 'stretch',
-          }}
-        >
-          <div
-            style={{
-              position: 'relative',
-              width: '100vw', height: '100vh',
-              background: '#0a0a0a',
-              overflow: 'hidden',
-            }}
-          >
-            <button
-              data-testid="btn-close-3d-viewer"
-              onClick={() => setShow3DViewer(false)}
-              style={{
-                position: 'absolute', top: 16, right: 16, zIndex: 10000,
-                background: 'rgba(26,26,26,0.92)', color: '#FFF',
-                border: '2px solid #FF6A00',
-                padding: '10px 18px',
-                fontSize: 12, fontWeight: 800, letterSpacing: 0.6,
-                fontFamily: 'JetBrains Mono, monospace',
-                textTransform: 'uppercase',
-                borderRadius: 8,
-                cursor: 'pointer',
-                boxShadow: '0 4px 16px rgba(255,106,0,0.45)',
-              }}
-              title="Retour à la Carte 2D"
-            >
-              ← Retour à la Carte
-            </button>
-            <CesiumTerritoireViewer
-              lat={selectedWaypointForZones?.lat || selectedWaypointForZones?.latitude || 48.206657}
-              lon={selectedWaypointForZones?.lng || selectedWaypointForZones?.longitude || -68.382422}
-              species={selectedSpecies === 'tous' ? 'orignal' : selectedSpecies}
-              month={new Date().getMonth() + 1}
-              hour={new Date().getHours()}
-              windDeg={windInfo?.directionDeg || 225}
-              windSpeed={windInfo?.speed || 15}
-              drapeSpectral
-              bboxRadiusM={600}
-              gridN={11}
-              fullScreen
-              loadOverlays
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 };
