@@ -235,6 +235,22 @@ Persona BCE-4X non-déviante.
     - Bundle V20 intact : 14 corridors · 5 zones · 4 salines · 148ms (cache HIT)
   - **V30_LOCK** respecté · aucune modification scoring V7 (délégation pure)
   - **Console DevTools COMMANDANT** : aucun appel résiduel `/api/v7/spatial/*` côté frontend
+- ✅ **P22ΩΩ_BLOC_5_TESTS_REGRESSION_PRESENCE_MASK_Ω** (2026-05-18) — Verrouillage doctrinal par tests:
+  - **Nouveau fichier** `tests/test_doctrinal_omega_presence_mask.py` (358 L)
+  - **25 tests doctrinaux couvrant 14 invariants Ω** :
+    - I-1/I-1bis/I-2/I-3 : Registre présence MFFP 2024 (wapiti ABSENT @ 3 waypoints, PRESENT @ Mauricie, chevreuil PRESENT @ BSL)
+    - I-4/I-5/I-6 : `apply_presence_mask_to_bundle` purge corridors+affuts+hotspots+salines, purge zones tagged, préserve infrastructure
+    - I-7/I-7bis : Rayon entry/exit 780m default (engine + smoother)
+    - I-8 : Promotion auto veine principale `P22ΩΩ_TERRITOIRE_Ω_SUPRA_BLOC_2_4`
+    - I-9 : Aucun fallback legacy (V8-PHASE-A/B/MAP_BUNDLE supprimés, corridors_v10 sanctuarisé, V7 spatial désactivé)
+    - I-10/I-11 : FIX BYPASS (organic_generate + smoother re-application après external_inflow)
+    - I-12/I-12bis : E2E pipeline wapiti @ BSL → 0 corridors, chevreuil @ BSL → corridors présents
+    - I-13 : Migration endpoints Ω (relocalisation/salines + spatial routers enregistrés)
+    - I-14 : Secure pickle HMAC roundtrip + tampering detection + legacy tolerance
+  - **conftest.py** : marqueur `doctrinal_omega` whitelisté (exemption filtre BCE-4X TERRITOIRE)
+  - **pyproject.toml** : marker `doctrinal_omega` enregistré
+  - **Résultat exécution** : **25/25 PASSED · 47.86s · 0 erreur**
+  - Aucun changement fonctionnel — tests uniquement, doctrine de vérification verrouillée
 
 ## PENDING / KNOWN ISSUES
 - ⚠️ **Single-worker uvicorn** : code SYNC dans `compute_territoire_v10` (1 await,

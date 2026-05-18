@@ -10,6 +10,7 @@ markers = [
     "supra: Tests SUPRA Panel (ACTIF)",
     "intelligence: Tests Intelligence Engine (ACTIF)",
     "commander: Tests Commander Engine (ACTIF)",
+    "doctrinal_omega: Tests doctrinaux Omega (P22OMEGAOMEGA verrouillage regression — ACTIF)",
 ]
 
 # Modules STRICTEMENT exclus du pipeline

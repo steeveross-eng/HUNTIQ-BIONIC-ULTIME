@@ -51,6 +51,10 @@ def pytest_collection_modifyitems(config, items):
     )
 
     for item in items:
+        # P22ΩΩ_BLOC_5 — Tests doctrinaux Ω : EXEMPTION explicite du filtre BCE-4X
+        if "doctrinal_omega" in item.keywords:
+            continue
+
         # Exclusion par marqueur
         if "territoire" in item.keywords:
             item.add_marker(skip_territoire)
