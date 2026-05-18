@@ -146,6 +146,26 @@ Persona BCE-4X non-déviante.
     - `P22OMEGAOMEGA_PALIER_3_MIGRATION_V7_SPATIAL_PRE_PLAN.md` (3 consommateurs FE)
   - **Validation** : backend boot OK, 78 modules registered, endpoints purgés → 404 propre,
     V20 bundle + V7 spatial préservés (chevreuil @ BSL OK), V30_LOCK respecté
+- ✅ **P22ΩΩ_QUALITY_GROUPE_A** (2026-05-18) — Correctifs revue de code (triage):
+  - **Syntax error frontend** : `src/config/modules.js:45` commentaire `#` (Python)
+    remplacé par `//` (JavaScript)
+  - **Wildcard imports → imports explicites** (3 fichiers) :
+    - `config/__init__.py` : `from .settings import *` → 10 imports explicites
+    - `modules/chasseur_jumeau.py` : `from .experiments import *` → 4 imports explicites
+    - `modules/liste_epicerie.py` : `from .utility_modules import *` → 5 imports explicites
+    - Bénéfice : namespace clarifié, dépendances tracées, lint conforme
+  - **Validation** : lint Python + JS conformes, backend boot OK, 78 modules,
+    singletons fonctionnels (`chasseur_jumeau_service`, `liste_epicerie_service`),
+    config exporte 26 modules + `ARCHITECTURE_VERSION=3.0.0`
+  - **Items EXCLUS du GROUPE A** (motifs documentés) :
+    - MD5 → SHA-256 sur `hash.py` : INTERDIT par doctrine BCE-4X x3205
+      (rupture cache + clés différentes). Différé jusqu'à x3300.
+    - Mutable default arguments : **0 instance trouvée** dans le code actif (rapport gonflé)
+  - **Items du rapport identifiés comme FAUX POSITIFS** :
+    - `exec()` `wms_proxy_router.py:131` : c'est `asyncio.create_subprocess_exec()`
+    - Hardcoded secrets (31 instances) : ce sont des fixtures de tests, pas des
+      credentials de production
+    - Syntax error : Webpack tolérait silencieusement, mais correction quand même appliquée
 
 ## PENDING / KNOWN ISSUES
 - ⚠️ **Single-worker uvicorn** : code SYNC dans `compute_territoire_v10` (1 await,
