@@ -404,6 +404,35 @@ def validate_corridor_visual_balance(corridors: List[Dict]) -> Dict[str, Any]:
     """
     BCE-4X-VIS-007: Validates visual balance of corridor rendering.
     Checks that band widths and opacities are within the reduced limits.
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║  P22ΩΩ_QUALITY_GROUPE_B · 2026-05-18 · COMMANDANT STEEVE-MAX     ║
+    ║  CIRCULAR IMPORT DOCTRINAIREMENT ACCEPTÉ                          ║
+    ╠═══════════════════════════════════════════════════════════════════╣
+    ║                                                                   ║
+    ║  Cette fonction importe `BAND_RATIO` et `BAND_COLORS` depuis      ║
+    ║  `modules.bionic_engine_p0.engines.corridors_v9` qui, à son tour, ║
+    ║  importe `enrich_corridor` depuis `bce.bce_corridor_v9` (ligne    ║
+    ║  453, `enrich_corridor()`).                                       ║
+    ║                                                                   ║
+    ║  POURQUOI CE PATTERN EST ACCEPTABLE :                             ║
+    ║  1. Les DEUX imports sont LAZY (à l'intérieur de fonctions)       ║
+    ║  2. Python résout les modules au runtime au moment de l'appel,    ║
+    ║     pas au top-level — aucun risque de boucle d'import statique   ║
+    ║  3. La dépendance bidirectionnelle est INTENTIONNELLE :           ║
+    ║     - BCE valide les paramètres visuels que CORRIDORS_V9 définit  ║
+    ║     - CORRIDORS_V9 enrichit ses corridors via BCE post-construction║
+    ║  4. Aucun crash runtime observé dans toute la session             ║
+    ║                                                                   ║
+    ║  POURQUOI NE PAS REFACTORER :                                     ║
+    ║  - Extraire BAND_RATIO/BAND_COLORS vers un 3e module casserait    ║
+    ║    les nombreux imports existants sans gain doctrinal             ║
+    ║  - Le pattern lazy-import est explicite et auditable              ║
+    ║                                                                   ║
+    ║  RÉFÉRENCES :                                                     ║
+    ║  - corridors_v9.py:453 → enrich_corridor (lazy)                   ║
+    ║  - bce_corridor_v9.py:408 → BAND_RATIO/BAND_COLORS (lazy, ici)    ║
+    ╚═══════════════════════════════════════════════════════════════════╝
     """
     from modules.bionic_engine_p0.engines.corridors_v9 import BAND_RATIO, BAND_COLORS
 

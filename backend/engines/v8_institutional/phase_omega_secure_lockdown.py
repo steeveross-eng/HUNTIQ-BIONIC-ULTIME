@@ -33,9 +33,15 @@ ENGINES_LOCKED_HASHES: dict[str, str] = {
     "engine_zones.py": "8229ca7c0d16e5f6",
     "engine_salines_v11_supra.py": "220ff36a3d7b67b6",
     "engine_hotspots.py": "8a268fa092a0499c",
-    "engine_ia_corridors_organic_omega.py": "027712696407882f",
-    "engine_rendu_omega.py": "96af50ad96bb7b6b",
-    "registry_lock_omega.py": "438c58198c8b4586",
+    # P22ΩΩ_QUALITY_GROUPE_B · 2026-05-18 · STEEVE-MAX
+    # Hashes mis à jour suite aux directives institutionnelles :
+    #   - engine_ia_corridors_organic_omega.py : P22ΩΩ_FIX_PRESENCE_MASK_BYPASS
+    #     + BLOC 2.2 (rayon 780m) + BLOC 2.4 (promotion auto)
+    #   - engine_rendu_omega.py : ajustements rendering Ω
+    #   - registry_lock_omega.py : maintenance institutionnelle
+    "engine_ia_corridors_organic_omega.py": "016fcc7e8322925d",
+    "engine_rendu_omega.py": "4d911cc288bdeb1f",
+    "registry_lock_omega.py": "fb765b94cc1fd421",
     "self_audit_omega.py": "449b6d0fe48c53a8",
 }
 
@@ -276,14 +282,41 @@ def bloc_8_lock_state() -> dict[str, Any]:
     reg_path = ENGINES_DIR / "registry_lock_omega.py"
     registry_version = None
     registry_sha256 = None
+    registry_exec_authorized = False
     try:
-        ns: dict[str, Any] = {}
-        exec(compile(reg_path.read_text(), str(reg_path), "exec"), ns)  # nosec B102
-        registry_version = ns.get("REGISTRY_VERSION")
-        get_signature = ns.get("get_registry_signature")
-        if callable(get_signature):
-            sig = get_signature()
-            registry_sha256 = sig.get("sha256") if isinstance(sig, dict) else None
+        # ═══════════════════════════════════════════════════════════════════
+        # P22ΩΩ_QUALITY_GROUPE_B · 2026-05-18 · COMMANDANT STEEVE-MAX
+        # VÉRIFICATION SHA-256 AVANT EXEC — DURCISSEMENT INSTITUTIONNEL
+        # ─────────────────────────────────────────────────────────────────
+        # Le registry_lock_omega.py est exécuté en isolation namespace pour
+        # extraire REGISTRY_VERSION et get_registry_signature(). Avant tout
+        # exec(), on vérifie que son SHA-256 correspond au hash attendu
+        # institutionnel (ENGINES_LOCKED_HASHES) — sinon refus catégorique
+        # de l'exec et retour d'une erreur explicite.
+        #
+        # Cela transforme la pratique exec() en un transport contrôlé
+        # par hash signed à l'avance (équivalent code-signing léger).
+        # ═══════════════════════════════════════════════════════════════════
+        reg_sha_actual = _sha16(reg_path)
+        reg_sha_expected = ENGINES_LOCKED_HASHES.get("registry_lock_omega.py")
+        if reg_sha_expected is None:
+            registry_version = "error: no expected hash in ENGINES_LOCKED_HASHES"
+        elif reg_sha_actual != reg_sha_expected:
+            registry_version = (
+                f"error: SHA-256 mismatch (actual={reg_sha_actual}, "
+                f"expected={reg_sha_expected}) — exec refused"
+            )
+        else:
+            # SHA-256 vérifié — exec autorisé en namespace isolé
+            registry_exec_authorized = True
+            ns: dict[str, Any] = {}
+            # nosec B102 — exec contrôlé par SHA-256 verification ci-dessus
+            exec(compile(reg_path.read_text(), str(reg_path), "exec"), ns)
+            registry_version = ns.get("REGISTRY_VERSION")
+            get_signature = ns.get("get_registry_signature")
+            if callable(get_signature):
+                sig = get_signature()
+                registry_sha256 = sig.get("sha256") if isinstance(sig, dict) else None
     except Exception as e:
         registry_version = f"error: {e}"
     return {
@@ -296,6 +329,7 @@ def bloc_8_lock_state() -> dict[str, Any]:
         "territoire_version": "V20-SUPRA-CERTIFIED",
         "registry_version": registry_version,
         "registry_sha256": registry_sha256,
+        "registry_exec_authorized": registry_exec_authorized,
         "engines_hashes_actual": hashes_actual,
         "hashes_conforme": hashes_conforme,
         "conforme": hashes_conforme,

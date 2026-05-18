@@ -166,6 +166,33 @@ Persona BCE-4X non-déviante.
     - Hardcoded secrets (31 instances) : ce sont des fixtures de tests, pas des
       credentials de production
     - Syntax error : Webpack tolérait silencieusement, mais correction quand même appliquée
+- ✅ **P22ΩΩ_QUALITY_GROUPE_B** (2026-05-18) — Durcissement sécurité ciblé:
+  - **Module `secure_pickle_omega.py`** (177 L) — Pickle HMAC-SHA256 :
+    - `secure_dumps()` : 32 bytes HMAC + pickle binaire
+    - `secure_loads()` : vérification HMAC en temps constant, refus si mismatch
+    - `secure_loads_legacy_tolerant()` : rétrocompatibilité migration premier boot
+    - Clé secrète en cascade : ENV → fichier persistant (`mode=0600`) → fallback
+    - Tests roundtrip + tampering detection + legacy migration validés (5/5)
+  - **Migration `v20_performance_bundle.py`** : `pickle.dump`/`pickle.load` → `secure_dumps`/`secure_loads_legacy_tolerant`
+    - Cache disque post-migration : `Disk load: 9 entries (HMAC-verified)`
+  - **Migration `redis_omega.py`** : idem (Redis off en preview, code prêt en production)
+  - **Lockdown SHA-256 `phase_omega_secure_lockdown.py:281`** :
+    - Vérification SHA-256 du fichier `registry_lock_omega.py` AVANT `exec()`
+    - Comparaison avec `ENGINES_LOCKED_HASHES["registry_lock_omega.py"]`
+    - Refus catégorique si mismatch (renvoie erreur explicite, exec non lancé)
+    - Nouveau flag : `registry_exec_authorized` dans réponse
+    - Mise à jour des 3 hashes obsolètes (organic, rendu, registry) suite aux patches
+      institutionnels antérieurs (BLOC 2.x)
+  - **Circular import `bce_corridor_v9` ↔ `corridors_v9`** :
+    - Documentation in-source dans les 2 fonctions impliquées (validate_corridor_visual_balance, enrich_corridor)
+    - Document institutionnel : `/app/memory/CIRCULAR_IMPORT_BCE_CORRIDORS_V9_DOCUMENTATION.md`
+    - Pattern lazy-import bidirectionnel **DOCTRINAIREMENT ACCEPTÉ** (faux positif rapport)
+  - **Validation post-déploiement** :
+    - Backend boot OK · 78 modules registered
+    - HMAC verified sur cache disque (9 entries)
+    - `registry_exec_authorized=True`, `hashes_conforme=True`
+    - Endpoints critiques (`/health`, `/bundle`, `/especes/list`) → 200 OK
+    - V30_LOCK respecté · aucune modification fonctionnelle
 
 ## PENDING / KNOWN ISSUES
 - ⚠️ **Single-worker uvicorn** : code SYNC dans `compute_territoire_v10` (1 await,

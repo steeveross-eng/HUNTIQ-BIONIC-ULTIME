@@ -9,15 +9,21 @@ Comportement:
   - API uniforme: redis_get / redis_set / redis_del / redis_stats.
 
 Cle namespace: "v20:territoire:bundle:<key>"
-Serialisation: pickle (meme format que cache disque).
+Serialisation: pickle HMAC-signé (P22ΩΩ_QUALITY_GROUPE_B · 2026-05-18 · STEEVE-MAX).
 TTL: 24h (86400s).
 
 Aucune regression: si Redis indisponible, logs warning et fallback LRU.
 """
 import os
-import pickle
 import logging
 from typing import Any, Optional
+
+# P22ΩΩ_QUALITY_GROUPE_B · 2026-05-18 · COMMANDANT STEEVE-MAX
+# Pickle sécurisé par HMAC-SHA256 — protège contre injection Redis compromis.
+from engines.v8_institutional.secure_pickle_omega import (
+    secure_dumps,
+    secure_loads_legacy_tolerant,
+)
 
 logger = logging.getLogger("bionic.redis_omega")
 
@@ -65,7 +71,12 @@ def is_redis_enabled() -> bool:
 
 
 def redis_get(key: str, tiles: bool = False) -> Optional[Any]:
-    """Recupere une entree depuis Redis. None si miss ou Redis off."""
+    """Recupere une entree depuis Redis. None si miss ou Redis off.
+
+    P22ΩΩ_QUALITY_GROUPE_B · 2026-05-18 · STEEVE-MAX
+    Désérialisation via secure_loads (HMAC-SHA256 vérifié). Tolérance
+    legacy pour migration premier boot.
+    """
     _init_redis()
     if not _redis_enabled:
         return None
@@ -74,20 +85,29 @@ def redis_get(key: str, tiles: bool = False) -> Optional[Any]:
         raw = _redis_client.get(full_key)
         if raw is None:
             return None
-        return pickle.loads(raw)
+        obj, was_legacy = secure_loads_legacy_tolerant(raw)
+        if was_legacy:
+            logger.warning(
+                f"[REDIS-Ω] Legacy unsigned payload for {key} — will re-sign on next set"
+            )
+        return obj
     except Exception as e:
         logger.warning(f"[REDIS-Omega] GET failed for {key}: {e}")
         return None
 
 
 def redis_set(key: str, value: Any, ttl: int = _REDIS_DEFAULT_TTL, tiles: bool = False) -> bool:
-    """Stocke une entree dans Redis avec TTL. False si Redis off."""
+    """Stocke une entree dans Redis avec TTL. False si Redis off.
+
+    P22ΩΩ_QUALITY_GROUPE_B · 2026-05-18 · STEEVE-MAX
+    Sérialisation via secure_dumps (HMAC-SHA256 préfixé).
+    """
     _init_redis()
     if not _redis_enabled:
         return False
     try:
         full_key = (_REDIS_NAMESPACE_TILES if tiles else _REDIS_NAMESPACE) + key
-        data = pickle.dumps(value)
+        data = secure_dumps(value)
         _redis_client.setex(full_key, ttl, data)
         return True
     except Exception as e:

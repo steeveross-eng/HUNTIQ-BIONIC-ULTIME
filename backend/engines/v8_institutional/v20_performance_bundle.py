@@ -11,13 +11,20 @@ UPGRADES:
   - CDN-ready: Cache-Control + Vary
 """
 import time
-import pickle
+import pickle  # noqa: F401  # conservé pour compat (legacy disk migration)
 import asyncio
 import logging
 import os
 from pathlib import Path
 from collections import OrderedDict
 from fastapi import APIRouter, Query, Response, BackgroundTasks
+
+# P22ΩΩ_QUALITY_GROUPE_B · 2026-05-18 · COMMANDANT STEEVE-MAX
+# Pickle sécurisé par HMAC-SHA256 pour disk cache + Redis propagation.
+from engines.v8_institutional.secure_pickle_omega import (
+    secure_dumps,
+    secure_loads_legacy_tolerant,
+)
 
 logger = logging.getLogger("bionic.v20_performance")
 router = APIRouter(prefix="/api/v20/territoire", tags=["V20 Performance Bundle"])
@@ -210,14 +217,21 @@ def _cache_set(key: str, payload: dict, ttl: int = None):
 
 # ═══ DISK PERSISTENCE ═══
 def _cache_save_disk():
-    """Persist LRU to disk (called on shutdown + periodic)."""
+    """Persist LRU to disk (called on shutdown + periodic).
+
+    P22ΩΩ_QUALITY_GROUPE_B · 2026-05-18 · STEEVE-MAX
+    Sauvegarde via secure_dumps (HMAC-SHA256) au lieu de pickle.dump direct.
+    """
     try:
         # Serialize only entries not expired
         valid = [(k, v) for k, v in _CACHE.items() if time.time() - v[0] < _CACHE_TTL_SEC]
+        signed_blob = secure_dumps({"entries": valid, "saved_at": time.time()})
         with open(_CACHE_DISK_FILE, "wb") as f:
-            pickle.dump({"entries": valid, "saved_at": time.time()}, f)
+            f.write(signed_blob)
         _STATS["disk_saved"] += 1
-        logger.info(f"[V20-CACHE] Disk save: {len(valid)} entries → {_CACHE_DISK_FILE}")
+        logger.info(
+            f"[V20-CACHE] Disk save: {len(valid)} entries → {_CACHE_DISK_FILE} (HMAC-signed)"
+        )
         return len(valid)
     except Exception as e:
         logger.warning(f"[V20-CACHE] Disk save failed: {e}")
@@ -225,19 +239,28 @@ def _cache_save_disk():
 
 
 def _cache_load_disk():
-    """Load persisted cache from disk (called at startup)."""
+    """Load persisted cache from disk (called at startup).
+
+    P22ΩΩ_QUALITY_GROUPE_B · 2026-05-18 · STEEVE-MAX
+    Lecture via secure_loads_legacy_tolerant — accepte les anciens pickles
+    non-signés au premier boot post-migration (puis re-signés au prochain save).
+    """
     if not _CACHE_DISK_FILE.exists():
         return 0
     try:
         with open(_CACHE_DISK_FILE, "rb") as f:
-            data = pickle.load(f)
+            blob = f.read()
+        data, was_legacy = secure_loads_legacy_tolerant(blob)
         loaded = 0
         for k, (ts, payload) in data.get("entries", []):
             if time.time() - ts < _CACHE_TTL_SEC:
                 _CACHE[k] = (ts, payload)
                 loaded += 1
         _STATS["disk_loaded"] = loaded
-        logger.info(f"[V20-CACHE] Disk load: {loaded} entries restored from {_CACHE_DISK_FILE}")
+        suffix = " (legacy unsigned, will re-sign)" if was_legacy else " (HMAC-verified)"
+        logger.info(
+            f"[V20-CACHE] Disk load: {loaded} entries restored from {_CACHE_DISK_FILE}{suffix}"
+        )
         return loaded
     except Exception as e:
         logger.warning(f"[V20-CACHE] Disk load failed: {e}")

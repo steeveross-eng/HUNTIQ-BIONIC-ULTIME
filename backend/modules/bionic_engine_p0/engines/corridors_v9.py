@@ -448,7 +448,21 @@ class CorridorEngineV9:
         return corridor
 
     def enrich_corridor(self, corridor: Dict) -> Dict:
-        """Enrichit un corridor avec des metadonnees ecologiques avancees."""
+        """Enrichit un corridor avec des metadonnees ecologiques avancees.
+
+        ╔═══════════════════════════════════════════════════════════════╗
+        ║  P22ΩΩ_QUALITY_GROUPE_B · 2026-05-18 · STEEVE-MAX            ║
+        ║  CIRCULAR IMPORT DOCTRINAIREMENT ACCEPTÉ — voir doc complète  ║
+        ║  dans bce/bce_corridor_v9.py:validate_corridor_visual_balance ║
+        ║                                                               ║
+        ║  Pattern lazy-import bidirectionnel :                         ║
+        ║  - Ici (corridors_v9) → bce.bce_corridor_v9 (lazy, ligne 453) ║
+        ║  - bce_corridor_v9 → corridors_v9.BAND_RATIO (lazy, ligne 408)║
+        ║                                                               ║
+        ║  Sécurité runtime : import résolu uniquement au moment de     ║
+        ║  l'appel effectif, aucune boucle d'import statique.           ║
+        ╚═══════════════════════════════════════════════════════════════╝
+        """
         try:
             from bce.bce_corridor_v9 import enrich_corridor as bce_enrich
             corridor = bce_enrich(corridor)
