@@ -461,21 +461,15 @@ try:
 except Exception as e:
     logger.warning(f"Hunt Orchestrator Engine not loaded: {e}")
 
-# BCE-4X BLOC 1: Corridor Unified Engine (fusion corridors OSM + BDRE)
-# PURGE-V6-PHASE-B: Corridor Unified DEPRECATED (V8 corridors terrain-aware)
-# try:
-#     from engines.corridor_unified.router import router as corridor_unified_router
-#     app.include_router(corridor_unified_router)
-# except Exception as e:
-#     pass
-
-# PURGE-V6-ANTI-DUPLICATION-A-Omega: V6 Relocalisation Router DEPRECATED
-# Relocalisation desormais geree par /api/v8/map/relocalisation (phase_a_engines.py)
-# try:
-#     from engines.relocation.router import router as relocation_router
-#     app.include_router(relocation_router)
-# except Exception as e:
-#     pass
+# P22ΩΩ_PALIERS_1_4_PURGE_IMMEDIATE_Ω · 2026-05-18 · COMMANDANT STEEVE-MAX
+# Routers legacy supprimés physiquement :
+#   - engines.corridor_unified (déjà supprimé physiquement)
+#   - engines.relocation (legacy V6 — relocalisation migrée vers Ω)
+#   - engines.v8_national.map_bundle (PALIER 1 purgé)
+#   - engines.v8_national.phase_b_engines (PALIER 1 purgé)
+#   - modules.bionic_engine_p0.routers.movement_corridors_router (PALIER 1 purgé)
+#   - core.scoring_pipeline.corridors_v10.router (HTTP désactivé,
+#     mais corridors_v10 reste CORE_MODULE pour score_point_consolidated)
 
 
 
@@ -632,12 +626,8 @@ try:
 except Exception as e:
     logger.warning(f"WMS Proxy not loaded: {e}")
 
-# PURGE-V6-PHASE-B: Movement Corridors DEPRECATED (V8 corridors terrain-aware)
-# try:
-#     from modules.bionic_engine_p0.routers.movement_corridors_router import router as movement_corridors_router
-#     app.include_router(movement_corridors_router)
-# except Exception as e:
-#     pass
+# P22ΩΩ_PALIERS_1_4_PURGE_IMMEDIATE_Ω · 2026-05-18 · STEEVE-MAX
+# movement_corridors_router supprimé physiquement (PALIER 1)
 
 # 31. Register BIONIC Compliance Engine (BCE)
 try:
@@ -708,9 +698,16 @@ try:
 except Exception as e:
     logger.warning(f"REPOS-V1 not loaded: {e}")
 
-# ═══ CORRIDORS-V10 — DELETE-LEGACY-V6: V6 router SUPPRIME ═══
-# Remplace par SPATIAL-ENGINE-V7 /api/v7/spatial/analyze-full
-# PURGE-V6-PHASE-B: Corridors V10 DEPRECATED (V8 corridors terrain-aware)
+# ═══ CORRIDORS-V10 — CORE_MODULE (HTTP router désactivé, module métier interne préservé) ═══
+# P22ΩΩ_PALIERS_1_4_PURGE_IMMEDIATE_Ω · 2026-05-18 · STEEVE-MAX
+# corridors_v10 sanctuarisé comme CORE_MODULE (PALIER 1 protection) :
+#   - HTTP API : désactivé (commenté ci-dessous)
+#   - Imports cascade INTERNES préservés :
+#     * bce/exclusion_layer_bce4x.py → cost_surface._load_cell_data
+#     * core/scoring_pipeline/score_consolide.py → engine.score_point_consolidated
+#     * engines/wildlife_behavior_omega/router.py → species_profiles.CORRIDOR_PROFILES
+#     * modules/score_consolide.py → engine.score_point_consolidated
+# INTERDICTION DE PURGE AUTOMATIQUE — voir /app/memory/P22OMEGAOMEGA_PURGE_LEGACY_V8_V7_PLAN.md
 # try:
 #     from core.scoring_pipeline.corridors_v10.router import router as corridors_v10_router
 #     app.include_router(corridors_v10_router)
@@ -877,15 +874,9 @@ try:
 except Exception as e:
     logger.warning(f"V8 Governance not loaded: {e}")
 
-# V8-MAP-BUNDLE — DÉSACTIVÉ par P22Ω_CORRIDORS_RESTORE_V90 · P0_CRITICAL · 2026-05-11
-# Motif : doctrine V90 — purge V8 legacy (mêle géométries hors conformité)
-# try:
-#     from engines.v8_national.map_bundle import router as map_bundle_router
-#     app.include_router(map_bundle_router)
-#     logger.info("✓ V8-MAP-BUNDLE registered (/api/v8/map) — Bundle unique + cache 30s")
-# except Exception as e:
-#     logger.warning(f"V8 Map Bundle not loaded: {e}")
-logger.info("[P22Ω_V90] V8-MAP-BUNDLE DISABLED — directive P22Ω_CORRIDORS_RESTORE_V90 P0")
+# V8-MAP-BUNDLE — P22ΩΩ_PALIERS_1_4_PURGE_IMMEDIATE_Ω · 2026-05-18 · STEEVE-MAX
+# Module engines/v8_national/map_bundle.py supprimé physiquement (PALIER 1).
+logger.info("[P22ΩΩ.PALIER_1] V8-MAP-BUNDLE PURGED — engines/v8_national/map_bundle.py removed")
 
 # V8-PHASE-A — DÉSACTIVÉ par P22Ω.PURGE_LEGACY.REMOVE V8 · 2026-05-12T14:30Z
 # Directive COMMANDANT STEEVE-MAX : éradication V8 legacy après wire-up V5 réussi.
@@ -899,16 +890,9 @@ logger.info("[P22Ω_V90] V8-MAP-BUNDLE DISABLED — directive P22Ω_CORRIDORS_RE
 #     logger.warning(f"V8 Phase A not loaded: {e}")
 logger.info("[P22Ω.PURGE_LEGACY] V8-PHASE-A DISABLED — /api/v8/map/relocalisation eradicated")
 
-# V8-PHASE-B — DÉSACTIVÉ par P22Ω_CORRIDORS_RESTORE_V90 · P0_CRITICAL · 2026-05-11
-# Motif : V90 ne tolère AUCUN mélange affuts/corridors (forbid_affut_references→false
-# mais V8-PHASE-B émet une géométrie incompatible avec ORGANIC v3)
-# try:
-#     from engines.v8_national.phase_b_engines import router as phase_b_router
-#     app.include_router(phase_b_router)
-#     logger.info("V8-PHASE-B registered (/api/v8/map) — Zones/Corridors/Affuts TA")
-# except Exception as e:
-#     logger.warning(f"V8 Phase B not loaded: {e}")
-logger.info("[P22Ω_V90] V8-PHASE-B DISABLED — directive P22Ω_CORRIDORS_RESTORE_V90 P0")
+# V8-PHASE-B — P22ΩΩ_PALIERS_1_4_PURGE_IMMEDIATE_Ω · 2026-05-18 · STEEVE-MAX
+# Module engines/v8_national/phase_b_engines.py supprimé physiquement (PALIER 1).
+logger.info("[P22ΩΩ.PALIER_1] V8-PHASE-B PURGED — engines/v8_national/phase_b_engines.py removed")
 
 # V8-PHASE-C — Scenario + Thermal + Multi-Engine Scoring
 try:

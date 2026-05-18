@@ -128,6 +128,24 @@ Persona BCE-4X non-déviante.
       après hierarchy_counts, promouvoir corridor de plus fort `fused_score`
     - Idempotent (skip si ≥1 veine principale existe déjà)
     - Nouveau flag : `p22omegaomega_promotion_doctrine` dans réponse
+- ✅ **P22ΩΩ_PALIERS_1_4_PURGE_IMMEDIATE_Ω** (2026-05-18) — Purge legacy + sanctuarisation :
+  - **PALIER 1** : suppression physique de 4 modules legacy (~1 563 L libérées)
+    - `engines/v8_national/map_bundle.py` (313 L)
+    - `engines/v8_national/phase_b_engines.py` (770 L)
+    - `modules/bionic_engine_p0/routers/movement_corridors_router.py` (480 L)
+    - `engines/v8_institutional/_ARCHIVE_NON_ACTIVE/engine_corridors_legacy_pre_L.py`
+    - 4 tests associés supprimés (~500 L)
+  - **PALIER 4** : 17 fichiers `tools/audit_phase_*.py` archivés dans `tools/archive/`
+  - **Cleanup server.py** : 5 blocs de commentaires legacy retirés (corridor_unified,
+    relocation, movement_corridors, V8-MAP-BUNDLE, V8-PHASE-B) + logs résiduels
+  - **Sanctuarisation `corridors_v10`** : marquage CORE_MODULE explicite dans
+    `__init__.py` avec `__purge_forbidden__=True`, liste des 5 consommateurs cascade
+    documentée (bce/exclusion_layer, score_consolide, wildlife_behavior_omega)
+  - **Pré-plans documentés** :
+    - `P22OMEGAOMEGA_PALIER_2_EXTRACTION_PHASE_A_PRE_PLAN.md` (relocalisation+salines)
+    - `P22OMEGAOMEGA_PALIER_3_MIGRATION_V7_SPATIAL_PRE_PLAN.md` (3 consommateurs FE)
+  - **Validation** : backend boot OK, 78 modules registered, endpoints purgés → 404 propre,
+    V20 bundle + V7 spatial préservés (chevreuil @ BSL OK), V30_LOCK respecté
 
 ## PENDING / KNOWN ISSUES
 - ⚠️ **Single-worker uvicorn** : code SYNC dans `compute_territoire_v10` (1 await,
