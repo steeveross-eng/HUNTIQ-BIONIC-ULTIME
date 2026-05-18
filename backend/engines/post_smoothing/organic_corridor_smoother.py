@@ -838,7 +838,10 @@ async def generate_smoothed(request: Request):
             anchor_mode=body.get("anchor_mode", "AUTO"),
             anchor_priority=body.get("anchor_priority"),
             allow_multi_anchor=body.get("allow_multi_anchor", False),
-            external_entry_exit_radius_m=body.get("external_entry_exit_radius_m", 600.0),
+            # P22ΩΩ_TERRITOIRE_Ω_SUPRA BLOC 2.2 · 2026-05-18 · STEEVE-MAX
+            # Default aligné avec rayon fonctionnel max ORGANIC_CONFIG (780m = 600m + 30%)
+            # pour autoriser la continuité corridors dans la zone fonctionnelle.
+            external_entry_exit_radius_m=body.get("external_entry_exit_radius_m", 780.0),
         )
     except TypeError:
         payload = gen_func(**{k: v for k, v in body.items() if v is not None})

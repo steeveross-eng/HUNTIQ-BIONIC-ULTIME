@@ -107,6 +107,27 @@ Persona BCE-4X non-déviante.
     - chevreuil @ BSL (PRESENT) → 81 corridors ✅ halt=False ✅ (aucune régression)
     - wapiti @ Mauricie (PRESENT zone intro) → 89 corridors ✅ halt=False ✅
   - Cache `_ORGANIC_CACHE` et `_SMOOTHER_CACHE` purgés via restart backend (in-memory)
+- ✅ **P22ΩΩ_TERRITOIRE_Ω_SUPRA BLOC 1 + 2** (2026-05-18) — Stabilisation doctrinale complète :
+  - **BLOC 1 (validation)** : 7 waypoints × 5 espèces audités, 5 endpoints critiques
+    conformes au mask XVIII-BIO, caches saines (93.94% hit ratio), aucune pollution
+  - **BLOC 2.1 — Purge sélective zones tagged species** :
+    - Patch `species_presence_mask_omega.py:288-330` : ajout purge sélective zones
+    - Critères : zones avec `species==canonical` OU `species_bias_applied!=None` purgées
+    - Infrastructure (zones sans tag espèce) préservée → `zones_preserved_infrastructure`
+    - Nouveau flag : `zones_rejected_bio_presence_mask` + `_count`
+    - **Validation wapiti @ BSL** : zones 5 → 0 (toutes tagged), chevreuil @ BSL : zones 5 préservées
+  - **BLOC 2.2 — Rayon entry/exit 600m → 780m** (rayon institutionnel fixe) :
+    - Patch `engine_ia_corridors_organic_omega.py:966` default 600→780
+    - Patch `organic_corridor_smoother.py:841` default 600→780 (smoother shadow)
+    - Aligné avec `functional_radius_max_m=780.0` (zone fonctionnelle 600m + 30%)
+  - **BLOC 2.3 — Fusion veineuse inter-corridors** :
+    - Déjà active sous condition `anchor_mode=TERRITORY_CONTINUOUS`
+    - Conservée by design (préserve rosace P22H en mode AUTO/SALINE_CENTERED)
+  - **BLOC 2.4 — Promotion auto veine principale (fused_score max)** :
+    - Patch `engine_ia_corridors_organic_omega.py:1273-1310` : si 0 veine_principale
+      après hierarchy_counts, promouvoir corridor de plus fort `fused_score`
+    - Idempotent (skip si ≥1 veine principale existe déjà)
+    - Nouveau flag : `p22omegaomega_promotion_doctrine` dans réponse
 
 ## PENDING / KNOWN ISSUES
 - ⚠️ **Single-worker uvicorn** : code SYNC dans `compute_territoire_v10` (1 await,

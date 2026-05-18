@@ -285,6 +285,49 @@ def apply_presence_mask_to_bundle(bundle: Dict[str, Any],
                 "bio_presence_mask_purged": True,
                 "score": 0.0,
             }
+        # ═══════════════════════════════════════════════════════════════════
+        # P22ΩΩ_ZONES_PRESENCE_MASK_Ω · 2026-05-18 · COMMANDANT STEEVE-MAX
+        # PURGE SÉLECTIVE DES ZONES ESPÈCE-SPÉCIFIQUES
+        # ─────────────────────────────────────────────────────────────────
+        # DOCTRINE BLOC 2.1 — Évolution institutionnelle :
+        # Auparavant, toutes les zones étaient préservées comme "infrastructure
+        # écologique du territoire" (ligne 227-229). Le COMMANDANT a confirmé
+        # que les zones tagged espèce-spécifiquement (rut/alimentation/repos/eau/
+        # thermique de espèce ABSENT) ne sont PAS de l'infrastructure et doivent
+        # disparaître pour cohérence biologique. Les zones d'infrastructure
+        # pure (sans tag species) restent préservées.
+        #
+        # CRITÈRES DE PURGE (zone est espèce-spécifique si AU MOINS UN tag) :
+        #   1. zone.get('species') correspond à l'espèce courante (canonical)
+        #   2. zone.get('species_bias_applied') est défini (biais biologique)
+        # ═══════════════════════════════════════════════════════════════════
+        zones_before = len(bundle.get("zones") or [])
+        if isinstance(bundle.get("zones"), list) and zones_before > 0:
+            species_canonical = presence["canonical"]
+            zones_filtered = []
+            zones_purged = []
+            for z in bundle["zones"]:
+                if not isinstance(z, dict):
+                    zones_filtered.append(z)
+                    continue
+                z_species = (z.get("species") or "").strip().lower()
+                has_species_tag = bool(z_species) and z_species == species_canonical.lower()
+                has_bias_tag = z.get("species_bias_applied") is not None
+                if has_species_tag or has_bias_tag:
+                    zones_purged.append({
+                        "id": z.get("id"),
+                        "type": z.get("type"),
+                        "species": z.get("species"),
+                        "reason": "species_absent_zone_tagged_purged",
+                    })
+                else:
+                    zones_filtered.append(z)
+            bundle["zones"] = zones_filtered
+            bundle["zones_rejected_bio_presence_mask"] = zones_purged
+            bundle["zones_rejected_bio_presence_mask_count"] = len(zones_purged)
+            purge_counts["zones"] = len(zones_purged)
+            purge_counts["zones_preserved_infrastructure"] = len(zones_filtered)
+
         bundle["bio_presence_mask_halt"] = True
         bundle["bio_presence_mask_purge_counts"] = purge_counts
     else:

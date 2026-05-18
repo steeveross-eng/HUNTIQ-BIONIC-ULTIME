@@ -963,7 +963,7 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
                                       anchor_mode: str = "AUTO",
                                       anchor_priority: list[str] | None = None,
                                       allow_multi_anchor: bool = False,
-                                      external_entry_exit_radius_m: float = 600.0,
+                                      external_entry_exit_radius_m: float = 780.0,
                                       densify_vitals: bool = True,
                                       enable_chained_corridors: bool = True,
                                       enable_cascade_pondere: bool = True,
@@ -975,7 +975,10 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
       - anchor_mode : "AUTO" | "SALINE_CENTERED" | "WAYPOINT"
       - anchor_priority : liste priorités (default : saline > feeding > rut > rest > waypoint)
       - allow_multi_anchor : autorise corridors multi-ancres (post-MVP)
-      - external_entry_exit_radius_m : rayon entry/exit nodes (default 600m)
+      - external_entry_exit_radius_m : rayon entry/exit nodes
+        (default 780m · P22ΩΩ_TERRITOIRE_Ω_SUPRA BLOC 2.2 · 2026-05-18 · STEEVE-MAX)
+        Aligné avec le rayon fonctionnel max ORGANIC_CONFIG ("functional_radius_max_m"=780.0)
+        pour autoriser la continuité corridors dans la zone fonctionnelle (600m + 30%).
 
     P22M+P22I (2026-05-10 · COMMANDANT STEEVE-MAX) :
       - densify_vitals : ×3 anchor points biologiques (default True)
@@ -1270,6 +1273,42 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
         else:
             hierarchy_counts[h] = hierarchy_counts.get(h, 0) + 1
 
+    # ═══════════════════════════════════════════════════════════════════════
+    # P22ΩΩ_TERRITOIRE_Ω_SUPRA BLOC 2.4 — PROMOTION AUTO VEINE PRINCIPALE
+    # 2026-05-18 · COMMANDANT STEEVE-MAX
+    # ─────────────────────────────────────────────────────────────────────
+    # DOCTRINE : Si AUCUN corridor n'est classé "veine_principale" alors qu'il
+    # existe des corridors hors connector, promouvoir celui avec le plus fort
+    # `fused_score` afin de GARANTIR ≥1 veine principale traversante par
+    # espèce dans la zone TERRITOIRE Ω.
+    # IDEMPOTENT : aucun effet si veine_principale ≥ 1 déjà.
+    # ═══════════════════════════════════════════════════════════════════════
+    promoted_id = None
+    if hierarchy_counts["veine_principale"] == 0:
+        non_connectors = [c for c in corridors_full if c.get("type") != "connector"]
+        if non_connectors:
+            best = max(
+                non_connectors,
+                key=lambda c: float(c.get("fused_score") or 0.0),
+            )
+            old_hierarchy = best.get("hierarchy", "capillaire")
+            best["hierarchy"] = "veine_principale"
+            best["hierarchy_promoted_from"] = old_hierarchy
+            best["hierarchy_promotion_doctrine"] = "P22ΩΩ_TERRITOIRE_Ω_SUPRA_BLOC_2_4"
+            best["hierarchy_promotion_reason"] = "no_main_vein_exists_promote_max_fused_score"
+            promoted_id = best.get("id")
+            # Reflect in counts
+            if old_hierarchy in hierarchy_counts and hierarchy_counts[old_hierarchy] > 0:
+                hierarchy_counts[old_hierarchy] -= 1
+            hierarchy_counts["veine_principale"] = 1
+
+    p22omegaomega_promotion_doctrine = {
+        "applied": promoted_id is not None,
+        "promoted_corridor_id": promoted_id,
+        "doctrine": "P22ΩΩ_TERRITOIRE_Ω_SUPRA_BLOC_2_4",
+        "rule": "promote_max_fused_score_when_no_veine_principale",
+    }
+
     return {
         "engine": ENGINE_NAME,
         "version": ENGINE_VERSION,
@@ -1327,6 +1366,8 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
             "doctrine": "PHASE_3_CASCADE_Ω · SPECTRAL → TERRAIN_HR → GIS → ORGANIC",
             "modulation_range": [0.5, 1.5],
         },
+        # P22ΩΩ_TERRITOIRE_Ω_SUPRA BLOC 2.4 (2026-05-18 · STEEVE-MAX) — promotion auto
+        "p22omegaomega_promotion_doctrine": p22omegaomega_promotion_doctrine,
     }
 
 
