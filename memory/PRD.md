@@ -1,5 +1,5 @@
 # PRD · TERRITOIRE Ω · BIONIC HUNT/CHASSE
-**Last updated**: 2026-02-XX · BCE-4X ULTIME ABSOLU · COMMANDANT STEEVE-MAX
+**Last updated**: 2026-02-19 · BCE-4X ULTIME ABSOLU · COMMANDANT STEEVE-MAX
 
 ## ORIGINAL PROBLEM STATEMENT
 PROTOCOLE BCE-4X ULTIME ABSOLU — Stabilisation exhaustive du backend et frontend
@@ -22,6 +22,19 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_PHASE3_CRONJOB_CANADA_H3R6_CYCLE1_Ω** (2026-02-19) — **CRONJOB CANADA H3 NIVEAU 6 EXÉCUTÉ (RUN PILOTE)** :
+  - Grille H3 résolution 6 Canada générée : **392 391 cellules** (réelle, vs 7993 R4 avant)
+  - Distribution provinces : NU 73 898 · BC 64 240 · QC 58 019 · NT 51 503 · ON 41 462 · YT 27 425 · MB 23 185 · SK 18 535 · NL 8 632 · AB 8 686 · NS 1 403
+  - Tuiles totales cibles Canada R6 = **28 252 152** (~386 GB, $5.66/mois R2)
+  - Launcher 16 workers parallèles simulant CronJob k8s exécuté en local
+  - **159 tuiles uploadées en R2 sur 26 cellules H3 uniques** durant le run pilote (T+10min, MAX_TILES=20/worker)
+  - Manifeste v2 régénéré : `r2://bionic-zerocost-omega/manifest.json` (doctrine P22ΩΩ_ZEROCOST_CANADA_H3R6_Ω)
+  - CDN propagation validée HTTP 200 en 235 ms
+  - Goulot identifié : Open-Meteo free tier HTTP 429 + circuit breaker OPEN 600s → ETA Canada complet 3 500j inacceptable
+  - Artefacts : `tools/zerocost_cronjob_launcher.sh`, `tools/zerocost_cronjob_monitor.sh`, `tools/zerocost_manifest_update.py`
+  - Rapport complet : `/app/memory/RAPPORT_CRONJOB_CANADA_H3R6_CYCLE1_Ω.md`
+  - **🔴 Phase 4 PROD SWITCH NON-AUTORISABLE en l'état** — mitigation rate-limit météo P0 bloquante
+
 - ✅ **P22ΩΩ_ZEROCOST_PHASE2_R2_CLOUDFLARE_Ω** (2026-02-XX) — **PHASE 2 ZEROCOST DÉPLOYÉE EN PRODUCTION** :
   - Bucket Cloudflare R2 `bionic-zerocost-omega` (ENAM Standard) créé via API native CF
   - Custom domain `cdn-zerocost.bionichunt.com` attaché à R2 avec SSL/HTTP3 auto

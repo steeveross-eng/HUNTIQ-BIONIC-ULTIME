@@ -42,7 +42,14 @@ SPECIES = ["chevreuil", "orignal", "ours_noir", "wapiti", "dindon_sauvage", "coy
 MONTHS = [5, 9, 10, 11]
 HOURS = [7, 14, 19]
 
-GRID_FILE = BACKEND_ROOT / "cache" / "zerocost_v1" / "canada_h3_grid.json"
+GRID_FILE = Path(
+    os.environ.get(
+        "GRID_FILE_PATH",
+        str(BACKEND_ROOT / "cache" / "zerocost_v1" / "canada_h3_grid.json"),
+    )
+)
+# Limite optionnelle de tuiles par worker (debug / smoke-test). 0 = illimité.
+MAX_TILES = int(os.environ.get("MAX_TILES", "0"))
 
 # Cloudflare R2
 CF_API_TOKEN = os.environ["CF_API_TOKEN"]
@@ -126,12 +133,16 @@ async def main():
 
     # 3. Boucle compute + upload
     stats = {"ok": 0, "fail": 0, "halt": 0, "size_bytes": 0, "start": time.time()}
+    n_total_tiles = 0
     for cell_idx, cell in enumerate(my_cells):
         lat = cell["lat"]
         lng = cell["lng"]
         for species in SPECIES:
             for month in MONTHS:
                 for hour in HOURS:
+                    if MAX_TILES and n_total_tiles >= MAX_TILES:
+                        break
+                    n_total_tiles += 1
                     bundle = await _compute_bundle(lat, lng, species, month, hour)
                     if "error" in bundle:
                         stats["fail"] += 1
@@ -150,6 +161,10 @@ async def main():
                         stats["size_bytes"] += size
                     else:
                         stats["fail"] += 1
+            if MAX_TILES and n_total_tiles >= MAX_TILES:
+                break
+        if MAX_TILES and n_total_tiles >= MAX_TILES:
+            break
         # Progress log every 10 cells
         if (cell_idx + 1) % 10 == 0:
             elapsed = time.time() - stats["start"]
