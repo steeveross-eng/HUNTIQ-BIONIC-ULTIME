@@ -1,80 +1,117 @@
 # ════════════════════════════════════════════════════════════════════════════
-# bionic-zerocost-cronjob.yaml — CronJob k8s ZEROCOST ENGINE
+# bionic-zerocost-cronjob.yaml — CronJob k8s ZEROCOST Canada parallélisé
 # ════════════════════════════════════════════════════════════════════════════
-# P22ΩΩ_ZEROCOST_PHASE2_R2_CLOUDFLARE_Ω · 2026-02-XX · STEEVE-MAX
+# P22ΩΩ_PHASE3_CRONJOB_PARALLEL_Ω · 2026-02-XX · STEEVE-MAX
 # COMMANDANT STEEVE-MAX · BCE-4X ULTIME ABSOLU
 #
-# Précalcul nocturne + upload vers Cloudflare R2.
+# Précalcul nocturne CANADA COMPLET avec 16 workers parallèles.
+# H3 résolution 4 (≈8 000 cellules × 6 espèces × 4 mois × 3 créneaux = 575k tuiles).
 # Schedule : 3h00 EST = 8h00 UTC daily.
-# Tolérance : starting deadline 3600s, retry 2x sur échec.
+# Durée estimée : ~24h avec 16 workers (50s/tuile cold-start).
 #
 # DÉPLOIEMENT :
 #   1. Créer les secrets :
 #      kubectl create secret generic cf-r2-creds \
+#        --from-literal=CF_API_TOKEN='cfut_...' \
+#        --from-literal=CF_ACCOUNT_ID='91a64640f553556f2674b8613d909aad' \
 #        --from-literal=R2_ACCESS_KEY_ID='<from_dashboard>' \
-#        --from-literal=R2_SECRET_ACCESS_KEY='<from_dashboard>' \
-#        --from-literal=CF_ACCOUNT_ID='91a64640f553556f2674b8613d909aad'
+#        --from-literal=R2_SECRET_ACCESS_KEY='<from_dashboard>'
 #   2. kubectl apply -f bionic-zerocost-cronjob.yaml
 # ════════════════════════════════════════════════════════════════════════════
 
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: bionic-zerocost-precompute
+  name: bionic-zerocost-grid-gen
   labels:
     app: bionic-zerocost
+    role: grid-generator
+spec:
+  schedule: "0 7 * * 0"  # Hebdo dimanche 2h EST · génère la grille
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: grid-gen
+              image: bionic-backend:latest
+              command:
+                - "python3"
+                - "tools/zerocost_canada_h3_grid_generator.py"
+                - "--resolution"
+                - "4"
+              volumeMounts:
+                - name: zerocost-grid
+                  mountPath: /app/backend/cache/zerocost_v1
+          volumes:
+            - name: zerocost-grid
+              persistentVolumeClaim:
+                claimName: bionic-zerocost-grid-pvc
+---
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: bionic-zerocost-precompute-parallel
+  labels:
+    app: bionic-zerocost
+    role: precompute
     doctrine: p22omega-zerocost-omega
 spec:
-  schedule: "0 8 * * *"  # 3h00 EST = 8h00 UTC
-  concurrencyPolicy: Forbid  # Jamais deux runs en parallèle
-  startingDeadlineSeconds: 3600
+  schedule: "0 8 * * *"  # Daily 3h EST = 8h UTC
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 7200
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 5
   jobTemplate:
     spec:
-      backoffLimit: 2  # Retry 2 fois max sur échec
-      activeDeadlineSeconds: 7200  # Max 2h de compute
+      # 🚀 PARALLÉLISATION : 16 workers indépendants
+      parallelism: 16
+      completions: 16
+      completionMode: Indexed  # WORKER_INDEX = JOB_COMPLETION_INDEX env
+      backoffLimit: 2
+      activeDeadlineSeconds: 86400  # 24h max
       template:
         metadata:
           labels:
             app: bionic-zerocost
-            tier: precompute
+            tier: precompute-worker
         spec:
           restartPolicy: OnFailure
           containers:
-            - name: zerocost-precompute
+            - name: zerocost-worker
               image: bionic-backend:latest
               imagePullPolicy: Always
               resources:
                 requests:
-                  memory: "1Gi"
-                  cpu: "500m"
+                  memory: "1.5Gi"
+                  cpu: "750m"
                 limits:
-                  memory: "2Gi"
-                  cpu: "1500m"
+                  memory: "3Gi"
+                  cpu: "2000m"
               env:
                 - name: MONGO_URL
                   valueFrom:
-                    secretKeyRef:
-                      name: mongo-creds
-                      key: url
+                    secretKeyRef: { name: mongo-creds, key: url }
                 - name: DB_NAME
                   value: "huntiq_v6"
+                - name: WORKER_INDEX
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.annotations['batch.kubernetes.io/job-completion-index']
+                - name: WORKER_COUNT
+                  value: "16"
+                - name: WORKER_RESOLUTION
+                  value: "4"
+                - name: CF_API_TOKEN
+                  valueFrom:
+                    secretKeyRef: { name: cf-r2-creds, key: CF_API_TOKEN }
                 - name: CF_ACCOUNT_ID
                   valueFrom:
-                    secretKeyRef:
-                      name: cf-r2-creds
-                      key: CF_ACCOUNT_ID
-                - name: R2_ACCESS_KEY_ID
-                  valueFrom:
-                    secretKeyRef:
-                      name: cf-r2-creds
-                      key: R2_ACCESS_KEY_ID
-                - name: R2_SECRET_ACCESS_KEY
-                  valueFrom:
-                    secretKeyRef:
-                      name: cf-r2-creds
-                      key: R2_SECRET_ACCESS_KEY
+                    secretKeyRef: { name: cf-r2-creds, key: CF_ACCOUNT_ID }
                 - name: CF_R2_BUCKET
                   value: "bionic-zerocost-omega"
                 - name: PYTHONUNBUFFERED
@@ -84,26 +121,33 @@ spec:
                 - "-c"
                 - |
                   set -e
-                  echo "═══ ZEROCOST PHASE 1 PRECOMPUTE ═══"
                   cd /app/backend
-                  python3 tools/zerocost_precompute_shadow.py
-                  echo
-                  echo "═══ ZEROCOST PHASE 2 UPLOAD R2 ═══"
-                  python3 tools/zerocost_upload_r2.py
-                  echo
-                  echo "✅ CronJob ZEROCOST terminé"
+                  echo "═══ ZEROCOST WORKER $WORKER_INDEX / $WORKER_COUNT ═══"
+                  python3 tools/zerocost_worker_precompute.py
+                  echo "✅ Worker $WORKER_INDEX terminé"
               volumeMounts:
-                - name: zerocost-cache
+                - name: zerocost-grid
                   mountPath: /app/backend/cache/zerocost_v1
+                  readOnly: true
           volumes:
-            - name: zerocost-cache
-              emptyDir:
-                sizeLimit: 5Gi  # ~50GB max production, 5GB suffit pour 2 territoires pilote
+            - name: zerocost-grid
+              persistentVolumeClaim:
+                claimName: bionic-zerocost-grid-pvc
 
-# ════════════════════════════════════════════════════════════════════════════
-# ALERTING (PrometheusRule, optionnel — Phase 5)
-# ════════════════════════════════════════════════════════════════════════════
 ---
+# Volume persistant partagé pour la grille H3
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bionic-zerocost-grid-pvc
+spec:
+  accessModes: [ReadWriteMany]
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+# Alerting Prometheus
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
@@ -120,16 +164,21 @@ spec:
           for: 10m
           labels:
             severity: critical
-            doctrine: P22OMEGA_ZEROCOST
           annotations:
             summary: "ZEROCOST CronJob a échoué"
-            description: "Le précalcul ZEROCOST n'a pas réussi depuis 10 minutes."
         - alert: ZerocostTilesStale
-          expr: time() - kube_cronjob_status_last_successful_time{cronjob="bionic-zerocost-precompute"} > 172800  # 48h
+          expr: time() - kube_cronjob_status_last_successful_time{cronjob="bionic-zerocost-precompute-parallel"} > 172800
           for: 1h
           labels:
             severity: warning
-            doctrine: P22OMEGA_ZEROCOST
           annotations:
             summary: "Tuiles ZEROCOST obsolètes (>48h)"
-            description: "Aucun précalcul réussi depuis plus de 48 heures."
+        - alert: ZerocostWorkerStarvation
+          expr: |
+            sum(rate(http_server_requests_seconds_count{job="bionic-backend",uri=~"/api/v20/territoire/bundle"}[5m]))
+            > 50
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Trop de requêtes V20 (cache CDN dégradé ?)"
