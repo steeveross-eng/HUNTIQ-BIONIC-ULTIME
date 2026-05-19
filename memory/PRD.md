@@ -22,6 +22,26 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_PHASE3_WEATHERCACHE_BETA2_B_E_PRECEDENT_16W_Ω** (2026-02-19) — **DAEMON PRÉ-WARM P1 + ANTI-502** :
+  - 🟢 **Daemon pré-warm 16 workers locaux LANCÉ EN BACKGROUND** (setsid + nohup + disown, PPID=1, indépendant session)
+  - 🟢 **Middleware ANTI-502 / NEVER BLANK Ω OPÉRATIONNEL** : route override `anti_502_bundle` + fast-path cache lookup V20 + slow-path 202 EN_COURS
+  - **Tests live sous charge** (4/4 PASS, 0 HTTP 502/504) :
+    - BSL chevreuil (cache HIT) : HTTP 200 fast-hit en 494ms
+    - Outaouais ours_noir (MISS) : HTTP 202 miss-202 en 96ms
+    - Côte-Nord wapiti (MISS) : HTTP 202 miss-202 en 95ms
+    - Estrie coyote (MISS) : HTTP 202 miss-202 en 91ms
+  - Endpoint monitoring : `/api/v20/territoire/anti502/metrics`
+  - Headers HTTP : `X-Zerocost-Anti502: fast-hit|miss-202|exception-202` + `Retry-After: 5`
+  - **Verrou Phase III strictement maintenu** : V10/V20/LiDAR/IRDA/terrain_hr_omega INTACTS · uniquement middleware additif (route override + 9 lignes server.py)
+  - Artefacts livrés :
+    - `/app/backend/middleware/anti_502_zerocost_omega.py` (240 LoC)
+    - `/app/backend/middleware/__init__.py`
+    - `/app/backend/tools/zerocost_prewarm_p1_daemon.sh` (start/status/stop)
+    - `/app/memory/RAPPORT_PREWARM_P1_BG_ET_ANTI502_Ω.md`
+  - Logs daemon : `/var/log/bionic-zerocost-prewarm-p1/worker_{0..15}.log`
+  - ETA P1 complet (16w local) : ~78 jours (job de fond accepté)
+  - QUOTA600 statut conservé APPROUVÉ_NON_ACTIVÉ
+
 - ✅ **P22ΩΩ_PHASE3_WEATHERCACHE_BETA2_B_E_EXEC_Ω** (2026-02-19) — **CYCLE PILOTE PRÉ-WARM P1 EXÉCUTÉ** :
   - YAML k8s `bionic-zerocost-cronjob.yaml` mis à jour à `parallelism: 256` · `completions: 256` · OWM_API_KEY ajouté
   - Sous-grille P1-only extraite : 7 077 cellules IFAP/ZEC/RF (`canada_h3_grid_r6_p1_only.json`)

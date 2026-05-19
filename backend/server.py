@@ -1014,6 +1014,14 @@ try:
         audit_router as v20_audit_router,
         v20_startup, v20_shutdown,
     )
+    # P22ΩΩ_PHASE3_WEATHERCACHE_BETA2_B_E_PRECEDENT_16W_Ω · STEEVE-MAX
+    # Route override anti-502 ENREGISTRÉE AVANT v20_perf_router pour priorité matching.
+    try:
+        from middleware.anti_502_zerocost_omega import register_anti_502
+        register_anti_502(app)
+        logger.info("[P22ΩΩ_ANTI_502] route override enregistrée AVANT v20_perf_router · NEVER BLANK Ω")
+    except Exception as _e:
+        logger.warning(f"Anti-502 route override non-installable: {_e}")
     app.include_router(v20_perf_router)
     app.include_router(v20_audit_router)
     logger.info("[P22Ω.V5_COMPLIANCE_LIVE_Ω] audit endpoint registered (/api/v20/audit/v5-compliance-live)")
