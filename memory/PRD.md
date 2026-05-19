@@ -22,6 +22,40 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_CORRIGE_FRONTEND_ET_VERITE_CORRIDORS_FULL_PACK_X10_Ω** (2026-02-XX) — FULL PACK P0→P3 :
+  - **P0 Purge absolue** : `setBundleData(null)` à chaque changement d'espèce (useMapBundleV8 ligne 64),
+    invalidation cache LRU si `bio_presence_mask_halt=True` (bionicBundleCache.haltTtlMs=60s),
+    TTL ESSENTIEL_T0 réduit de 3600s → 60s pour éliminer la contamination inter-espèces.
+  - **P1 Différenciation visuelle** : palette `SPECIES_COLOR_OMEGA` (vert chevreuil #2D7A2D,
+    brun orignal #8B4513, violet ours_noir #5D2E8C, bleu wapiti #1E5F8E, ambre dindon #D4A017,
+    gris coyote #555555), épaisseur weight 4.0/2.5/1.5 par hiérarchie, opacité 1.0/0.78/0.55,
+    halo externe teinté espèce, badge permanent "ESPÈCE: <nom>" sur pill SCORE.
+  - **P2 Vérité données** : pill rendu multiligne `SCORE X · NEUTRE / ESPÈCE: X / TIER: X`,
+    badge dédié "⛔ ABSENT MFFP" pour espèces halt (wapiti/dindon BSL), normalisation
+    'tous' → resolveSpeciesByBioregion (BSL → orignal) au lieu de mapping 'cerf' opaque.
+  - **P3 Conformité géométrique** : `_apply_catmullrom_cap_to_corridors` post-cap BLOC 2.5,
+    target 30 points/corridor. Audit live confirmé : ours_noir **531→30**, coyote **399→30**,
+    chevreuil/orignal **133→30**.
+  - **Validation live x6 espèces (audit post-correction)** :
+    | Espèce | n_corr | CR cap | tier | score_local |
+    |---|---|---|---|---|
+    | chevreuil | 7 | 30 | ESSENTIEL_T0 | 68.26 |
+    | orignal | 7 | 30 | ESSENTIEL_T0 | 66.10 |
+    | ours_noir | 7 | 30 (531→30) | ESSENTIEL_T0 | 68.45 |
+    | wapiti | 0 (mask halt) | n/a | n/a | 67.57 |
+    | dindon_sauvage | 0 (mask halt) | n/a | n/a | 70.22 |
+    | coyote | 7 | 30 (399→30) | ESSENTIEL_T0 | 68.34 |
+  - **Preuve frontend palette** : 14 corridors mono rendus avec `species_signature='chevreuil'`,
+    couleurs `#2D7A2D` (primary) et `#5BC68F` (secondary) confirmées via inspection DOM Leaflet.
+  - **Tests** : 27/27 pytest doctrinaux passent.
+  - **Fichiers modifiés** :
+    - `/app/frontend/src/lib/speciesColorOmega.js` (nouveau · palette + helpers)
+    - `/app/frontend/src/lib/bionicBundleCache.js` (TTL adaptatif halt 60s)
+    - `/app/frontend/src/hooks/useMapBundleV8.js` (purge inter-espèces + halt-aware)
+    - `/app/frontend/src/components/territoire/BionicLayersV8.jsx` (pill multiligne + palette mono override)
+    - `/app/frontend/src/pages/MonTerritoireBionicPage.jsx` (alignement resolveSpeciesByBioregion)
+    - `/app/backend/engines/v8_institutional/v20_performance_bundle.py` (CatmullRom cap 30 pts + alias multi_aggregated)
+
 - ✅ **P22ΩΩ_BLOC_2_5_CORRIGE_DEADLINE_GATE_Ω** (2026-02-XX) — CORRECTION CRITIQUE BLOC 2.5 :
   - **Root cause identifiée** : le bypass du cap doctrinal 5-7 corridors n'était PAS
     causé par `_V5_REWIRE_ACTIVE` (déjà appelé inconditionnellement ligne 1476),

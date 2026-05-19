@@ -813,11 +813,21 @@ const MonTerritoireBionicPage = ({ pageMode = 'analyse-bionic' } = {}) => {
   }, [selectedSpecies, updateSpecies]);
 
   // ═══ BCE-4X V8: Fetch automatique Score V8 quand position ou espece change ═══
+  // P22ΩΩ_CORRIGE_FRONTEND_ET_VERITE_CORRIDORS_FULL_PACK_X10_Ω · 2026-02-XX
+  // ALIGNEMENT STRICT BUNDLE ↔ UI : on utilise la MÊME résolution biorégion que
+  // BionicLayersV8 (resolveSpeciesByBioregion dans MapContent.jsx) afin que le
+  // bundle fetché corresponde exactement à l'espèce affichée par le composant.
+  // En mode 'tous' à BSL, la biorégion résout vers 'orignal' (espèce dominante).
   useEffect(() => {
     const lat = waypointCenter?.lat || currentMapCenter?.lat;
     const lng = waypointCenter?.lng || currentMapCenter?.lng;
     if (lat && lng) {
-      const sp = selectedSpecies === 'tous' ? 'cerf' : selectedSpecies;
+      const { resolveSpeciesByBioregion } = require('@/lib/bioregion');
+      const userChoice = selectedSpecies && selectedSpecies !== 'tous'
+        ? selectedSpecies.toLowerCase()
+        : null;
+      const resolved = resolveSpeciesByBioregion(lat, lng, userChoice);
+      const sp = resolved.species;
       fetchScoreV8(lat, lng, sp);
       const windDeg = windInfo?.directionDeg || 225;
       fetchBundleV8(lat, lng, sp, undefined, undefined, windDeg);
@@ -994,12 +1004,18 @@ const MonTerritoireBionicPage = ({ pageMode = 'analyse-bionic' } = {}) => {
   const { scores, calculateHybridScores, globalScore } = useBionicScoring();
 
   // ═══ V8-PHASE-A: Fetch Relocalisation+Salines quand Phase A active + position change ═══
+  // P22ΩΩ_FULL_PACK_X10_Ω : alignement strict avec resolveSpeciesByBioregion
   useEffect(() => {
     if (!showPhaseA) return;
     const lat = waypointCenter?.lat || currentMapCenter?.lat;
     const lng = waypointCenter?.lng || currentMapCenter?.lng;
     if (lat && lng) {
-      const sp = selectedSpecies === 'tous' ? 'cerf' : selectedSpecies;
+      const { resolveSpeciesByBioregion } = require('@/lib/bioregion');
+      const userChoice = selectedSpecies && selectedSpecies !== 'tous'
+        ? selectedSpecies.toLowerCase()
+        : null;
+      const resolved = resolveSpeciesByBioregion(lat, lng, userChoice);
+      const sp = resolved.species;
       const windDeg = windInfo?.directionDeg || 180;
       fetchPhaseA(lat, lng, sp, undefined, windDeg);
     }

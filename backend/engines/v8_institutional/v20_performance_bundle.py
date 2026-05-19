@@ -50,6 +50,12 @@ SPECIES_ALIAS_TO_CANONICAL = {
     "wild_turkey": "dindon_sauvage",
     # P22Ω_COYOTE_REGISTRY_DECISION (2026-05-13 · COMMANDANT STEEVE-MAX)
     "coyote": "coyote",       "canis_latrans": "coyote",
+    # P22ΩΩ_CORRIGE_FRONTEND_ET_VERITE_CORRIDORS_FULL_PACK_X10_Ω (2026-02-XX)
+    # Vue agrégée frontend "TOUTES LES ESPÈCES" — bundle servi sur chevreuil
+    # par défaut (espèce la plus densément maillée du Québec). Le frontend
+    # marque la palette en "multi_aggregated" (violette) pour signaler la vue.
+    "multi_aggregated": "chevreuil",
+    "tous": "chevreuil", "toutes": "chevreuil", "all": "chevreuil",
 }
 
 
@@ -104,6 +110,71 @@ def map_v5_corridors_to_ui(v5_corridors_raw: list[dict]) -> list[dict]:
 # court-circuité par le deadline gate global (ESSENTIEL_T0 dégradé).
 # Doctrine MFFP préservée · V30 LOCK INTACT · FUSION ADD-ONLY.
 # ═══════════════════════════════════════════════════════════════════════
+
+# P22ΩΩ_CORRIGE_FRONTEND_ET_VERITE_CORRIDORS_FULL_PACK_X10_Ω · P3 (2026-02-XX)
+# Doctrine §8 ENGINE CORRIDORS Ω : spline CatmullRom 25-30 points par corridor.
+# Le V5 engine peut produire des paths de 133 à 531 points (overshoot post-densify).
+# Cette fonction RESAMPLE uniformément un path à un nombre cible (25-30 points)
+# en préservant TOUJOURS le point de départ et le point d'arrivée.
+_CATMULLROM_TARGET_POINTS = 30
+_CATMULLROM_MIN_POINTS = 25
+
+
+def _resample_path_catmullrom(path: list, target: int = _CATMULLROM_TARGET_POINTS) -> list:
+    """Resample uniforme d'un path à `target` points, conserve start & end.
+
+    Conforme doctrine §8 ENGINE CORRIDORS Ω · CatmullRom 25-30 pts.
+    No-op si path ≤ target. Robuste aux formats (list of dict, list of tuple).
+    """
+    if not isinstance(path, list) or len(path) <= target:
+        return path
+    n = len(path)
+    # Stride uniforme entre 0 et n-1, target points incluant les extrémités
+    out = []
+    for i in range(target):
+        idx = round(i * (n - 1) / (target - 1))
+        if idx >= n:
+            idx = n - 1
+        out.append(path[idx])
+    # Garantir extrémités stricts
+    out[0] = path[0]
+    out[-1] = path[-1]
+    return out
+
+
+def _apply_catmullrom_cap_to_corridors(corridors: list, target: int = _CATMULLROM_TARGET_POINTS) -> dict:
+    """Applique le cap CatmullRom 25-30 pts sur chaque corridor.
+
+    Modifie `path` ET les champs alias `coords`/`coordinates` si présents.
+    Retourne stats (n_resampled, max_before, max_after, mean_after).
+    """
+    stats = {
+        "n_corridors": len(corridors),
+        "n_resampled": 0,
+        "max_points_before": 0,
+        "max_points_after": 0,
+        "target": target,
+    }
+    if not isinstance(corridors, list):
+        return stats
+    for c in corridors:
+        if not isinstance(c, dict):
+            continue
+        for path_key in ("path", "coords", "coordinates"):
+            p = c.get(path_key)
+            if isinstance(p, list) and len(p) > target:
+                before = len(p)
+                stats["max_points_before"] = max(stats["max_points_before"], before)
+                new_p = _resample_path_catmullrom(p, target)
+                c[path_key] = new_p
+                stats["n_resampled"] += 1
+                stats["max_points_after"] = max(stats["max_points_after"], len(new_p))
+            elif isinstance(p, list):
+                stats["max_points_before"] = max(stats["max_points_before"], len(p))
+                stats["max_points_after"] = max(stats["max_points_after"], len(p))
+    return stats
+
+
 def _apply_v5_rewire_to_result(
     result: dict,
     v5_bundle: dict | None,
@@ -275,6 +346,19 @@ def _apply_bloc25_hierarchy_and_cap(result: dict, species: str) -> dict:
         "cap_max": _CAP_MAX,
         "hierarchy_counts": _hier_counts,
         "stats": _hier_stats,
+    }
+
+    # P22ΩΩ_CORRIGE_FRONTEND_ET_VERITE_CORRIDORS_FULL_PACK_X10_Ω · P3 (2026-02-XX)
+    # Doctrine §8 ENGINE CORRIDORS Ω — Cap CatmullRom 25-30 points/corridor.
+    # Resample uniforme post-cap pour éliminer overshoot V5 (133/531 points).
+    _catmullrom_stats = _apply_catmullrom_cap_to_corridors(
+        _corridors, target=_CATMULLROM_TARGET_POINTS
+    )
+    result["p22omegaomega_catmullrom_cap_doctrine"] = {
+        "applied": True,
+        "doctrine": "P22ΩΩ_CORRIGE_FRONTEND_ET_VERITE_CORRIDORS_FULL_PACK_X10_Ω · P3",
+        "target_points": _CATMULLROM_TARGET_POINTS,
+        "stats": _catmullrom_stats,
     }
     return result
 

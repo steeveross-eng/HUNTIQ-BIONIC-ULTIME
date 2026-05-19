@@ -23,6 +23,8 @@ import { NUTRITION_SEVERITY_COLORS } from '@/config/territoire_defaults';
 import { validateElement, logRenderCycle } from './RenderGuardOmega';
 import { buildInstitutionalPopup, FichePopup } from './InstitutionalPopup';
 import { RENDU_OMEGA, resolveCorridorStyleOmega, isCorridorsVisibleAtZoom, getRenduRules, getOrganicCorridors, resolveCorridorStyleOrganic, clampCorridorWeight, validateCorridorGeometry, renduOmegaPaneName, prepareDisplayPath, detectConvergenceMainVein, computeSupraArtHaloSpec, isInspectionBiologiqueActive, computeDirectionalLuminosityGradient, computeTerrainAwareBoost, detectVitalZoneOverlap, publicPulseMultiplier, isPublicPulseActive, computeFadeOutTail, buildInspectionBioFeatures, inspectionBioPaneName, INSPECTION_BIO_SPEC, bindNutritionToSaline, NUTRITION_SALINES_SPEC } from '@/lib/renduOmegaStore';
+// P22ΩΩ_CORRIGE_FRONTEND_ET_VERITE_CORRIDORS_FULL_PACK_X10_Ω · palette par espèce
+import { getCorridorColorBySpeciesAndHierarchy, getCorridorWeightByHierarchy, getCorridorOpacityByHierarchy, getSpeciesPaletteOmega, normalizeSpeciesKey } from '@/lib/speciesColorOmega';
 
 // ═══ PALETTE BCE-4X V9-INSTITUTIONNEL ═══
 const ZONE_COLORS = {
@@ -540,8 +542,20 @@ const BionicLayersV8 = ({
         // ═══ P22Σ_RENDU_MONO_LAYER_Ω — BRANCHE MONO-LAYER ═══
         // Si monoLayerActive : skip pipeline halos + snap-saline + glow.
         // Rendu direct path organic en 1 seule polyline orange #FF8F00.
+        // P22ΩΩ_CORRIGE_FRONTEND_ET_VERITE_CORRIDORS_FULL_PACK_X10_Ω · 2026-02-XX
+        // OVERRIDE couleur par ESPÈCE × HIÉRARCHIE pour éliminer la perception
+        // d'uniformité visuelle inter-espèces (palette mono orange ignorait l'espèce).
         if (monoLayerActive) {
           const monoStyle = resolveCorridorStyleMonoLayer(c, monoLayerBaseColor);
+          // P22ΩΩ_FULL_PACK_X10_Ω : override mono color par palette espèce
+          const _hierMono = c.hierarchy || c.veine_type || (corridorIdx === 0 ? 'veine_principale' : 'veine_secondaire');
+          const _speciesColorMono = getCorridorColorBySpeciesAndHierarchy(speciesForSig, _hierMono);
+          monoStyle.color = _speciesColorMono;
+          // épaisseur cumulative : conserver mono weight (tient compte de intensity_level)
+          // mais garantir lisibilité veine_principale (min weight 3.5 px)
+          if (_hierMono === 'veine_principale') {
+            monoStyle.weight = Math.max(monoStyle.weight, 3.5);
+          }
           const polyPath = Array.isArray(rawPath) ? rawPath : [];
           if (polyPath.length < 2) return;
           const monoLine = L.polyline(polyPath, {
@@ -601,8 +615,16 @@ const BionicLayersV8 = ({
         const styleOmega = organicReady
           ? resolveCorridorStyleOrganic(c)
           : resolveCorridorStyleOmega(c);
-        const color = RENDU_OMEGA.color;
-        let weight = clampCorridorWeight(styleOmega.weight);
+        // P22ΩΩ_FULL_PACK_X10_Ω : palette PAR ESPÈCE × HIÉRARCHIE
+        //   - color de la ligne principale = palette[species][hierarchy]
+        //   - weight base = palette weight × clampCorridorWeight pour ne pas
+        //     casser les contraintes RENDU_OMEGA.
+        const _hierResolved = c.hierarchy || (corridorIdx === 0 ? 'veine_principale' : 'veine_secondaire');
+        const speciesColor = getCorridorColorBySpeciesAndHierarchy(speciesForSig, _hierResolved);
+        const speciesWeightBase = getCorridorWeightByHierarchy(_hierResolved);
+        const speciesOpacity = getCorridorOpacityByHierarchy(_hierResolved);
+        const color = speciesColor;
+        let weight = clampCorridorWeight(Math.max(styleOmega.weight, speciesWeightBase));
         const isMainVein = mainVeinIdxs.has(corridorIdx);
 
         // §A6 — Tension terrainaware++ (boost intensité lumineuse perçue via halo)
@@ -615,7 +637,7 @@ const BionicLayersV8 = ({
         // §A2 — Veine principale cumulative (épaisseur + luminosité max ×1.6)
         if (isMainVein) weight = clampCorridorWeight(weight + RENDU_OMEGA.microWeightDeltaPx * 4);
 
-        const opacity = 1.0; // SUPRA_S strict (dépasse RENDU_OMEGA.opacityMin ≥ 0.75)
+        const opacity = Math.max(speciesOpacity, 0.75); // SUPRA_S strict (dépasse RENDU_OMEGA.opacityMin ≥ 0.75)
 
         // Halo spec SUPRA_ART — amplifié par fond, saline, veine principale
         const halo = computeSupraArtHaloSpec(weight, {
@@ -625,6 +647,10 @@ const BionicLayersV8 = ({
         });
         // §A6/A7 — Boost cumulatif opacité halo externe
         halo.external.opacity = Math.min(0.85, halo.external.opacity * terrainBoost * (1 + vitalBoostCum));
+        // P22ΩΩ_FULL_PACK_X10_Ω : halo externe teinté par espèce (signature discrète 1-2px)
+        const _speciesPaletteHalo = getSpeciesPaletteOmega(speciesForSig);
+        halo.external.color = _speciesPaletteHalo.halo;
+        halo.inner.color = _speciesPaletteHalo.secondary;
 
         // §A HOTFIX — log si aucun subpath rendu (corridor masqué intégralement)
         if (!displaySubpaths || displaySubpaths.length === 0) {
@@ -1738,23 +1764,59 @@ const BionicLayersV8 = ({
     // 9. SCORE LOCAL (overlay pill macro — toujours)
     // PHASE_RECAPTURE_OMEGA (2026-04-28 · ordre Commandant STEEVE-MAX) :
     // grille Ω institutionnelle (FAVORABLE/NEUTRE/RÉSERVE) — JAMAIS PARTIEL.
-    if (score_local && score_local.value != null && waypointCenter) {
+    // P22ΩΩ_CORRIGE_FRONTEND_ET_VERITE_CORRIDORS_FULL_PACK_X10_Ω · 2026-02-XX
+    //   - Le pill affiche désormais aussi : ESPÈCE ACTIVE et BUNDLE TIER.
+    //   - Pour espèce ABSENT (bio_presence_mask_halt), badge dédié "ABSENT MFFP".
+    if (waypointCenter) {
       // Import runtime (CommonJS safe)
       const { scoreLabelOmegaBande, scoreColorOmega } = require('@/lib/scoreLabelOmega');
-      const _scoreVal = Number(score_local.value) || 0;
-      const _labelInstit = scoreLabelOmegaBande(_scoreVal);
-      const _colorInstit = scoreColorOmega(_labelInstit);
-      const pill = L.marker([waypointCenter.lat, waypointCenter.lng], {
-        icon: L.divIcon({
-          className: 'score-local-pill-v20',
-          html: `<div data-testid="score-local-pill" data-label-instit="${_labelInstit}" style="background:rgba(14,17,23,0.92);color:${_colorInstit};padding:4px 10px;border-radius:999px;font-size:13px;font-weight:700;border:1px solid ${_colorInstit};white-space:nowrap;letter-spacing:0.03em">SCORE ${_scoreVal.toFixed(2)} · ${_labelInstit}</div>`,
-          iconSize: [null, 22],
-          iconAnchor: [0, -30],
-        }),
-        interactive: false,
-      });
-      pill.addTo(group);
-      supraRendered++;
+      const { getSpeciesPaletteOmega, normalizeSpeciesKey } = require('@/lib/speciesColorOmega');
+      const _speciesKey = normalizeSpeciesKey(species);
+      const _palette = getSpeciesPaletteOmega(species);
+      const _isHalt = !!bundleData?.bio_presence_mask_halt;
+      const _bundleTier = bundleData?.bundle_tier || 'ESSENTIEL_T0';
+
+      let _pillHtml = '';
+      if (_isHalt) {
+        // Bundle HALT — pas de score pertinent, affichage "ABSENT MFFP"
+        _pillHtml = `
+          <div data-testid="score-local-pill"
+               data-label-instit="HALT_MFFP"
+               data-species="${_speciesKey}"
+               data-bundle-tier="${_bundleTier}"
+               style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;background:rgba(14,17,23,0.95);padding:6px 12px;border-radius:10px;border:1.5px solid #DC2626;white-space:nowrap;letter-spacing:0.03em;font-family:system-ui,sans-serif;">
+            <div style="color:#DC2626;font-size:12px;font-weight:800;">⛔ ABSENT MFFP</div>
+            <div style="color:${_palette.primary};font-size:10px;font-weight:700;">ESPÈCE: ${_palette.label}</div>
+            <div style="color:#9CA3AF;font-size:9px;font-weight:600;">TIER: ${_bundleTier} · 0 CORRIDORS</div>
+          </div>`;
+      } else if (score_local && score_local.value != null) {
+        const _scoreVal = Number(score_local.value) || 0;
+        const _labelInstit = scoreLabelOmegaBande(_scoreVal);
+        const _colorInstit = scoreColorOmega(_labelInstit);
+        _pillHtml = `
+          <div data-testid="score-local-pill"
+               data-label-instit="${_labelInstit}"
+               data-species="${_speciesKey}"
+               data-bundle-tier="${_bundleTier}"
+               style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;background:rgba(14,17,23,0.95);padding:6px 12px;border-radius:10px;border:1.5px solid ${_colorInstit};white-space:nowrap;letter-spacing:0.03em;font-family:system-ui,sans-serif;">
+            <div style="color:${_colorInstit};font-size:13px;font-weight:800;">SCORE ${_scoreVal.toFixed(2)} · ${_labelInstit}</div>
+            <div style="color:${_palette.primary};font-size:10px;font-weight:700;">ESPÈCE: ${_palette.label}</div>
+            <div style="color:#9CA3AF;font-size:9px;font-weight:600;">TIER: ${_bundleTier}</div>
+          </div>`;
+      }
+      if (_pillHtml) {
+        const pill = L.marker([waypointCenter.lat, waypointCenter.lng], {
+          icon: L.divIcon({
+            className: 'score-local-pill-v20',
+            html: _pillHtml,
+            iconSize: [null, 56],
+            iconAnchor: [0, -34],
+          }),
+          interactive: false,
+        });
+        pill.addTo(group);
+        supraRendered++;
+      }
     }
 
     // ═══ RSE-Ω: emit render cycle log ═══
