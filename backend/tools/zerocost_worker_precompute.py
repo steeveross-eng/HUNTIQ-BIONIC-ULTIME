@@ -141,11 +141,15 @@ async def main():
     print(f"  • Tuiles à générer        : {n_tiles_expected}")
 
     # 3. Boucle compute + upload
-    stats = {"ok": 0, "fail": 0, "halt": 0, "size_bytes": 0, "start": time.time()}
+    stats = {
+        "ok": 0, "fail": 0, "halt": 0, "size_bytes": 0, "start": time.time(),
+        "by_priority": {1: 0, 2: 0, 3: 0, "unknown": 0},
+    }
     n_total_tiles = 0
     for cell_idx, cell in enumerate(my_cells):
         lat = cell["lat"]
         lng = cell["lng"]
+        prio = cell.get("priority", "unknown")
         for species in SPECIES:
             for month in MONTHS:
                 for hour in HOURS:
@@ -168,6 +172,7 @@ async def main():
                     if ok:
                         stats["ok"] += 1
                         stats["size_bytes"] += size
+                        stats["by_priority"][prio] = stats["by_priority"].get(prio, 0) + 1
                     else:
                         stats["fail"] += 1
             if MAX_TILES and n_total_tiles >= MAX_TILES:
@@ -191,6 +196,8 @@ async def main():
         f"\n  Tuiles FAIL  : {stats['fail']}"
         f"\n  Mask HALT    : {stats['halt']}"
         f"\n  Volume       : {stats['size_bytes']/1024/1024:.1f} MB"
+        f"\n  Par priorité : P1={stats['by_priority'].get(1,0)} "
+        f"P2={stats['by_priority'].get(2,0)} P3={stats['by_priority'].get(3,0)}"
     )
     print(f"  WeatherCache : {weather_cache_stats()}")
 

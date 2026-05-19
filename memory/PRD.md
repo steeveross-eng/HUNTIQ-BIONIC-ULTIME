@@ -22,6 +22,18 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_PHASE3_WEATHERCACHE_BETA2_B_E_Ω** (2026-02-19) — **STRATIFICATION β2-Β + β2-Ε VALIDÉE** :
+  - Grille filtrée QC+Maritimes R6 = **68 054 cellules** (vs 392 391 Canada complet)
+  - Pondération β2-Ε par bounding boxes doctrinaux : P1=7 077 (IFAP/ZEC/RF) · P2=17 056 · P3=43 921
+  - 9 bboxes P1 hotspots (Outaouais, Laurentides, Mauricie, Saguenay, BSL, Côte-Nord, Estrie, Capitale, Pontiac)
+  - Tracking priorité ajouté au worker · grille triée P1→P2→P3 ASC
+  - **Run pilote 16 workers T+12min** : 84 tuiles uploadées · **100 % en priorité P1** (Côte-Nord) ✅
+  - **0 erreur 429** · WeatherCache MongoDB +5 régions H3R3 (17 → 22)
+  - Latence compute mesurée : ~84s/tuile bio-positive QC (vs ~1s HALT NU/YT)
+  - ETA pré-warm P1 (509 K tuiles) : **31j local 16w / 7.7j k8s 64w / 1.9j k8s 256w** ✅
+  - Plans livrés : `RAPPORT_WEATHERCACHE_BETA2_Ω_ADDENDUM_B_E.md`, `PLAN_MONTEE_EN_CHARGE_PHASE4_PROD_Ω.md`, `RAPPORT_WEATHERCACHE_BETA2_QUOTA600_Ω.md` (brouillon non-activé)
+  - Verrou Phase III strictement maintenu
+
 - ✅ **P22ΩΩ_PHASE3_WEATHERCACHE_BETA2_Ω** (2026-02-19) — **MITIGATION RATE-LIMIT MÉTÉO RÉSOLUE** :
   - Nouvel engine `engines/weather_cache_regional_omega.py` (320 LoC) — cache régional H3 R3
   - OWM_API_KEY OpenWeatherMap intégré au `.env` (chiffré au runtime)
