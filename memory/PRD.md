@@ -22,6 +22,22 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_PHASE3_WEATHERCACHE_BETA2_Ω** (2026-02-19) — **MITIGATION RATE-LIMIT MÉTÉO RÉSOLUE** :
+  - Nouvel engine `engines/weather_cache_regional_omega.py` (320 LoC) — cache régional H3 R3
+  - OWM_API_KEY OpenWeatherMap intégré au `.env` (chiffré au runtime)
+  - Monkey-patch transparent `httpx.AsyncClient.get` + `httpx.Client.get` → redirection vers cache OWM
+  - **ZÉRO modification V10/V20/lidar_irda_v11/terrain_hr_omega** — verrou Phase III strictement maintenu
+  - Granularité cache : H3 R3 (~270km) · 1 fetch OWM sert 13 080 cellules H3 R6
+  - Canada complet = **30 fetches OWM max/mois** (vs 30 000/mois quota free tier)
+  - Storage cache : MongoDB `weather_cache_regional_omega` (TTL 30j) + RAM secondary
+  - Synthèse fields manquants OWM (soil_moisture, CAPE, radiation) → constantes doctrinales
+  - **Mesures multi-worker run de validation (16 workers parallèles T+10min)** :
+    - 17 fetches OWM total · 80+ cache hits · **0 erreurs 429** (vs ~300 dans run α)
+    - 3 workers terminés (vs 2 dans run α) · throughput ×1.5
+    - Bundle V20 QC Gatineau chevreuil → 7 corridors, 5 zones, 85KB ✅
+  - Phase 4 PROD switch désormais **conditionnellement autorisable** (mitigation OK, couverture H3R6 à compléter)
+  - Rapport complet : `/app/memory/RAPPORT_WEATHERCACHE_BETA2_Ω.md`
+
 - ✅ **P22ΩΩ_PHASE3_CRONJOB_CANADA_H3R6_CYCLE1_Ω** (2026-02-19) — **CRONJOB CANADA H3 NIVEAU 6 EXÉCUTÉ (RUN PILOTE)** :
   - Grille H3 résolution 6 Canada générée : **392 391 cellules** (réelle, vs 7993 R4 avant)
   - Distribution provinces : NU 73 898 · BC 64 240 · QC 58 019 · NT 51 503 · ON 41 462 · YT 27 425 · MB 23 185 · SK 18 535 · NL 8 632 · AB 8 686 · NS 1 403

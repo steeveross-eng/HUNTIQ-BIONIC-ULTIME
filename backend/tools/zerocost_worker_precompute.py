@@ -33,6 +33,15 @@ BACKEND_ROOT = Path("/app/backend")
 sys.path.insert(0, str(BACKEND_ROOT))
 load_dotenv(BACKEND_ROOT / ".env")
 
+# P22ΩΩ_PHASE3_WEATHERCACHE_BETA2_Ω · STEEVE-MAX
+# Active l'interception transparente Open-Meteo → cache régional OWM
+# AVANT tout import du pipeline V20.
+from engines.weather_cache_regional_omega import (  # noqa: E402
+    install_open_meteo_interceptor,
+    get_stats as weather_cache_stats,
+)
+install_open_meteo_interceptor()
+
 # Config worker
 WORKER_INDEX = int(os.environ.get("WORKER_INDEX", "0"))
 WORKER_COUNT = int(os.environ.get("WORKER_COUNT", "1"))
@@ -183,6 +192,7 @@ async def main():
         f"\n  Mask HALT    : {stats['halt']}"
         f"\n  Volume       : {stats['size_bytes']/1024/1024:.1f} MB"
     )
+    print(f"  WeatherCache : {weather_cache_stats()}")
 
 
 if __name__ == "__main__":
