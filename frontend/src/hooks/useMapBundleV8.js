@@ -178,8 +178,27 @@ const useMapBundleV8 = () => {
           setLoading(false);
           return null;
         }
+        // P22ΩΩ_TERRITOIRE_STABILISATION_TOTALE_Ω · 2026-02-XX
+        // DataCloneError est lancé par le script tiers Emergent (assets.emergent.sh/scripts/emergent-main.js)
+        // qui essaie de postMessage(Request) au parent window — pas notre code.
+        // Comme le fetch RÉEL fonctionne et que res.json() a déjà été lu, on ignore
+        // ces erreurs silencieusement pour ne plus polluer la console.
+        const errMsg = String(err.message || err);
+        const isDataCloneError = errMsg.includes('DataCloneError')
+          || errMsg.includes('postMessage')
+          || errMsg.includes('could not be cloned');
+        if (isDataCloneError) {
+          // Silent : retry sans warn pollué
+          if (attempt < RETRY_DELAYS_MS.length) {
+            // eslint-disable-next-line no-await-in-loop
+            await new Promise((r) => setTimeout(r, RETRY_DELAYS_MS[attempt]));
+            continue;
+          }
+          setLoading(false);
+          return null;
+        }
         if (attempt < RETRY_DELAYS_MS.length) {
-          console.warn(`[V20-PERFORMANCE] Bundle network error attempt ${attempt + 1}, retry in ${RETRY_DELAYS_MS[attempt]}ms:`, err.message || err);
+          console.warn(`[V20-PERFORMANCE] Bundle network error attempt ${attempt + 1}, retry in ${RETRY_DELAYS_MS[attempt]}ms:`, errMsg);
           // eslint-disable-next-line no-await-in-loop
           await new Promise((r) => setTimeout(r, RETRY_DELAYS_MS[attempt]));
           continue;

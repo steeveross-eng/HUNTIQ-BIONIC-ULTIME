@@ -76,8 +76,13 @@ const usePhaseAV8 = () => {
       }
     } catch (err) {
       if (err.name === 'AbortError') return;
+      // P22ΩΩ_TERRITOIRE_STABILISATION_TOTALE_Ω · ignore DataCloneError tiers Emergent
+      const errMsg = String(err.message || err);
+      if (errMsg.includes('DataCloneError') || errMsg.includes('postMessage') || errMsg.includes('could not be cloned')) {
+        return;
+      }
       console.error('[TERRITOIRE-Ω-RELOC-SALINES]', err);
-      setError(err.message);
+      setError(errMsg);
     } finally {
       setLoading(false);
     }

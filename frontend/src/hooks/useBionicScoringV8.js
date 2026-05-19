@@ -77,7 +77,12 @@ const useBionicScoringV8 = () => {
       return scoreData;
     } catch (err) {
       if (err.name === 'AbortError') return null;
-      setError(err.message);
+      // P22ΩΩ_TERRITOIRE_STABILISATION_TOTALE_Ω · ignore DataCloneError du script tiers Emergent
+      const errMsg = String(err.message || err);
+      if (errMsg.includes('DataCloneError') || errMsg.includes('postMessage') || errMsg.includes('could not be cloned')) {
+        return null;
+      }
+      setError(errMsg);
       console.error('[V8-SCORE]', err);
       return null;
     } finally {
