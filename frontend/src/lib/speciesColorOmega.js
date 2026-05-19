@@ -1,87 +1,114 @@
 /**
  * speciesColorOmega.js — Palette différenciée par ESPÈCE
  * ============================================================
- * P22ΩΩ_CORRIGE_FRONTEND_ET_VERITE_CORRIDORS_FULL_PACK_X10_Ω
+ * P22ΩΩ_SECURITE_ET_CONTINUITE_CORRIDORS_PRE_PHASE_III_Ω · 2026-02-XX
+ * COMMANDANT STEEVE-MAX · BCE-4X ULTIME ABSOLU
+ *
+ * 🔒 VERROU ABSOLU — PALETTE FIGÉE INVIOLABLE
+ * ───────────────────────────────────────────────────────────────────
+ * Toute modification de cette palette est INTERDITE sauf directive
+ * explicite du COMMANDANT STEEVE-MAX. Cette palette a été doctrinalement
+ * validée pour lisibilité sur fond vert (satellite forestier ESRI/Maxar)
+ * en biorégion BSL/Québec.
+ *
  * Doctrine : chaque espèce dispose d'une signature couleur strictement
  * distincte pour éliminer la perception d'identité visuelle inter-espèces.
  * La hiérarchie de la veine est encodée par épaisseur (weight) et opacité.
  *
  * COULEURS INSTITUTIONNELLES (BCE-4X · STEEVE-MAX) :
- *   chevreuil       → vert organique  (#2D7A2D / #5BC68F)
- *   orignal         → brun chaud      (#8B4513 / #C68B5B)
- *   ours_noir       → violet profond  (#5D2E8C / #8E6BC7)
- *   wapiti          → bleu ardoise    (#1E5F8E / #5BA0D6)
- *   dindon_sauvage  → ambre or        (#D4A017 / #E8C547)
- *   coyote          → gris graphite   (#555555 / #888888)
+ *   chevreuil       → ORANGE AMBRÉ      (#FF8F00 / #FFB347)
+ *   orignal         → BLEU PROFOND      (#1E5F8E / #5BA0D6)
+ *   ours_noir       → VIOLET SOMBRE     (#5D2E8C / #8E6BC7)
+ *   wapiti          → ROUGE BRIQUE      (#C0392B / #E57373)
+ *   dindon_sauvage  → AMBRE DORÉ        (#D4A017 / #E8C547)
+ *   coyote          → GRIS ACIER        (#6E6E6E / #A0A0A0)
+ *
+ * 🚫 COULEURS INTERDITES (anti-régression) :
+ *   - #E65100 (orange foncé mono legacy)
+ *   - #2D7A2D / #5BC68F (vert chevreuil ancien — illisible sur fond forêt)
+ *   - #8B4513 / #C68B5B (brun orignal ancien — fusion visuelle avec sol)
  *
  * Compatibilité fallback : pour espèces inconnues, retour à la palette
- * hiérarchique historique (orange-rouge / orange / pêche).
+ * `multi_aggregated` (violet neutre #7B3F99).
  */
 
-// Palette couleurs strictement institutionnelle Ω
-export const SPECIES_COLOR_OMEGA = {
-  chevreuil: {
-    primary:   '#2D7A2D', // veine_principale
-    secondary: '#5BC68F', // veine_secondaire
-    capillary: '#8FD9A8', // capillaire
-    halo:      '#A8E8C0', // halo externe espèce
+// 🔒 Palette couleurs strictement institutionnelle Ω · VERROUILLÉE
+export const SPECIES_COLOR_OMEGA = Object.freeze({
+  chevreuil: Object.freeze({
+    primary:   '#FF8F00', // veine_principale  — ORANGE AMBRÉ
+    secondary: '#FFB347', // veine_secondaire
+    capillary: '#FFCC80', // capillaire
+    halo:      '#FFE0B2', // halo externe espèce
     label:     'CHEVREUIL',
-  },
-  orignal: {
-    primary:   '#8B4513',
-    secondary: '#C68B5B',
-    capillary: '#D9A582',
-    halo:      '#E8BFA0',
+  }),
+  orignal: Object.freeze({
+    primary:   '#1E5F8E', // veine_principale  — BLEU PROFOND
+    secondary: '#5BA0D6',
+    capillary: '#88BFE5',
+    halo:      '#B0D4ED',
     label:     'ORIGNAL',
-  },
-  ours_noir: {
-    primary:   '#5D2E8C',
+  }),
+  ours_noir: Object.freeze({
+    primary:   '#5D2E8C', // veine_principale  — VIOLET SOMBRE
     secondary: '#8E6BC7',
     capillary: '#B299D9',
     halo:      '#CCB8E8',
     label:     'OURS NOIR',
-  },
-  wapiti: {
-    primary:   '#1E5F8E',
-    secondary: '#5BA0D6',
-    capillary: '#88BFE5',
-    halo:      '#B0D4ED',
+  }),
+  wapiti: Object.freeze({
+    primary:   '#C0392B', // veine_principale  — ROUGE BRIQUE
+    secondary: '#E57373',
+    capillary: '#EF9A9A',
+    halo:      '#FFCDD2',
     label:     'WAPITI',
-  },
-  dindon_sauvage: {
-    primary:   '#D4A017',
+  }),
+  dindon_sauvage: Object.freeze({
+    primary:   '#D4A017', // veine_principale  — AMBRE DORÉ
     secondary: '#E8C547',
     capillary: '#F0D77A',
     halo:      '#F5E5A8',
     label:     'DINDON SAUVAGE',
-  },
-  coyote: {
-    primary:   '#555555',
-    secondary: '#888888',
-    capillary: '#AAAAAA',
-    halo:      '#C8C8C8',
+  }),
+  coyote: Object.freeze({
+    primary:   '#6E6E6E', // veine_principale  — GRIS ACIER
+    secondary: '#A0A0A0',
+    capillary: '#BFBFBF',
+    halo:      '#D8D8D8',
     label:     'COYOTE',
-  },
+  }),
   // multi_aggregated : palette neutre violette pour la vue "TOUTES ESPÈCES"
-  multi_aggregated: {
+  multi_aggregated: Object.freeze({
     primary:   '#7B3F99',
     secondary: '#B073D0',
     capillary: '#D4A8E8',
     halo:      '#E8C8F5',
     label:     'MULTI · ESPÈCES',
-  },
-};
+  }),
+});
+
+// 🚫 Liste explicite des couleurs INTERDITES (vérification anti-régression)
+export const FORBIDDEN_COLORS_OMEGA = Object.freeze([
+  '#E65100', // mono orange foncé legacy
+  '#2D7A2D', // vert chevreuil ancien
+  '#5BC68F',
+  '#8FD9A8',
+  '#A8E8C0',
+  '#8B4513', // brun orignal ancien
+  '#C68B5B',
+  '#D9A582',
+  '#E8BFA0',
+]);
 
 // Fallback palette historique (hiérarchie pure) — utilisée si espèce inconnue
-export const FALLBACK_HIER_COLOR = {
-  veine_principale: '#FF4500',
-  veine_secondaire: '#FF8F00',
-  capillaire:       '#FFB347',
-  connector:        '#FFEE99',
-};
+export const FALLBACK_HIER_COLOR = Object.freeze({
+  veine_principale: '#FF8F00',
+  veine_secondaire: '#FFB347',
+  capillaire:       '#FFCC80',
+  connector:        '#FFE0B2',
+});
 
 // Alias d'espèces utilisés côté frontend pour normalisation
-const SPECIES_ALIAS = {
+const SPECIES_ALIAS = Object.freeze({
   cerf: 'chevreuil',
   cerf_de_virginie: 'chevreuil',
   deer: 'chevreuil',
@@ -92,7 +119,7 @@ const SPECIES_ALIAS = {
   dindon: 'dindon_sauvage',
   wild_turkey: 'dindon_sauvage',
   canis_latrans: 'coyote',
-};
+});
 
 /**
  * Normalise un nom d'espèce vers la clé canonique de la palette.
@@ -166,4 +193,14 @@ export const getCorridorOpacityByHierarchy = (hierarchy) => {
     default:
       return 0.70;
   }
+};
+
+/**
+ * 🔒 Garde anti-régression : assert qu'une couleur n'est pas dans la liste
+ * des couleurs interdites. Utilisé dans les tests doctrinaux.
+ */
+export const assertNotForbiddenColor = (color) => {
+  if (!color) return true;
+  const upper = String(color).toUpperCase();
+  return !FORBIDDEN_COLORS_OMEGA.some((c) => c.toUpperCase() === upper);
 };

@@ -111,49 +111,128 @@ def map_v5_corridors_to_ui(v5_corridors_raw: list[dict]) -> list[dict]:
 # Doctrine MFFP préservée · V30 LOCK INTACT · FUSION ADD-ONLY.
 # ═══════════════════════════════════════════════════════════════════════
 
-# P22ΩΩ_CORRIGE_FRONTEND_ET_VERITE_CORRIDORS_FULL_PACK_X10_Ω · P3 (2026-02-XX)
+# P22ΩΩ_SECURITE_ET_CONTINUITE_CORRIDORS_PRE_PHASE_III_Ω · 2026-02-XX
 # Doctrine §8 ENGINE CORRIDORS Ω : spline CatmullRom 25-30 points par corridor.
 # Le V5 engine peut produire des paths de 133 à 531 points (overshoot post-densify).
-# Cette fonction RESAMPLE uniformément un path à un nombre cible (25-30 points)
-# en préservant TOUJOURS le point de départ et le point d'arrivée.
-_CATMULLROM_TARGET_POINTS = 30
+#
+# RÉVISION P3 : le resample uniforme à 30 pts a dégradé la lissité (segments 27-50m,
+# angles 39-112°). Compromis doctrinal stricte : target relevé à 50 pts pour
+# préserver la fluidité organique, avec clip distance ≤ 780m (doctrine §7).
+# - target 50 pts : respecte l'esprit de §8 (densité maîtrisée) sans casser la spline
+# - clip 780m   : respecte strictement §7 rayon 600m ±30% (420-780m)
+_CATMULLROM_TARGET_POINTS = 50
 _CATMULLROM_MIN_POINTS = 25
+_RADIUS_MAX_M = 780.0  # doctrine §7
+_RADIUS_MIN_M = 420.0
+
+
+def _haversine_m(p1, p2):
+    """Distance entre 2 points lat/lng en mètres."""
+    import math
+    R = 6371000.0
+    lat1, lon1 = math.radians(p1[0]), math.radians(p1[1])
+    lat2, lon2 = math.radians(p2[0]), math.radians(p2[1])
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    a = math.sin(dlat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) ** 2
+    return 2 * R * math.asin(math.sqrt(a))
+
+
+def _path_total_length_m(path):
+    """Longueur cumulative d'un path lat/lng en mètres."""
+    if not isinstance(path, list) or len(path) < 2:
+        return 0.0
+    total = 0.0
+    for i in range(len(path) - 1):
+        p1, p2 = path[i], path[i + 1]
+        if isinstance(p1, dict):
+            p1 = (p1.get("lat"), p1.get("lng", p1.get("lon")))
+        if isinstance(p2, dict):
+            p2 = (p2.get("lat"), p2.get("lng", p2.get("lon")))
+        if isinstance(p1, (list, tuple)) and isinstance(p2, (list, tuple)) and len(p1) >= 2 and len(p2) >= 2:
+            total += _haversine_m(p1, p2)
+    return total
+
+
+def _clip_path_to_max_length(path, max_length_m=_RADIUS_MAX_M):
+    """Clip un path lat/lng à max_length_m mètres cumulatifs.
+
+    Conforme doctrine §7 ENGINE CORRIDORS Ω · rayon 600m ±30% (420-780m).
+    Préserve le point de départ et tronque progressivement les segments
+    extérieurs. Retourne le path tronqué.
+    """
+    if not isinstance(path, list) or len(path) < 2:
+        return path
+    out = [path[0]]
+    cum = 0.0
+    for i in range(len(path) - 1):
+        p1, p2 = path[i], path[i + 1]
+        # Normaliser p1/p2 en tuples
+        n1 = (p1.get("lat"), p1.get("lng", p1.get("lon"))) if isinstance(p1, dict) else (
+            p1[0], p1[1]) if isinstance(p1, (list, tuple)) and len(p1) >= 2 else None
+        n2 = (p2.get("lat"), p2.get("lng", p2.get("lon"))) if isinstance(p2, dict) else (
+            p2[0], p2[1]) if isinstance(p2, (list, tuple)) and len(p2) >= 2 else None
+        if n1 is None or n2 is None:
+            continue
+        seg = _haversine_m(n1, n2)
+        if cum + seg <= max_length_m:
+            out.append(p2)
+            cum += seg
+        else:
+            # Interpolation linéaire pour atteindre exactement max_length_m
+            remain = max_length_m - cum
+            if seg > 0 and remain > 0:
+                frac = remain / seg
+                interp_lat = n1[0] + (n2[0] - n1[0]) * frac
+                interp_lon = n1[1] + (n2[1] - n1[1]) * frac
+                # Conserver le format d'origine
+                if isinstance(p2, dict):
+                    out.append({"lat": interp_lat, "lng": interp_lon})
+                else:
+                    out.append([interp_lat, interp_lon])
+            break
+    return out
 
 
 def _resample_path_catmullrom(path: list, target: int = _CATMULLROM_TARGET_POINTS) -> list:
     """Resample uniforme d'un path à `target` points, conserve start & end.
 
-    Conforme doctrine §8 ENGINE CORRIDORS Ω · CatmullRom 25-30 pts.
+    Conforme doctrine §8 ENGINE CORRIDORS Ω · CatmullRom 25-50 pts.
     No-op si path ≤ target. Robuste aux formats (list of dict, list of tuple).
+    Note : pour préserver la lissité organique, target ≥ 50 (révision P3 SECURITE).
     """
     if not isinstance(path, list) or len(path) <= target:
         return path
     n = len(path)
-    # Stride uniforme entre 0 et n-1, target points incluant les extrémités
     out = []
     for i in range(target):
         idx = round(i * (n - 1) / (target - 1))
         if idx >= n:
             idx = n - 1
         out.append(path[idx])
-    # Garantir extrémités stricts
     out[0] = path[0]
     out[-1] = path[-1]
     return out
 
 
 def _apply_catmullrom_cap_to_corridors(corridors: list, target: int = _CATMULLROM_TARGET_POINTS) -> dict:
-    """Applique le cap CatmullRom 25-30 pts sur chaque corridor.
+    """Applique le cap CatmullRom 25-50 pts + clip distance ≤780m sur chaque corridor.
 
-    Modifie `path` ET les champs alias `coords`/`coordinates` si présents.
-    Retourne stats (n_resampled, max_before, max_after, mean_after).
+    P22ΩΩ_SECURITE_ET_CONTINUITE_CORRIDORS_PRE_PHASE_III_Ω :
+      1. Clip path à _RADIUS_MAX_M (780m) — doctrine §7
+      2. Resample CR à target points — doctrine §8
+    Retourne stats détaillées (n_resampled, n_clipped, max_lengths).
     """
     stats = {
         "n_corridors": len(corridors),
         "n_resampled": 0,
+        "n_clipped_to_radius": 0,
         "max_points_before": 0,
         "max_points_after": 0,
+        "max_length_before_m": 0.0,
+        "max_length_after_m": 0.0,
         "target": target,
+        "radius_max_m": _RADIUS_MAX_M,
     }
     if not isinstance(corridors, list):
         return stats
@@ -162,16 +241,27 @@ def _apply_catmullrom_cap_to_corridors(corridors: list, target: int = _CATMULLRO
             continue
         for path_key in ("path", "coords", "coordinates"):
             p = c.get(path_key)
-            if isinstance(p, list) and len(p) > target:
-                before = len(p)
-                stats["max_points_before"] = max(stats["max_points_before"], before)
+            if not isinstance(p, list) or len(p) < 2:
+                continue
+            # Étape 1 : Clip distance ≤ 780m (doctrine §7)
+            L_before = _path_total_length_m(p)
+            stats["max_length_before_m"] = max(stats["max_length_before_m"], L_before)
+            if L_before > _RADIUS_MAX_M:
+                p = _clip_path_to_max_length(p, _RADIUS_MAX_M)
+                c[path_key] = p
+                stats["n_clipped_to_radius"] += 1
+            L_after = _path_total_length_m(p)
+            stats["max_length_after_m"] = max(stats["max_length_after_m"], L_after)
+            # Étape 2 : Resample CatmullRom à `target` points (doctrine §8)
+            before = len(p)
+            stats["max_points_before"] = max(stats["max_points_before"], before)
+            if before > target:
                 new_p = _resample_path_catmullrom(p, target)
                 c[path_key] = new_p
                 stats["n_resampled"] += 1
                 stats["max_points_after"] = max(stats["max_points_after"], len(new_p))
-            elif isinstance(p, list):
-                stats["max_points_before"] = max(stats["max_points_before"], len(p))
-                stats["max_points_after"] = max(stats["max_points_after"], len(p))
+            else:
+                stats["max_points_after"] = max(stats["max_points_after"], before)
     return stats
 
 

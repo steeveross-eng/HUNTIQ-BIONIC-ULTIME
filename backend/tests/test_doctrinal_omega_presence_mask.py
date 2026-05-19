@@ -461,3 +461,100 @@ def test_omega_spatial_module_files_exist_after_purge():
     assert "async def spatial_heatmap" in logic_src
     assert "async def spatial_scoring" in logic_src
     assert "async def spatial_status" in logic_src
+
+
+
+# =========================================================================
+# I-17 — P22ΩΩ_SECURITE_ET_CONTINUITE_CORRIDORS_PRE_PHASE_III_Ω
+# Anti-régression palette espèce + verrouillage couleurs interdites
+# =========================================================================
+
+def test_species_color_palette_omega_locked_anti_regression():
+    """I-17 — La palette SPECIES_COLOR_OMEGA est figée et conforme directive.
+
+    P22ΩΩ_SECURITE_ET_CONTINUITE_CORRIDORS_PRE_PHASE_III_Ω · 2026-02-XX
+    COMMANDANT STEEVE-MAX · BCE-4X ULTIME ABSOLU
+
+    Vérifie côté SOURCE (lecture du fichier JS) que :
+      1. La palette contient EXACTEMENT les 6 espèces + multi_aggregated
+      2. Les couleurs primary respectent la directive du Commandant
+      3. Aucune couleur INTERDITE (regression) n'apparaît dans la palette
+      4. La palette est Object.freeze (immutable)
+    """
+    import pathlib
+    src = pathlib.Path(
+        "/app/frontend/src/lib/speciesColorOmega.js"
+    ).read_text()
+
+    # 1. Palette figée Object.freeze
+    assert "Object.freeze({" in src
+    assert "SPECIES_COLOR_OMEGA = Object.freeze" in src
+
+    # 2. Couleurs primary DOCTRINE STEEVE-MAX strictes
+    expected_primary = {
+        "chevreuil": "#FF8F00",      # ORANGE AMBRÉ
+        "orignal": "#1E5F8E",        # BLEU PROFOND
+        "ours_noir": "#5D2E8C",      # VIOLET SOMBRE
+        "wapiti": "#C0392B",         # ROUGE BRIQUE
+        "dindon_sauvage": "#D4A017", # AMBRE DORÉ
+        "coyote": "#6E6E6E",         # GRIS ACIER
+    }
+    for sp, primary in expected_primary.items():
+        assert sp in src, f"espèce manquante: {sp}"
+        assert primary in src, f"couleur primary {primary} manquante pour {sp}"
+
+    # 3. Couleurs INTERDITES (anti-régression directive)
+    forbidden = [
+        "#E65100",  # mono orange foncé legacy
+        "#2D7A2D",  # vert chevreuil ancien (illisible sur fond forêt)
+        "#5BC68F",  # vert chevreuil ancien secondary
+        "#8B4513",  # brun orignal ancien (fusion sol)
+    ]
+    # Vérifier qu'elles sont DOCUMENTÉES comme interdites et qu'elles n'apparaissent
+    # PAS dans les définitions de palette (présence OK uniquement dans FORBIDDEN_COLORS_OMEGA).
+    assert "FORBIDDEN_COLORS_OMEGA" in src
+    for col in forbidden:
+        assert col in src  # doit être listé dans FORBIDDEN_COLORS_OMEGA
+    # Aucune des couleurs interdites ne doit apparaître dans les définitions
+    # primary/secondary/capillary/halo (vérification simple par contexte).
+    # On compte les occurrences : doit être 1 (dans FORBIDDEN_COLORS_OMEGA) sauf #E65100
+    # qui peut aussi être dans le commentaire — on tolère ≤ 2.
+    for col in forbidden:
+        assert src.count(col) <= 2, f"couleur interdite {col} apparaît trop souvent: {src.count(col)}"
+
+    # 4. Marqueurs doctrinaux
+    assert "P22ΩΩ_SECURITE_ET_CONTINUITE_CORRIDORS_PRE_PHASE_III_Ω" in src
+    assert "VERROU ABSOLU" in src
+
+
+def test_catmullrom_cap_radius_clip_doctrine():
+    """I-18 — Le backend applique le clip §7 (≤780m) et resample §8 (≤50pts).
+
+    Vérifie présence des helpers + constantes doctrinales dans
+    v20_performance_bundle.py.
+    """
+    import pathlib
+    src = pathlib.Path(
+        "/app/backend/engines/v8_institutional/v20_performance_bundle.py"
+    ).read_text()
+    assert "_clip_path_to_max_length" in src
+    assert "_apply_catmullrom_cap_to_corridors" in src
+    assert "_RADIUS_MAX_M = 780" in src
+    assert "_RADIUS_MIN_M = 420" in src
+    assert "_CATMULLROM_TARGET_POINTS = 50" in src
+    assert "n_clipped_to_radius" in src
+    # Marqueur doctrinal P22ΩΩ_SECURITE
+    assert "P22ΩΩ_SECURITE_ET_CONTINUITE_CORRIDORS_PRE_PHASE_III_Ω" in src
+
+    # Import + test runtime des helpers
+    import importlib
+    module = importlib.import_module("engines.v8_institutional.v20_performance_bundle")
+    assert hasattr(module, "_clip_path_to_max_length")
+    assert hasattr(module, "_apply_catmullrom_cap_to_corridors")
+    assert hasattr(module, "_haversine_m")
+    # Test fonctionnel clip
+    long_path = [[48.0 + i * 0.001, -68.0] for i in range(20)]  # ~2200m linéaire
+    clipped = module._clip_path_to_max_length(long_path, 780.0)
+    L = module._path_total_length_m(clipped)
+    assert L <= 780.5, f"clip échoué: {L}m"
+    assert L >= 770.0, f"clip trop agressif: {L}m"
