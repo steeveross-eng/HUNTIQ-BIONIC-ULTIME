@@ -22,7 +22,36 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
-- ✅ **P22ΩΩ_CORRIGE_FRONTEND_ET_VERITE_CORRIDORS_FULL_PACK_X10_Ω** (2026-02-XX) — FULL PACK P0→P3 :
+- ✅ **P22ΩΩ_ZEROCOST_PHASE2_R2_CLOUDFLARE_Ω** (2026-02-XX) — **PHASE 2 ZEROCOST DÉPLOYÉE EN PRODUCTION** :
+  - Bucket Cloudflare R2 `bionic-zerocost-omega` (ENAM Standard) créé via API native CF
+  - Custom domain `cdn-zerocost.bionichunt.com` attaché à R2 avec SSL/HTTP3 auto
+  - **145 objets uploadés** (1 manifest + 144 tuiles · 2 territoires × 6 espèces × 4 mois × 3 créneaux)
+    - Volume : 2 056 KB · upload 40.1s via boto3 S3-compat
+  - Endpoint S3 : `https://91a64640f553556f2674b8613d909aad.r2.cloudflarestorage.com`
+  - **Validation end-to-end CDN** : HTTP 200 · CF-Cache-Status **HIT** · CF-Ray ORD · latence 150ms
+  - Bundle servi conforme : 10 corridors, ENRICHI_TDELTA, score doctrinal, bio_presence_mask MFFP
+  - **Coût mensuel actuel : ~$0.00** (largement sous franchise R2 Free 10 GB)
+  - Crédentiels R2 S3 sécurisés en `.env` (jamais en clair dans le code)
+  - Scripts livrés :
+    - `tools/zerocost_precompute_shadow.py` — précalcul shadow V20 → tuiles
+    - `tools/zerocost_upload_r2.py` — upload S3-compat boto3
+    - `tools/zerocost_upload_r2_native.py` — upload via API native CF (fallback)
+    - `tools/zerocost_phase2_full_setup.py` — orchestration 5 étapes complète
+    - `tools/bionic-zerocost-cronjob.yaml` — CronJob k8s daily 3h EST + PrometheusRule
+  - Frontend :
+    - `hooks/useZerocostBundle.js` — dual-read LKG → CDN → API → LKG_STALE
+    - `lib/lkgCacheOmega.js` — cache IndexedDB 7j (Last Known Good)
+    - `lib/lkgCacheOmega.test.js` — **8/8 tests Jest** (fake-indexeddb + polyfill structuredClone)
+    - `components/territoire/TerritoireDegradedBanner.jsx` — banner NEVER BLANK Ω + LKG Ω
+  - Feature flag `REACT_APP_ZEROCOST_ENABLED=false` (mode SHADOW jusqu'à directive de bascule)
+  - Tests : **41 backend pytest + 8 frontend Jest = 49/49 PASS**
+
+- ✅ **P22ΩΩ_ZEROCOST_PHASE1_SHADOW_ET_LKG_Ω** (2026-02-XX) — Phase 1 + LKG IndexedDB :
+  - Précalcul 144 tuiles BSL + Outaouais, manifest.json généré
+  - LKG IndexedDB (TTL 7j, GC 200 entries) intégré à `useMapBundleV8.js`
+  - Banner LKG Ω distinct (ambre orange) avec bouton "Actualiser"
+
+- ✅ **P22ΩΩ_ZEROCOST_ENGINE_ET_TERRITOIRE_NEVER_BLANK_Ω** (2026-02-XX) — NEVER BLANK Ω :
   - **P0 Purge absolue** : `setBundleData(null)` à chaque changement d'espèce (useMapBundleV8 ligne 64),
     invalidation cache LRU si `bio_presence_mask_halt=True` (bionicBundleCache.haltTtlMs=60s),
     TTL ESSENTIEL_T0 réduit de 3600s → 60s pour éliminer la contamination inter-espèces.
