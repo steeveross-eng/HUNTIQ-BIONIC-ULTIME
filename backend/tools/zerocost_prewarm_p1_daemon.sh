@@ -42,6 +42,7 @@ start_daemon() {
     echo "  Logs       : $LOG_DIR/worker_*.log"
     echo "  Résolution : H3 R$WORKER_RESOLUTION"
     echo "  MAX_TILES  : $MAX_TILES (0 = illimité)"
+    echo "  Nice level : 19 (priorité minimale, ne sature pas le backend)"
     echo ""
 
     START_TS=$(date +%s)
@@ -49,8 +50,9 @@ start_daemon() {
     for ((i=0; i<WORKER_COUNT; i++)); do
         # setsid détache du process group de la session
         # nohup ignore SIGHUP quand session ferme
+        # nice -n 19 : priorité MINIMALE pour ne pas saturer le backend uvicorn
         # < /dev/null détache stdin
-        setsid nohup env \
+        setsid nohup nice -n 19 env \
             GRID_FILE_PATH="$GRID_FILE_PATH" \
             WORKER_INDEX=$i \
             WORKER_COUNT=$WORKER_COUNT \
@@ -61,7 +63,7 @@ start_daemon() {
             > "$LOG_DIR/worker_${i}.log" 2>&1 < /dev/null &
         PIDS+=($!)
         disown
-        echo "  ✓ Worker $i démarré (PID ${PIDS[$i]})"
+        echo "  ✓ Worker $i démarré (PID ${PIDS[$i]} · nice 19)"
     done
 
     # Persister état pour status/stop

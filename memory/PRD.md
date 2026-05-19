@@ -22,6 +22,18 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_PHASE3_WEATHERCACHE_BETA2_B_E_ARBITRAGE_DAEMON_3RF_Ω** (2026-02-19) — **ARBITRAGE 3 RF FOCALISÉ** :
+  - Grille `canada_h3_grid_r6_3rf_focused.json` : **1 775 cellules** (Laurentides 1 234 · Mauricie 412 · Outaouais 129)
+  - 127 800 tuiles cibles · ~$0.026/mois stockage R2
+  - Daemon relancé en **8 workers nice -n 19** (priorité minimale, n'affame plus le backend)
+  - Load avg divisé par 14 (11.87 → 0.82) après reconfiguration
+  - Backend reste fonctionnel sous charge daemon : test BSL chevreuil → HTTP 200 fast-hit
+  - ETA stationnaire : ~11 jours warm cache / 39j cold cache (compromis vs disponibilité backend)
+  - **Plans approuvés non-déployés** : `PLAN_BUNDLE_SEED_H3R5_BETA2_ΣΤ_Ω.md` · `PLAN_FRONTEND_202_BANNER_LKG_Ω.md` (créé)
+  - `ANTI_502_BG_COMPUTE=false` strict (directive Commandant)
+  - Verrou Phase III maintenu · QUOTA600 statut conservé APPROUVÉ_NON_ACTIVÉ
+  - Rapport : `/app/memory/RAPPORT_PREWARM_3RF_FOCALISÉ_Ω.md`
+
 - ✅ **P22ΩΩ_PHASE3_WEATHERCACHE_BETA2_B_E_PRECEDENT_16W_Ω** (2026-02-19) — **DAEMON PRÉ-WARM P1 + ANTI-502** :
   - 🟢 **Daemon pré-warm 16 workers locaux LANCÉ EN BACKGROUND** (setsid + nohup + disown, PPID=1, indépendant session)
   - 🟢 **Middleware ANTI-502 / NEVER BLANK Ω OPÉRATIONNEL** : route override `anti_502_bundle` + fast-path cache lookup V20 + slow-path 202 EN_COURS
