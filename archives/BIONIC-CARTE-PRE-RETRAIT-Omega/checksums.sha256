@@ -1,8 +1,0 @@
-d576aee8e63d8bc8690db6973c828fa5cdea0173d63a39a4c4021f0ef746824c  ./builds/BUILD_MANIFEST.txt
-98bd425e55a0ce6ec3b857e7bcbe4a6cef508864f23e1dc2b40fd2b7a4f38279  ./codebase/backend.tar.gz
-af12795866227b0745375ad2a1cc2e7bfd0976ab9ecbc39d407679cd4391e267  ./codebase/frontend.tar.gz
-2d1463dafa704606f877a191c8d66a92957ea61ad01c34700a84a5e26f0d43aa  ./logs/integrity-check.txt
-2530151fd1529c4f3cf39705c2edc091fc0849483d327c36bc085e0764476605  ./restore.txt
-22d251982fb4d370b71b469d344c3be504ac38a563e94829a39de3d5e61fe729  ./snapshot/snapshot-endpoints.json
-58c7620a8b1ebb6ffb845faf535128ecddac2afe231152b722314278d897dbfb  ./snapshot/snapshot-layers.yaml
-cad7397c2b559e76c71eaf627edeefb209f5531bda520d4fc0bad20e4a00667e  ./snapshot/snapshot-structure.json

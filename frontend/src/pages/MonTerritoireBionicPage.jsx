@@ -28,6 +28,7 @@ import { Switch } from '@/components/ui/switch';
 import useBionicSession from '@/hooks/useBionicSession';
 import useBionicLayers from '@/hooks/useBionicLayers';
 import { TerritoireToolbar } from '@/components/territoire/ui/TerritoireToolbar';
+import { TerritoireDegradedBanner } from '@/components/territoire/TerritoireDegradedBanner';
 import { InspectionBiologiquePanel } from '@/components/territoire/InspectionBiologiquePanel';
 import { NutritionPanelOmega } from '@/components/territoire/NutritionPanelOmega';import { NutritionPanel } from '@/components/territoire/ui/NutritionPanel';
 import { TerritoireDialogs } from '@/components/territoire/ui/TerritoireDialogs';
@@ -1431,6 +1432,8 @@ const MonTerritoireBionicPage = ({ pageMode = 'analyse-bionic' } = {}) => {
             />
           ) : (
           <>
+          {/* P22ΩΩ_ZEROCOST_ENGINE_ET_TERRITOIRE_NEVER_BLANK_Ω · Banner état dégradé */}
+          <TerritoireDegradedBanner bundleData={bundleDataV8} />
           {/* ── MapContainer — CARTE PRINCIPALE (composant extrait IM1.2) ── */}
           <MapContainer center={mapCenter} zoom={mapZoom} className={`absolute inset-0 w-full h-full ${mapClickMode ? 'cursor-crosshair' : ''}`} zoomControl={false} style={{ background: '#0a0a0f' }}>
             <MapContent

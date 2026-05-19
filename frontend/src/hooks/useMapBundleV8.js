@@ -16,6 +16,7 @@
  */
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { buildBundleCacheKey, bundleCacheGet, bundleCacheSet, bundleCacheTier, bundleCacheAge, bundleCacheDelete } from '../lib/bionicBundleCache';
+import { lkgSave, lkgGet } from '../lib/lkgCacheOmega';
 
 const API = process.env.REACT_APP_BACKEND_URL;
 
@@ -152,6 +153,29 @@ const useMapBundleV8 = () => {
         //  - cache invalidé après set pour ne pas polluer 60s
         if (data && data.bio_presence_mask_halt === true) {
           data.corridors = [];
+        }
+        // P22ΩΩ_ZEROCOST_PHASE1_SHADOW_ET_LKG_Ω : doctrine LKG
+        // Si le bundle est DEGRADED (middleware NEVER BLANK Ω), tenter de
+        // servir le LKG IndexedDB du dernier bundle valide pour cette
+        // (espèce × position). Affichage banner LKG via metadata _lkg.
+        if (data && data.status === 'DEGRADED') {
+          // eslint-disable-next-line no-await-in-loop
+          const lkg = await lkgGet(species, lat, lon);
+          if (lkg) {
+            setBundleData(lkg);
+            setBundleTier(lkg.bundle_tier || 'LKG_FALLBACK');
+            setLoading(false);
+            return lkg;
+          }
+          // Aucun LKG → on garde le payload DEGRADED qui activera le banner
+          setBundleData(data);
+          setBundleTier('DEGRADED');
+          setLoading(false);
+          return data;
+        }
+        // Bundle valide : sauvegarder en LKG (async, non-bloquant)
+        if (data && !data.error) {
+          lkgSave(species, lat, lon, data).catch(() => {});
         }
         setBundleData(data);
         setBundleTier(tier);

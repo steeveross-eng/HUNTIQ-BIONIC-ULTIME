@@ -1,0 +1,725 @@
+[
+ {
+  "timestamp": "2026-05-19T15:36:44.373976+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "chevreuil",
+  "waypoint": {
+   "lat": 48.206657,
+   "lng": -68.382422
+  },
+  "rejected_count": 1,
+  "rejected": [
+   {
+    "id": "corr_omega_1",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 3,
+     "zones_humides": 0,
+     "strong_attractor_count": 5
+    },
+    "path_first": [
+     48.207407,
+     -68.381677
+    ],
+    "path_last": [
+     48.21099,
+     -68.380619
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-05-19T15:36:45.017756+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "chevreuil",
+  "waypoint": {
+   "lat": 48.206657,
+   "lng": -68.382422
+  },
+  "rejected_count": 1,
+  "rejected": [
+   {
+    "id": "corr_omega_1",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 3,
+     "zones_humides": 0,
+     "strong_attractor_count": 5
+    },
+    "path_first": [
+     48.207407,
+     -68.381677
+    ],
+    "path_last": [
+     48.21099,
+     -68.380619
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-05-19T15:36:45.672850+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "orignal",
+  "waypoint": {
+   "lat": 48.206657,
+   "lng": -68.382422
+  },
+  "rejected_count": 4,
+  "rejected": [
+   {
+    "id": "corr_omega_2",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 2
+    },
+    "path_first": [
+     48.213268,
+     -68.38176
+    ],
+    "path_last": [
+     48.207892,
+     -68.381702
+    ]
+   },
+   {
+    "id": "corr_omega_8",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 1,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 2,
+     "zones_humides": 0,
+     "strong_attractor_count": 3
+    },
+    "path_first": [
+     48.2032,
+     -68.376051
+    ],
+    "path_last": [
+     48.205575,
+     -68.382677
+    ]
+   },
+   {
+    "id": "corr_omega_9",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 1,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 3,
+     "zones_humides": 0,
+     "strong_attractor_count": 4
+    },
+    "path_first": [
+     48.204844,
+     -68.374455
+    ],
+    "path_last": [
+     48.20563,
+     -68.381742
+    ]
+   },
+   {
+    "id": "corr_omega_10",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 1,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 3,
+     "zones_humides": 0,
+     "strong_attractor_count": 4
+    },
+    "path_first": [
+     48.205742,
+     -68.381606
+    ],
+    "path_last": [
+     48.204859,
+     -68.374904
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-05-19T15:36:46.313545+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "orignal",
+  "waypoint": {
+   "lat": 48.206657,
+   "lng": -68.382422
+  },
+  "rejected_count": 4,
+  "rejected": [
+   {
+    "id": "corr_omega_2",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 2
+    },
+    "path_first": [
+     48.213268,
+     -68.38176
+    ],
+    "path_last": [
+     48.207892,
+     -68.381702
+    ]
+   },
+   {
+    "id": "corr_omega_8",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 1,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 2,
+     "zones_humides": 0,
+     "strong_attractor_count": 3
+    },
+    "path_first": [
+     48.2032,
+     -68.376051
+    ],
+    "path_last": [
+     48.205575,
+     -68.382677
+    ]
+   },
+   {
+    "id": "corr_omega_9",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 1,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 3,
+     "zones_humides": 0,
+     "strong_attractor_count": 4
+    },
+    "path_first": [
+     48.204844,
+     -68.374455
+    ],
+    "path_last": [
+     48.20563,
+     -68.381742
+    ]
+   },
+   {
+    "id": "corr_omega_10",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 1,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 3,
+     "zones_humides": 0,
+     "strong_attractor_count": 4
+    },
+    "path_first": [
+     48.205742,
+     -68.381606
+    ],
+    "path_last": [
+     48.204859,
+     -68.374904
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-05-19T15:36:56.931839+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "orignal",
+  "waypoint": {
+   "lat": 45.476542,
+   "lng": -75.701271
+  },
+  "rejected_count": 1,
+  "rejected": [
+   {
+    "id": "corr_omega_9",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 3,
+     "hotspots_major": 2,
+     "zones_humides": 0,
+     "strong_attractor_count": 5
+    },
+    "path_first": [
+     45.472957,
+     -75.692878
+    ],
+    "path_last": [
+     45.475164,
+     -75.701269
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-05-19T15:36:59.361491+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "ours_noir",
+  "waypoint": {
+   "lat": 45.476542,
+   "lng": -75.701271
+  },
+  "rejected_count": 1,
+  "rejected": [
+   {
+    "id": "corr_omega_8",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 1,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 2,
+     "zones_humides": 0,
+     "strong_attractor_count": 4
+    },
+    "path_first": [
+     45.47653,
+     -75.692576
+    ],
+    "path_last": [
+     45.475571,
+     -75.700219
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-05-19T15:36:59.955930+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "ours_noir",
+  "waypoint": {
+   "lat": 45.476542,
+   "lng": -75.701271
+  },
+  "rejected_count": 1,
+  "rejected": [
+   {
+    "id": "corr_omega_8",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 1,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 2,
+     "zones_humides": 0,
+     "strong_attractor_count": 4
+    },
+    "path_first": [
+     45.47653,
+     -75.692576
+    ],
+    "path_last": [
+     45.475571,
+     -75.700219
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-05-19T15:37:00.581380+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "ours_noir",
+  "waypoint": {
+   "lat": 45.476542,
+   "lng": -75.701271
+  },
+  "rejected_count": 1,
+  "rejected": [
+   {
+    "id": "corr_omega_8",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 1,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 2,
+     "zones_humides": 0,
+     "strong_attractor_count": 4
+    },
+    "path_first": [
+     45.47653,
+     -75.692576
+    ],
+    "path_last": [
+     45.475571,
+     -75.700219
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-05-19T15:37:01.179836+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "ours_noir",
+  "waypoint": {
+   "lat": 45.476542,
+   "lng": -75.701271
+  },
+  "rejected_count": 1,
+  "rejected": [
+   {
+    "id": "corr_omega_8",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 1,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 2,
+     "zones_humides": 0,
+     "strong_attractor_count": 4
+    },
+    "path_first": [
+     45.47653,
+     -75.692576
+    ],
+    "path_last": [
+     45.475571,
+     -75.700219
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-05-19T15:37:05.789745+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "coyote",
+  "waypoint": {
+   "lat": 45.476542,
+   "lng": -75.701271
+  },
+  "rejected_count": 3,
+  "rejected": [
+   {
+    "id": "corr_omega_2",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale,transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 2
+    },
+    "path_first": [
+     45.477321,
+     -75.701401
+    ],
+    "path_last": [
+     45.477523,
+     -75.706689
+    ]
+   },
+   {
+    "id": "corr_omega_3",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 1,
+     "zones_humides": 0,
+     "strong_attractor_count": 3
+    },
+    "path_first": [
+     45.47728,
+     -75.701751
+    ],
+    "path_last": [
+     45.478025,
+     -75.706653
+    ]
+   },
+   {
+    "id": "corr_omega_4",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 1,
+     "zones_humides": 0,
+     "strong_attractor_count": 3
+    },
+    "path_first": [
+     45.476974,
+     -75.702398
+    ],
+    "path_last": [
+     45.47647,
+     -75.707691
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-05-19T15:37:06.395917+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "coyote",
+  "waypoint": {
+   "lat": 45.476542,
+   "lng": -75.701271
+  },
+  "rejected_count": 3,
+  "rejected": [
+   {
+    "id": "corr_omega_2",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale,transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 2
+    },
+    "path_first": [
+     45.477321,
+     -75.701401
+    ],
+    "path_last": [
+     45.477523,
+     -75.706689
+    ]
+   },
+   {
+    "id": "corr_omega_3",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 1,
+     "zones_humides": 0,
+     "strong_attractor_count": 3
+    },
+    "path_first": [
+     45.47728,
+     -75.701751
+    ],
+    "path_last": [
+     45.478025,
+     -75.706653
+    ]
+   },
+   {
+    "id": "corr_omega_4",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 1,
+     "zones_humides": 0,
+     "strong_attractor_count": 3
+    },
+    "path_first": [
+     45.476974,
+     -75.702398
+    ],
+    "path_last": [
+     45.47647,
+     -75.707691
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-05-19T15:37:06.986842+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "coyote",
+  "waypoint": {
+   "lat": 45.476542,
+   "lng": -75.701271
+  },
+  "rejected_count": 3,
+  "rejected": [
+   {
+    "id": "corr_omega_2",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale,transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 2
+    },
+    "path_first": [
+     45.477321,
+     -75.701401
+    ],
+    "path_last": [
+     45.477523,
+     -75.706689
+    ]
+   },
+   {
+    "id": "corr_omega_3",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 1,
+     "zones_humides": 0,
+     "strong_attractor_count": 3
+    },
+    "path_first": [
+     45.47728,
+     -75.701751
+    ],
+    "path_last": [
+     45.478025,
+     -75.706653
+    ]
+   },
+   {
+    "id": "corr_omega_4",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 1,
+     "zones_humides": 0,
+     "strong_attractor_count": 3
+    },
+    "path_first": [
+     45.476974,
+     -75.702398
+    ],
+    "path_last": [
+     45.47647,
+     -75.707691
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-05-19T15:37:07.590590+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "coyote",
+  "waypoint": {
+   "lat": 45.476542,
+   "lng": -75.701271
+  },
+  "rejected_count": 3,
+  "rejected": [
+   {
+    "id": "corr_omega_2",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale,transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 2
+    },
+    "path_first": [
+     45.477321,
+     -75.701401
+    ],
+    "path_last": [
+     45.477523,
+     -75.706689
+    ]
+   },
+   {
+    "id": "corr_omega_3",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 1,
+     "zones_humides": 0,
+     "strong_attractor_count": 3
+    },
+    "path_first": [
+     45.47728,
+     -75.701751
+    ],
+    "path_last": [
+     45.478025,
+     -75.706653
+    ]
+   },
+   {
+    "id": "corr_omega_4",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 1,
+     "zones_humides": 0,
+     "strong_attractor_count": 3
+    },
+    "path_first": [
+     45.476974,
+     -75.702398
+    ],
+    "path_last": [
+     45.47647,
+     -75.707691
+    ]
+   }
+  ]
+ }
+]

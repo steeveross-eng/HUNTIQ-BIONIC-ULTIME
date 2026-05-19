@@ -309,6 +309,78 @@ app.add_middleware(
 app.add_middleware(GZipMiddleware, minimum_size=500)
 
 
+# ════════════════════════════════════════════════════════════════════════════
+# P22ΩΩ_ZEROCOST_ENGINE_ET_TERRITOIRE_NEVER_BLANK_Ω · 2026-02-XX · STEEVE-MAX
+# DOCTRINE NEVER BLANK Ω · CONTRAT D'API EN ERREUR
+# ════════════════════════════════════════════════════════════════════════════
+# Tout endpoint TERRITOIRE qui retourne 404 ou 500 est intercepté et remplacé
+# par un JSON structuré conforme à la doctrine. Empêche TERRITOIRE de rester
+# silencieusement vide ; force l'UI à afficher un état dégradé explicite.
+#
+# Périmètre : préfixes /api/v3, /api/v8, /api/v20, /api/v30, /api/territoire,
+# /api/v1/bionic, /api/zones, /api/permis. Les autres endpoints conservent
+# leur comportement HTTP standard (auth, business, etc.).
+# ════════════════════════════════════════════════════════════════════════════
+_NEVER_BLANK_PREFIXES = (
+    "/api/v3/weather",
+    "/api/v8/national",
+    "/api/v8/institutional",
+    "/api/v20/territoire",
+    "/api/v30",
+    "/api/territoire",
+    "/api/v1/bionic",
+    "/api/zones",
+    "/api/permis",
+)
+
+
+@app.middleware("http")
+async def territoire_never_blank_omega_middleware(request, call_next):
+    """Intercepte 404/500 sur les endpoints TERRITOIRE → JSON DEGRADED structuré.
+
+    Doctrine P22ΩΩ_NEVER_BLANK_Ω · COMMANDANT STEEVE-MAX.
+    """
+    from fastapi.responses import JSONResponse
+    from datetime import datetime, timezone
+    response = await call_next(request)
+    path = request.url.path
+    # Active uniquement sur le périmètre TERRITOIRE
+    if not any(path.startswith(p) for p in _NEVER_BLANK_PREFIXES):
+        return response
+    # Active uniquement sur 404 et 500/502/503/504
+    if response.status_code not in (404, 500, 502, 503, 504):
+        return response
+    # Garde-fou : ne pas écraser une 401/403 (auth) ni une 422 (validation)
+    if response.status_code in (401, 403, 422):
+        return response
+    # Construire la réponse NEVER BLANK
+    degraded_payload = {
+        "status": "DEGRADED",
+        "doctrine": "P22ΩΩ_NEVER_BLANK_Ω",
+        "reason": (
+            f"endpoint_unavailable_http_{response.status_code}"
+            if response.status_code in (404, 500)
+            else f"backend_overloaded_http_{response.status_code}"
+        ),
+        "path": path,
+        "method": request.method,
+        "http_status_original": response.status_code,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "fallback_hint": (
+            "frontend_should_show_degraded_banner_and_retry_with_backoff"
+        ),
+    }
+    return JSONResponse(
+        content=degraded_payload,
+        status_code=200,  # 200 OK avec status=DEGRADED dans le payload
+        headers={
+            "X-Territoire-Status": "DEGRADED",
+            "X-Territoire-Original-Code": str(response.status_code),
+            "X-Territoire-Doctrine": "P22OMEGAOMEGA_NEVER_BLANK_OMEGA",
+        },
+    )
+
+
 # P20_PHASE3 · FORCE PURGE Ω · injecte headers no-cache sur toutes les
 # responses super-masters et admin-premium. Ordre Commandant STEEVE-MAX.
 @app.middleware("http")

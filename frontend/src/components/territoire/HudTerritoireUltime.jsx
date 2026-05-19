@@ -290,6 +290,7 @@ export default function HudTerritoireUltime({
             <label style={{ fontSize: 11, color: "#6B7280" }}>Espèce</label>
             <select
               data-testid="hud-ultime-species-select"
+              translate="no"
               value={species}
               onChange={(e) => setSpecies(e.target.value)}
               style={{
@@ -301,7 +302,7 @@ export default function HudTerritoireUltime({
               }}
             >
               {SPECIES_OFFICIAL.map((s) => (
-                <option key={s.key} value={s.key}>
+                <option translate="no" key={s.key} value={s.key}>
                   {s.label}
                 </option>
               ))}

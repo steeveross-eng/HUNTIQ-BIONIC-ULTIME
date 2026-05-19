@@ -54,6 +54,9 @@ def pytest_collection_modifyitems(config, items):
         # P22ΩΩ_BLOC_5 — Tests doctrinaux Ω : EXEMPTION explicite du filtre BCE-4X
         if "doctrinal_omega" in item.keywords:
             continue
+        # P22ΩΩ_NEVER_BLANK_Ω : tests NEVER BLANK exemptés (validation backend API)
+        if "never_blank" in str(item.fspath).lower():
+            continue
 
         # Exclusion par marqueur
         if "territoire" in item.keywords:
