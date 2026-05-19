@@ -58,7 +58,7 @@ export const lkgSave = async (species, lat, lng, bundleData) => {
     const tx = db.transaction(STORE_NAME, 'readwrite');
     const store = tx.objectStore(STORE_NAME);
     const cache_key = buildLkgKey(species, lat, lng);
-    store.put({
+    const putReq = store.put({
       cache_key,
       species: String(species || 'unknown').toLowerCase(),
       lat: Number(lat),
@@ -67,11 +67,16 @@ export const lkgSave = async (species, lat, lng, bundleData) => {
       ts: Date.now(),
       schema: 1,
     });
+    // Attendre EXPLICITEMENT la complétion du put ET du commit de la transaction
     await new Promise((resolve, reject) => {
+      putReq.onsuccess = () => { /* put OK */ };
+      putReq.onerror = () => reject(putReq.error);
       tx.oncomplete = resolve;
       tx.onerror = () => reject(tx.error);
+      tx.onabort = () => reject(tx.error || new Error('tx_aborted'));
     });
-    await _gcIfNeeded();
+    // GC en fire-and-forget (n'attend PAS la complétion)
+    _gcIfNeeded().catch(() => {});
     return true;
   } catch (err) {
     return false;
@@ -166,3 +171,27 @@ export const lkgPurge = async () => {
 if (typeof window !== 'undefined') {
   window.__BIONIC_LKG_OMEGA__ = { lkgGet, lkgSave, lkgStats, lkgPurge, buildLkgKey };
 }
+
+/**
+ * P22ΩΩ_TEST_HOOK_Ω — Reset complet (tests only).
+ * NE PAS appeler en production. Permet aux tests Jest de recréer une DB
+ * propre entre chaque cas, en bypassant le cache _dbPromise module-level.
+ */
+export const __resetForTests__ = async () => {
+  try {
+    if (_dbPromise) {
+      const db = await _dbPromise;
+      try { db.close(); } catch (e) { /* ignore */ }
+    }
+    _dbPromise = null;
+    await new Promise((resolve) => {
+      if (typeof indexedDB === 'undefined') return resolve();
+      const req = indexedDB.deleteDatabase(DB_NAME);
+      req.onsuccess = () => resolve();
+      req.onerror = () => resolve();
+      req.onblocked = () => resolve();
+    });
+  } catch (err) {
+    _dbPromise = null;
+  }
+};

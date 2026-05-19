@@ -1,0 +1,135 @@
+# ════════════════════════════════════════════════════════════════════════════
+# bionic-zerocost-cronjob.yaml — CronJob k8s ZEROCOST ENGINE
+# ════════════════════════════════════════════════════════════════════════════
+# P22ΩΩ_ZEROCOST_PHASE2_R2_CLOUDFLARE_Ω · 2026-02-XX · STEEVE-MAX
+# COMMANDANT STEEVE-MAX · BCE-4X ULTIME ABSOLU
+#
+# Précalcul nocturne + upload vers Cloudflare R2.
+# Schedule : 3h00 EST = 8h00 UTC daily.
+# Tolérance : starting deadline 3600s, retry 2x sur échec.
+#
+# DÉPLOIEMENT :
+#   1. Créer les secrets :
+#      kubectl create secret generic cf-r2-creds \
+#        --from-literal=R2_ACCESS_KEY_ID='<from_dashboard>' \
+#        --from-literal=R2_SECRET_ACCESS_KEY='<from_dashboard>' \
+#        --from-literal=CF_ACCOUNT_ID='91a64640f553556f2674b8613d909aad'
+#   2. kubectl apply -f bionic-zerocost-cronjob.yaml
+# ════════════════════════════════════════════════════════════════════════════
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: bionic-zerocost-precompute
+  labels:
+    app: bionic-zerocost
+    doctrine: p22omega-zerocost-omega
+spec:
+  schedule: "0 8 * * *"  # 3h00 EST = 8h00 UTC
+  concurrencyPolicy: Forbid  # Jamais deux runs en parallèle
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      backoffLimit: 2  # Retry 2 fois max sur échec
+      activeDeadlineSeconds: 7200  # Max 2h de compute
+      template:
+        metadata:
+          labels:
+            app: bionic-zerocost
+            tier: precompute
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: zerocost-precompute
+              image: bionic-backend:latest
+              imagePullPolicy: Always
+              resources:
+                requests:
+                  memory: "1Gi"
+                  cpu: "500m"
+                limits:
+                  memory: "2Gi"
+                  cpu: "1500m"
+              env:
+                - name: MONGO_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: mongo-creds
+                      key: url
+                - name: DB_NAME
+                  value: "huntiq_v6"
+                - name: CF_ACCOUNT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: cf-r2-creds
+                      key: CF_ACCOUNT_ID
+                - name: R2_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: cf-r2-creds
+                      key: R2_ACCESS_KEY_ID
+                - name: R2_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: cf-r2-creds
+                      key: R2_SECRET_ACCESS_KEY
+                - name: CF_R2_BUCKET
+                  value: "bionic-zerocost-omega"
+                - name: PYTHONUNBUFFERED
+                  value: "1"
+              command:
+                - "/bin/bash"
+                - "-c"
+                - |
+                  set -e
+                  echo "═══ ZEROCOST PHASE 1 PRECOMPUTE ═══"
+                  cd /app/backend
+                  python3 tools/zerocost_precompute_shadow.py
+                  echo
+                  echo "═══ ZEROCOST PHASE 2 UPLOAD R2 ═══"
+                  python3 tools/zerocost_upload_r2.py
+                  echo
+                  echo "✅ CronJob ZEROCOST terminé"
+              volumeMounts:
+                - name: zerocost-cache
+                  mountPath: /app/backend/cache/zerocost_v1
+          volumes:
+            - name: zerocost-cache
+              emptyDir:
+                sizeLimit: 5Gi  # ~50GB max production, 5GB suffit pour 2 territoires pilote
+
+# ════════════════════════════════════════════════════════════════════════════
+# ALERTING (PrometheusRule, optionnel — Phase 5)
+# ════════════════════════════════════════════════════════════════════════════
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: bionic-zerocost-alerts
+  labels:
+    app: bionic-zerocost
+spec:
+  groups:
+    - name: bionic-zerocost-omega
+      interval: 5m
+      rules:
+        - alert: ZerocostCronJobFailed
+          expr: kube_job_status_failed{job_name=~"bionic-zerocost-.*"} > 0
+          for: 10m
+          labels:
+            severity: critical
+            doctrine: P22OMEGA_ZEROCOST
+          annotations:
+            summary: "ZEROCOST CronJob a échoué"
+            description: "Le précalcul ZEROCOST n'a pas réussi depuis 10 minutes."
+        - alert: ZerocostTilesStale
+          expr: time() - kube_cronjob_status_last_successful_time{cronjob="bionic-zerocost-precompute"} > 172800  # 48h
+          for: 1h
+          labels:
+            severity: warning
+            doctrine: P22OMEGA_ZEROCOST
+          annotations:
+            summary: "Tuiles ZEROCOST obsolètes (>48h)"
+            description: "Aucun précalcul réussi depuis plus de 48 heures."
