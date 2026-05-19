@@ -1,22 +1,30 @@
 # ════════════════════════════════════════════════════════════════════════════
 # bionic-zerocost-cronjob.yaml — CronJob k8s ZEROCOST Canada parallélisé
 # ════════════════════════════════════════════════════════════════════════════
-# P22ΩΩ_PHASE3_CRONJOB_PARALLEL_Ω · 2026-02-XX · STEEVE-MAX
+# P22ΩΩ_PHASE3_WEATHERCACHE_BETA2_B_E_EXEC_Ω · 2026-02-19 · STEEVE-MAX
 # COMMANDANT STEEVE-MAX · BCE-4X ULTIME ABSOLU
 #
-# Précalcul nocturne CANADA COMPLET avec 16 workers parallèles.
-# H3 résolution 4 (≈8 000 cellules × 6 espèces × 4 mois × 3 créneaux = 575k tuiles).
-# Schedule : 3h00 EST = 8h00 UTC daily.
-# Durée estimée : ~24h avec 16 workers (50s/tuile cold-start).
+# Pré-warm P1 IFAP/ZEC/RF QC+Maritimes avec 256 workers parallèles k8s.
+# Grille : canada_h3_grid_r6_qc_maritimes_weighted.json (68 054 cellules, P1=7 077).
+# Couverture cible : 509 544 tuiles P1 (priorité 1 hotspots).
+# Durée estimée : ~1.9 jours avec 256 workers (84s/tuile bio-positive QC).
 #
-# DÉPLOIEMENT :
+# DÉPLOIEMENT (procédure complète pour cluster k8s cible) :
 #   1. Créer les secrets :
 #      kubectl create secret generic cf-r2-creds \
 #        --from-literal=CF_API_TOKEN='cfut_...' \
 #        --from-literal=CF_ACCOUNT_ID='91a64640f553556f2674b8613d909aad' \
-#        --from-literal=R2_ACCESS_KEY_ID='<from_dashboard>' \
-#        --from-literal=R2_SECRET_ACCESS_KEY='<from_dashboard>'
-#   2. kubectl apply -f bionic-zerocost-cronjob.yaml
+#        --from-literal=R2_ACCESS_KEY_ID='<dashboard>' \
+#        --from-literal=R2_SECRET_ACCESS_KEY='<dashboard>' \
+#        --from-literal=OWM_API_KEY='444e2f791375898ce2db3a82b89f4a08'
+#   2. kubectl create configmap canada-h3-grid \
+#        --from-file=canada_h3_grid_r6_qc_maritimes_weighted.json
+#   3. kubectl apply -f bionic-zerocost-cronjob.yaml
+#   4. Suivi : kubectl logs -l app=bionic-zerocost,tier=precompute-worker --tail=100
+#
+# DÉCLENCHEMENT ONE-SHOT (pré-warm initial P1) :
+#   kubectl create job --from=cronjob/bionic-zerocost-precompute-parallel \
+#     prewarm-p1-$(date +%Y%m%d-%H%M)
 # ════════════════════════════════════════════════════════════════════════════
 
 apiVersion: batch/v1
@@ -68,12 +76,13 @@ spec:
   failedJobsHistoryLimit: 5
   jobTemplate:
     spec:
-      # 🚀 PARALLÉLISATION : 16 workers indépendants
-      parallelism: 16
-      completions: 16
+      # 🚀 PARALLÉLISATION : 256 workers indépendants (β2-Β+β2-Ε P1 pré-warm)
+      # P22ΩΩ_PHASE3_WEATHERCACHE_BETA2_B_E_EXEC_Ω · STEEVE-MAX
+      parallelism: 256
+      completions: 256
       completionMode: Indexed  # WORKER_INDEX = JOB_COMPLETION_INDEX env
       backoffLimit: 2
-      activeDeadlineSeconds: 86400  # 24h max
+      activeDeadlineSeconds: 259200  # 72h max (pré-warm one-shot)
       template:
         metadata:
           labels:
@@ -103,9 +112,11 @@ spec:
                     fieldRef:
                       fieldPath: metadata.annotations['batch.kubernetes.io/job-completion-index']
                 - name: WORKER_COUNT
-                  value: "16"
+                  value: "256"
                 - name: WORKER_RESOLUTION
-                  value: "4"
+                  value: "6"
+                - name: GRID_FILE_PATH
+                  value: "/app/backend/cache/zerocost_v1/canada_h3_grid_r6_qc_maritimes_weighted.json"
                 - name: CF_API_TOKEN
                   valueFrom:
                     secretKeyRef: { name: cf-r2-creds, key: CF_API_TOKEN }
@@ -114,6 +125,9 @@ spec:
                     secretKeyRef: { name: cf-r2-creds, key: CF_ACCOUNT_ID }
                 - name: CF_R2_BUCKET
                   value: "bionic-zerocost-omega"
+                - name: OWM_API_KEY
+                  valueFrom:
+                    secretKeyRef: { name: cf-r2-creds, key: OWM_API_KEY }
                 - name: PYTHONUNBUFFERED
                   value: "1"
               command:

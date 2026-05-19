@@ -22,6 +22,23 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_PHASE3_WEATHERCACHE_BETA2_B_E_EXEC_Ω** (2026-02-19) — **CYCLE PILOTE PRÉ-WARM P1 EXÉCUTÉ** :
+  - YAML k8s `bionic-zerocost-cronjob.yaml` mis à jour à `parallelism: 256` · `completions: 256` · OWM_API_KEY ajouté
+  - Sous-grille P1-only extraite : 7 077 cellules IFAP/ZEC/RF (`canada_h3_grid_r6_p1_only.json`)
+  - **Cycle pilote local 16 workers · 24.7 min** :
+    - 111 tuiles uploadées · **100 % P1 strict** ✅
+    - 15 cellules H3 R6 distinctes (Outaouais lat 45.6° → RF Rouge-Matawin 47.0°, lng ~-74.26°W)
+    - 0 erreur 429 · 0 FAIL · 0 retry
+    - WeatherCache MongoDB +3 régions H3 R3 (22→25)
+  - **Latence réelle mesurée** : **213s/tuile/worker** (V20 complet incluant LiDAR/IRDA, WeatherCache OK)
+  - Extrapolation 256w k8s : **4.9 jours** pour P1 complet (vs 1.9j estimation initiale honnêtement révisée)
+  - 4 documents livrés :
+    - `RAPPORT_PREWARM_P1_Ω.md` — cycle pilote + extrapolation + procédure déploiement k8s
+    - `PLAN_BUNDLE_SEED_H3R5_BETA2_ΣΤ_Ω.md` — plan technique β2-ΣΤ (gain ×7, non-exécuté)
+    - `RAPPORT_WEATHERCACHE_BETA2_QUOTA600_Ω.md` — brouillon APPROUVÉ NON-ACTIVÉ (mesure live <1/j)
+    - `PLAN_MONTEE_EN_CHARGE_PHASE4_PROD_Ω.md` — 4 paliers SHADOW/CANARY/RAMP/FULL
+  - Verrou Phase III strictement maintenu · QUOTA600 statut conservé APPROUVÉ_NON_ACTIVÉ
+
 - ✅ **P22ΩΩ_PHASE3_WEATHERCACHE_BETA2_B_E_Ω** (2026-02-19) — **STRATIFICATION β2-Β + β2-Ε VALIDÉE** :
   - Grille filtrée QC+Maritimes R6 = **68 054 cellules** (vs 392 391 Canada complet)
   - Pondération β2-Ε par bounding boxes doctrinaux : P1=7 077 (IFAP/ZEC/RF) · P2=17 056 · P3=43 921
