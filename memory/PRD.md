@@ -22,6 +22,25 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_AUDIT_GLOBAL_ELIMINATION_MOTEURS_DOCTRINE_Ω** (2026-02-19) — **COMMANDE OPÉRATIONNELLE β2-ΣΤ PRÊTE INERTE** :
+  - Prise d'acte audit complète : architecture HYBRIDE Phase 3, V20/V10 doctrinalement irréductibles
+  - **3 artefacts squelettes ready-to-run mais INERTES** :
+    - `tools/zerocost_seed_r5_grid_generator.py` (génère grille H3 R5 + mapping enfants R6)
+    - `tools/bundle_adapter_r5_to_r6_omega.py` (adaptateur fan-out · offset géométrique + jitter déterministe ±2° wind / ±1.5% score)
+    - `tools/zerocost_worker_seed_r5.py` (worker SEED+FAN-OUT compute V20 + upload 7 R6/seed)
+  - **Test syntactique adaptateur validé** : 7 enfants R6 distincts produits depuis 1 R5 parent (offsets cohérents Δlat 0.06°, jitters déterministes)
+  - Document opérationnel : `/app/memory/COMMANDE_OPERATIONNELLE_BETA2_ST_ACTIVATION_Ω.md` (10 étapes + rollback + 3 options)
+  - 3 options Commandant : α (3 RF · 8w · ~1.5j) · β (P1 complet · 16w · ~3j) · γ (test 1 RF · 8w · ~1j)
+  - Gain compute projeté : **×7** (vs direct R6) · ETA réaliste 3 RF + 8w = **~1.5j** au lieu de ~11j
+  - **0 import** depuis `server.py` · **0 process** β2-ΣΤ actif · daemon 3 RF direct continue normalement
+  - Verrou Phase III strictement maintenu · activation 100% additive · réversible
+
+- ✅ **P22ΩΩ_AUDIT_GLOBAL_ELIMINATION_MOTEURS_Ω** (2026-02-19) — **AUDIT EXHAUSTIF LIVRÉ** :
+  - Tableau complet 14 catégories (corridoriels, IA, 3D, zone, affût, saline, hotspot, terrain, LiDAR, IRDA, V10, V20, ULTRA, ZeroCost)
+  - 70+ moteurs cartographiés par statut ACTIF/PRÉSENT/LEGACY/ÉLIMINÉ
+  - Verdict : architecture en mode HYBRIDE Phase 3 · ZEROCOST COMPLET non-prêt (couverture CDN 0.0075%)
+  - Document : `/app/memory/AUDIT_GLOBAL_ELIMINATION_MOTEURS_Ω.md` (24 KB)
+
 - ✅ **P22ΩΩ_PHASE3_WEATHERCACHE_BETA2_B_E_ARBITRAGE_DAEMON_3RF_Ω** (2026-02-19) — **ARBITRAGE 3 RF FOCALISÉ** :
   - Grille `canada_h3_grid_r6_3rf_focused.json` : **1 775 cellules** (Laurentides 1 234 · Mauricie 412 · Outaouais 129)
   - 127 800 tuiles cibles · ~$0.026/mois stockage R2
