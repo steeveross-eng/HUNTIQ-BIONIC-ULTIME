@@ -221,7 +221,9 @@ def _apply_catmullrom_cap_to_corridors(corridors: list, target: int = _CATMULLRO
     P22ΩΩ_SECURITE_ET_CONTINUITE_CORRIDORS_PRE_PHASE_III_Ω :
       1. Clip path à _RADIUS_MAX_M (780m) — doctrine §7
       2. Resample CR à target points — doctrine §8
-    Retourne stats détaillées (n_resampled, n_clipped, max_lengths).
+    P22ΩΩ_AUDIT_TOTAL_ARTEFACTS_ET_ARCHITECTURE_TERRITOIRE_Ω · 2026-02-XX :
+      3. Despike filtre 1-2-1 sur angles > 45° (artefact V5 + clip §7) — doctrine §9
+    Retourne stats détaillées (n_resampled, n_clipped, max_lengths, despike_stats).
     """
     stats = {
         "n_corridors": len(corridors),
@@ -233,6 +235,8 @@ def _apply_catmullrom_cap_to_corridors(corridors: list, target: int = _CATMULLRO
         "max_length_after_m": 0.0,
         "target": target,
         "radius_max_m": _RADIUS_MAX_M,
+        "despike_passes": 0,
+        "despike_points_smoothed": 0,
     }
     if not isinstance(corridors, list):
         return stats
@@ -259,10 +263,91 @@ def _apply_catmullrom_cap_to_corridors(corridors: list, target: int = _CATMULLRO
                 new_p = _resample_path_catmullrom(p, target)
                 c[path_key] = new_p
                 stats["n_resampled"] += 1
-                stats["max_points_after"] = max(stats["max_points_after"], len(new_p))
-            else:
-                stats["max_points_after"] = max(stats["max_points_after"], before)
+                p = new_p
+            stats["max_points_after"] = max(stats["max_points_after"], len(p))
+            # Étape 3 : Despike filtre 1-2-1 — doctrine §9 (P22ΩΩ_AUDIT_TOTAL)
+            despiked, passes, smoothed = _despike_path(p, angle_threshold_deg=45.0)
+            if smoothed > 0:
+                c[path_key] = despiked
+                stats["despike_passes"] = max(stats["despike_passes"], passes)
+                stats["despike_points_smoothed"] += smoothed
     return stats
+
+
+def _despike_path(path: list, angle_threshold_deg: float = 45.0, max_passes: int = 3) -> tuple:
+    """Despike d'un path par filtre 1-2-1 pondéré sur angles > seuil.
+
+    P22ΩΩ_AUDIT_TOTAL_ARTEFACTS_ET_ARCHITECTURE_TERRITOIRE_Ω · doctrine §9.
+    Algorithme :
+      - Pour chaque triplet (p[j-1], p[j], p[j+1]), si angle > seuil :
+        remplacer p[j] par la moyenne pondérée (p[j-1] + 2*p[j] + p[j+1]) / 4
+      - Itérer jusqu'à convergence (aucun angle > seuil) ou max_passes
+    Préserve EXACTEMENT les points de départ et d'arrivée.
+    Retourne (path_lissé, n_passes_effectuées, n_points_lissés_cumulés).
+    """
+    import math
+    if not isinstance(path, list) or len(path) < 3:
+        return path, 0, 0
+
+    def _normalize(p):
+        if isinstance(p, dict):
+            return (p.get("lat"), p.get("lng", p.get("lon")))
+        if isinstance(p, (list, tuple)) and len(p) >= 2:
+            return (p[0], p[1])
+        return None
+
+    def _denormalize(p_orig, new_lat, new_lon):
+        # Conserver le format d'origine
+        if isinstance(p_orig, dict):
+            new = dict(p_orig)
+            new["lat"] = new_lat
+            if "lng" in p_orig:
+                new["lng"] = new_lon
+            else:
+                new["lon"] = new_lon
+            return new
+        return [new_lat, new_lon]
+
+    def _bearing(p1, p2):
+        lat1, lat2 = math.radians(p1[0]), math.radians(p2[0])
+        dlon = math.radians(p2[1] - p1[1])
+        x = math.sin(dlon) * math.cos(lat2)
+        y = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(dlon)
+        return math.degrees(math.atan2(x, y))
+
+    def _adiff(a, b):
+        d = abs(a - b) % 360
+        return d if d <= 180 else 360 - d
+
+    cur = list(path)
+    total_smoothed = 0
+    passes = 0
+    for _pass in range(max_passes):
+        passes += 1
+        any_smoothed = False
+        new_path = [cur[0]]  # préserver start
+        for j in range(1, len(cur) - 1):
+            p_prev = _normalize(cur[j - 1])
+            p_cur = _normalize(cur[j])
+            p_next = _normalize(cur[j + 1])
+            if p_prev is None or p_cur is None or p_next is None:
+                new_path.append(cur[j])
+                continue
+            ang = _adiff(_bearing(p_prev, p_cur), _bearing(p_cur, p_next))
+            if ang > angle_threshold_deg:
+                # Filtre 1-2-1 pondéré
+                new_lat = (p_prev[0] + 2 * p_cur[0] + p_next[0]) / 4
+                new_lon = (p_prev[1] + 2 * p_cur[1] + p_next[1]) / 4
+                new_path.append(_denormalize(cur[j], new_lat, new_lon))
+                any_smoothed = True
+                total_smoothed += 1
+            else:
+                new_path.append(cur[j])
+        new_path.append(cur[-1])  # préserver end
+        cur = new_path
+        if not any_smoothed:
+            break
+    return cur, passes, total_smoothed
 
 
 def _apply_v5_rewire_to_result(

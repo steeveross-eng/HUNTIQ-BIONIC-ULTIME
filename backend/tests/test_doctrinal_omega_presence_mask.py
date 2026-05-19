@@ -558,3 +558,39 @@ def test_catmullrom_cap_radius_clip_doctrine():
     L = module._path_total_length_m(clipped)
     assert L <= 780.5, f"clip échoué: {L}m"
     assert L >= 770.0, f"clip trop agressif: {L}m"
+
+
+
+def test_despike_filter_121_doctrine():
+    """I-19 — P22ΩΩ_AUDIT_TOTAL_ARTEFACTS_ET_ARCHITECTURE_TERRITOIRE_Ω.
+
+    Vérifie présence du despike filtre 1-2-1 + test fonctionnel.
+    Doctrine §9 ENGINE CORRIDORS Ω : angles ≤45°, segments ≤20m.
+    """
+    import pathlib
+    src = pathlib.Path(
+        "/app/backend/engines/v8_institutional/v20_performance_bundle.py"
+    ).read_text()
+    assert "_despike_path" in src
+    assert "P22ΩΩ_AUDIT_TOTAL_ARTEFACTS_ET_ARCHITECTURE_TERRITOIRE_Ω" in src
+
+    import importlib
+    module = importlib.import_module("engines.v8_institutional.v20_performance_bundle")
+    assert hasattr(module, "_despike_path")
+
+    # Test fonctionnel : path en zigzag (angles 90°) → despike doit lisser
+    zigzag = [
+        [48.0000, -68.0000],
+        [48.0010, -68.0000],
+        [48.0010, -68.0010],
+        [48.0020, -68.0010],
+        [48.0020, -68.0020],
+    ]
+    despiked, passes, smoothed = module._despike_path(zigzag, angle_threshold_deg=45.0, max_passes=3)
+    assert smoothed > 0, "despike doit lisser un zigzag à 90°"
+    assert passes >= 1
+    # Préservation start/end
+    assert despiked[0] == zigzag[0]
+    assert despiked[-1] == zigzag[-1]
+    # Le path lissé doit avoir le même nombre de points
+    assert len(despiked) == len(zigzag)
