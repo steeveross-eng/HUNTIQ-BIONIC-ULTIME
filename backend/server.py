@@ -729,6 +729,17 @@ try:
 except Exception as e:
     logger.warning(f"NUTRITION INTELLIGENCE SUPRA not loaded: {e}")
 
+# ═══ V12-SUPRA+ · FICHE SALINE ULTIME — Router autonome P22ΩΩ ═══
+# P22ΩΩ_NUTRITION_V12_SUPRA_PLUS_Ω · STEEVE-MAX · 2026-02-19
+# Router autonome qui ne dépend PAS du nutrition_intelligence/__init__.py
+# (actuellement cassé : module x5100_mineral_score manquant)
+try:
+    from engines.v8_institutional.v12_plus_router import router as v12_plus_router
+    app.include_router(v12_plus_router)
+    logger.info("✓ V12-SUPRA+ FICHE SALINE ULTIME registered (/api/v6/nutrition-intelligence/v12-plus) — P22ΩΩ")
+except Exception as e:
+    logger.warning(f"V12-SUPRA+ FICHE SALINE ULTIME not loaded: {e}")
+
 # ═══ SALINE INTELLIGENCE ULTRA — 7 moteurs scientifiques (STEEVE-MAX x1000) ═══
 try:
     from modules.saline_engine.router import router as saline_ultra_router
