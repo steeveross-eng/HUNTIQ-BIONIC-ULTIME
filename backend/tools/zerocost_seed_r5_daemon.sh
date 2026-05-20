@@ -35,6 +35,8 @@ start_daemon() {
 
     START_TS=$(date +%s)
     PIDS=()
+    PYTHON_BIN="/root/.venv/bin/python3"
+    [ -x "$PYTHON_BIN" ] || PYTHON_BIN="$(command -v python3)"
     for ((i=0; i<WORKER_COUNT; i++)); do
         setsid nohup nice -n 19 env \
             GRID_FILE_PATH="$GRID_FILE_PATH" \
@@ -42,11 +44,11 @@ start_daemon() {
             WORKER_COUNT=$WORKER_COUNT \
             MAX_R5_CELLS=$MAX_R5_CELLS \
             PYTHONUNBUFFERED=1 \
-            python3 /app/backend/tools/zerocost_worker_seed_r5.py \
+            "$PYTHON_BIN" /app/backend/tools/zerocost_worker_seed_r5.py \
             > "$LOG_DIR/worker_${i}.log" 2>&1 < /dev/null &
         PIDS+=($!)
         disown
-        echo "  ✓ β2-ΣΤ Worker $i démarré (PID ${PIDS[$i]} · nice 19)"
+        echo "  ✓ β2-ΣΤ Worker $i démarré (PID ${PIDS[$i]} · nice 19 · $PYTHON_BIN)"
     done
     echo "{\"started_at\": $START_TS, \"worker_count\": $WORKER_COUNT, \"pids\": [$(IFS=,; echo "${PIDS[*]}")], \"grid_file\": \"$GRID_FILE_PATH\"}" > "$STATE_FILE"
     echo ""
