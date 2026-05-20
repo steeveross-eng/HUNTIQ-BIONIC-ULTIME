@@ -22,6 +22,23 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_ACTIVATION_BETA2_ST_Ω** (2026-02-19) — **β2-ΣΤ ACTIVÉ EN PRODUCTION** :
+  - Directive Commandant : `ACTIVATE β2-ΣΤ option α workers 8` exécutée
+  - **10 étapes opérationnelles** : 9/10 ✅ · ÉTAPE 7 stop doctrinal déclenché → adapter bug fixé → re-validé OK
+  - **Anomalie détectée et corrigée** : adapter initial échouait sur affûts top-level lat/lng + zone.center nested dict
+  - **Correction doctrinale** : `_offset_coords` étendu en descente récursive universelle + BLACKLIST_KEYS pour préserver `node_from/node_to/score/id/hierarchy` etc.
+  - **Re-validation post-fix** : 7/7 distincts sur affûts, zones, salines, hotspots · `node_from.lat` 1/7 préservé (référence régionale)
+  - **267 tuiles buggées purgées** de R2 avant relance
+  - **Daemon β2-ΣΤ production** : 8 workers NI=19 PPID=1 · launcher `tools/zerocost_seed_r5_daemon.sh`
+  - **Mesures live T+6min** :
+    - 420 tuiles R6 uploadées · 56 cellules R6 distinctes
+    - **8 R5 parents complets avec 7 sœurs chacun** ✅
+    - Throughput 70 tuiles/min = **gain ×7.5 vs direct R6 mesuré** (théorique ×7)
+    - Backend HTTP 200 en 5ms sous charge (réactivité préservée) · load avg 0.16
+  - **ETA révisé 3 RF complet** : **~1.3 jour** (vs 11j en β2-Ε direct, ×8.7 gain réel)
+  - Rapport : `/app/memory/RAPPORT_BETA2_ST_ACTIVATION_T0_Ω.md`
+  - Verrou Phase III strictement maintenu
+
 - ✅ **P22ΩΩ_AUDIT_GLOBAL_ELIMINATION_MOTEURS_DOCTRINE_Ω** (2026-02-19) — **COMMANDE OPÉRATIONNELLE β2-ΣΤ PRÊTE INERTE** :
   - Prise d'acte audit complète : architecture HYBRIDE Phase 3, V20/V10 doctrinalement irréductibles
   - **3 artefacts squelettes ready-to-run mais INERTES** :

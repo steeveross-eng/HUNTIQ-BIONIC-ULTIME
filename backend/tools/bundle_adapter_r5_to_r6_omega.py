@@ -64,27 +64,56 @@ def _hash_jitter(r6_cell_id: str) -> float:
 
 
 def _offset_coords(coords: Any, dlat: float, dlng: float) -> Any:
-    """Applique récursivement (dlat, dlng) à toute structure de coordonnées."""
+    """Applique récursivement (dlat, dlng) à toute structure de coordonnées.
+
+    Détection universelle :
+      - [lat, lng] (2-tuple/list de floats)
+      - {"lat": X, "lng"|"lon"|"longitude": Y}
+      - {"latitude": X, "longitude": Y}
+      - Descend récursivement dans listes et dicts (sauf clés blacklist)
+    """
     if coords is None:
         return None
     if isinstance(coords, (list, tuple)) and len(coords) == 2 \
-            and all(isinstance(x, (int, float)) for x in coords):
-        # Probablement [lat, lng]
+            and all(isinstance(x, (int, float)) and not isinstance(x, bool) for x in coords):
+        # Probablement [lat, lng] géographique (heuristique : lat dans [-90,90] OU
+        # système V20 interne — on offset dans les deux cas, le V20 est cohérent)
         return [coords[0] + dlat, coords[1] + dlng]
     if isinstance(coords, list):
         return [_offset_coords(c, dlat, dlng) for c in coords]
     if isinstance(coords, dict):
-        # Format {"lat": ..., "lng": ...} ou similaire
+        # Champ dict — décale lat/lng dans la structure et descend récursivement
         out = {}
         for k, v in coords.items():
-            if k in ("lat", "latitude"):
+            if k in BLACKLIST_KEYS:
+                # Champs métadata non-géographiques (id, score, type, etc.)
+                out[k] = v
+            elif k in ("lat", "latitude") and isinstance(v, (int, float)) and not isinstance(v, bool):
                 out[k] = v + dlat
-            elif k in ("lng", "lon", "longitude"):
+            elif k in ("lng", "lon", "longitude") and isinstance(v, (int, float)) and not isinstance(v, bool):
                 out[k] = v + dlng
             else:
                 out[k] = _offset_coords(v, dlat, dlng)
         return out
     return coords  # int/float/str inchangé
+
+
+# Clés à NE PAS décaler (métadonnées, scores, identifiants, etc.)
+BLACKLIST_KEYS = {
+    "id", "type", "source", "source_id", "score", "score_global", "score_v10",
+    "score_affut_v12", "score_distance_corridor", "intensity", "n_points",
+    "hierarchy", "version", "species", "species_profile", "color",
+    "merged_ids", "fusion_count", "fusion_doctrine", "subnet_role",
+    "cluster_size", "cluster_subnets", "intensity_level", "intensity_label",
+    "_gis_factor", "_gis_density_per_km2", "_gis_n_major_roads", "_gis_chain",
+    "_intensity_level_pre_cascade", "_cascade_factor_global", "_cascade_chain",
+    "_cascade_cache_hit",
+    "quality", "orientation_deg", "wind_deg", "wind_speed", "wind_speed_kmh",
+    "month", "hour", "year", "h3_cell", "h3_index", "h3_resolution",
+    "node_from", "node_to",  # gardés en tant que références écologiques régionales
+    "doctrine", "schema_version", "_seed_r5_parent", "_adapter_doctrine",
+    "_fan_out_jitter",
+}
 
 
 def adapt_bundle_to_r6_child(
@@ -114,17 +143,18 @@ def adapt_bundle_to_r6_child(
     # 3) Deep copy du bundle pour mutation safe
     adapted = copy.deepcopy(seed_bundle)
 
-    # 4) Offset géométrique sur tous les champs identifiés
-    for top_key, sub_keys in GEOMETRY_FIELDS.items():
-        elements = adapted.get(top_key)
-        if not isinstance(elements, list):
-            continue
-        for elem in elements:
-            if not isinstance(elem, dict):
-                continue
-            for sub_key in sub_keys:
-                if sub_key in elem:
-                    elem[sub_key] = _offset_coords(elem[sub_key], dlat, dlng)
+    # 4) Offset géométrique UNIVERSEL sur toutes les sections géographiques
+    # Descend récursivement dans corridors / zones / affuts / salines / hotspots
+    # et applique l'offset partout où il rencontre des coords ou des {"lat":..., "lng":...}
+    GEO_SECTIONS = ("corridors", "zones", "affuts", "salines", "hotspots",
+                    "wind_vectors", "wind_vectors_meta", "contamination",
+                    "contamination_v2", "contamination_v2_heatmap",
+                    "habitat_supra", "hydrologie_supra", "sol_supra",
+                    "thermique_microclimat", "sensoriel_vent_odeurs",
+                    "ia_vision_ecologique", "connectivite_ecologique")
+    for section in GEO_SECTIONS:
+        if section in adapted:
+            adapted[section] = _offset_coords(adapted[section], dlat, dlng)
 
     # 5) Re-stamp métadata
     for k in METADATA_FIELDS_TO_REWRITE:
