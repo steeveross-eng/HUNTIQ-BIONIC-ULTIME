@@ -10,6 +10,7 @@
  */
 import React from 'react';
 import { Wheat, ShieldAlert, Activity, Droplets, Calendar, ClipboardList, Package, Repeat, FlaskConical, HeartPulse, Award } from 'lucide-react';
+import { FicheSalineUltimeV12PlusBlock } from './FicheSalineUltimeV12PlusBlock';
 
 const ORANGE = '#FF8F00';
 const DARK = '#0d0d14';
@@ -48,7 +49,7 @@ function renderValue(v) {
   return <span style={{ color: '#e8e8f0' }}>{String(v)}</span>;
 }
 
-export function NutritionPanelOmega({ payload, onClose }) {
+export function NutritionPanelOmega({ payload, onClose, v12Plus, v12PlusLoading, v12PlusError, v12PlusEnCours }) {
   if (!payload) return null;
 
   return (
@@ -135,6 +136,18 @@ export function NutritionPanelOmega({ payload, onClose }) {
             Espèce : <span style={{ color: '#e8e8f0', textTransform: 'uppercase' }}>{payload.species}</span>
             {' '}· Mois : {payload.month}
           </div>
+        </div>
+      )}
+
+      {/* FICHE SALINE ULTIME — V12-SUPRA+ (additif) */}
+      {payload.ok && (v12Plus || v12PlusLoading || v12PlusError) && (
+        <div data-testid="nutrition-panel-v12plus-slot" style={{ padding: '0 10px' }}>
+          <FicheSalineUltimeV12PlusBlock
+            data={v12Plus}
+            loading={!!v12PlusLoading}
+            error={v12PlusError}
+            enCours={!!v12PlusEnCours}
+          />
         </div>
       )}
 

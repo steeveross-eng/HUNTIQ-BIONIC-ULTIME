@@ -31,6 +31,7 @@ import { TerritoireToolbar } from '@/components/territoire/ui/TerritoireToolbar'
 import { TerritoireDegradedBanner } from '@/components/territoire/TerritoireDegradedBanner';
 import { InspectionBiologiquePanel } from '@/components/territoire/InspectionBiologiquePanel';
 import { NutritionPanelOmega } from '@/components/territoire/NutritionPanelOmega';import { NutritionPanel } from '@/components/territoire/ui/NutritionPanel';
+import useFicheSalineUltimeV12Plus from '@/hooks/useFicheSalineUltimeV12Plus';
 import { TerritoireDialogs } from '@/components/territoire/ui/TerritoireDialogs';
 import useBionicWeather from '@/hooks/useBionicWeather';
 import useSharedWeather from '@/hooks/useSharedWeather';
@@ -1001,6 +1002,20 @@ const MonTerritoireBionicPage = ({ pageMode = 'analyse-bionic' } = {}) => {
 
   // BCE-4X Phase 3.1: Hook meteo partage — waypoint UNIQUE pour le bloc meteo intelligent
   const sharedWeather = useSharedWeather(weatherCoords[0], weatherCoords[1], { autoFetch: true });
+
+  // P22ΩΩ_NUTRITION_V12_SUPRA_PLUS_Ω — Fiche Saline Ultime au clic saline suggérée pour
+  // espèce active. Hook additif (Verrou Phase III maintenu) — fetch /v12-plus uniquement
+  // si nutritionPanelPayload.ok=true (saline validée par filtres Ω). selectedSpecies='tous'
+  // → fallback 'orignal' côté hook. Wind sourcé sur useBionicWeather.
+  const _v12SalineCtx = nutritionPanelPayload?.ok ? nutritionPanelPayload.saline : null;
+  const _v12Species = nutritionPanelPayload?.species || (selectedSpecies !== 'tous' ? selectedSpecies : 'orignal');
+  const _v12Month = nutritionPanelPayload?.month || (new Date().getMonth() + 1);
+  const v12PlusFiche = useFicheSalineUltimeV12Plus({
+    saline: _v12SalineCtx,
+    species: _v12Species,
+    month: _v12Month,
+    wind: { directionDeg: windInfo?.directionDeg, speed: windInfo?.speed },
+  });
   
   const { scores, calculateHybridScores, globalScore } = useBionicScoring();
 
@@ -1367,6 +1382,10 @@ const MonTerritoireBionicPage = ({ pageMode = 'analyse-bionic' } = {}) => {
           <NutritionPanelOmega
             payload={nutritionPanelPayload}
             onClose={() => setNutritionPanelPayload(null)}
+            v12Plus={v12PlusFiche?.data}
+            v12PlusLoading={v12PlusFiche?.loading}
+            v12PlusError={v12PlusFiche?.error}
+            v12PlusEnCours={v12PlusFiche?.enCours}
           />
           {/* Indicateur du mode création de waypoint */}
           {mapClickMode && (

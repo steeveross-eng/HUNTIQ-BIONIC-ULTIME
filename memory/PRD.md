@@ -1,5 +1,5 @@
 # PRD · TERRITOIRE Ω · BIONIC HUNT/CHASSE
-**Last updated**: 2026-02-19 · BCE-4X ULTIME ABSOLU · COMMANDANT STEEVE-MAX
+**Last updated**: 2026-02-20 · BCE-4X ULTIME ABSOLU · COMMANDANT STEEVE-MAX
 
 ## ORIGINAL PROBLEM STATEMENT
 PROTOCOLE BCE-4X ULTIME ABSOLU — Stabilisation exhaustive du backend et frontend
@@ -22,6 +22,20 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **FRONTEND_FICHE_SALINE_ULTIME_Ω** (2026-02-20) — Câblage UI V12-SUPRA+ :
+  - **Hook** `useFicheSalineUltimeV12Plus` (cache mémoire par saline×species×mois)
+  - **Composant** `FicheSalineUltimeV12PlusBlock` (10 blocs doctrinaux collapsibles)
+  - **Trigger** : dblclick saline suggérée pour espèce active dans BionicLayersV8 →
+    NutritionPanelOmega rend additivement les 10 blocs V12-SUPRA+ au-dessus des
+    11 sections legacy (Verrou Phase III maintenu)
+  - **Backend** `/api/v6/nutrition-intelligence/v12-plus/fiche-saline-ultime` câblé
+  - **Validation E2E** : panel=true · v12block=true · blocs=10 · error=false · loading
+    state correctement géré (incluant fallback 202 EN_COURS NEVER BLANK Ω)
+  - **Fichiers** :
+    - `/app/frontend/src/hooks/useFicheSalineUltimeV12Plus.js` (créé)
+    - `/app/frontend/src/components/territoire/FicheSalineUltimeV12PlusBlock.jsx` (créé)
+    - `/app/frontend/src/components/territoire/NutritionPanelOmega.jsx` (additif)
+    - `/app/frontend/src/pages/MonTerritoireBionicPage.jsx` (additif)
 - ✅ **P22ΩΩ_ACTIVATION_BETA2_ST_Ω** (2026-02-19) — **β2-ΣΤ ACTIVÉ EN PRODUCTION** :
   - Directive Commandant : `ACTIVATE β2-ΣΤ option α workers 8` exécutée
   - **10 étapes opérationnelles** : 9/10 ✅ · ÉTAPE 7 stop doctrinal déclenché → adapter bug fixé → re-validé OK
