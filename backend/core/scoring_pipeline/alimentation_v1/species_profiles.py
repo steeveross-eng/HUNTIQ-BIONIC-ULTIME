@@ -203,6 +203,49 @@ ALIM_PROFILES = {
             "hiver": {"proteines": 0.35, "energie": 0.85, "mineraux": 0.30},
         },
     },
+    # P22ΩΩ_ADD_COYOTE_TO_MULTI_SPECIES_Ω (2026-05-21 · COMMANDANT STEEVE-MAX)
+    # Coyote (Canis latrans) — carnivore opportuniste, régime omnivore strict :
+    # micromammifères, ongulés (charogne / faons), petits gibiers, fruits sauvages
+    # automne. AUCUNE saline doctrinale (carnivore — recettes minérales n/a) :
+    # `sources_mineraux` reste défini par cohérence structurelle mais à scores faibles.
+    "COYOTE": {
+        "id": "coyote",
+        "nom_fr": "Coyote",
+        "nom_scientifique": "Canis latrans",
+        "sources_proteines": {
+            "micromammiferes": 0.95,
+            "charogne_ongules": 0.85,
+            "faons_chevreuil": 0.80,
+            "petits_gibiers": 0.75,
+            "insectes": 0.40,
+        },
+        "sources_energie": {
+            "fruits_sauvages_automne": 0.70,
+            "charogne_grosse": 0.85,
+            "dechets_anthropiques": 0.50,
+        },
+        "sources_mineraux": {
+            "os_charogne_ca": 0.40,
+            "sols_nus": 0.10,
+        },
+        "securite": {
+            "lisiere_friche_taillis": 0.90,
+            "vigilance_haute": 0.95,
+            "distance_route_min_m": 50,
+            "distance_batiment_min_m": 100,
+        },
+        "effort": {
+            "pente_optimale_deg": 12,
+            "pente_max_deg": 35,
+            "tolerance_obstacles": 0.80,
+        },
+        "saisonnalite": {
+            "printemps": {"proteines": 0.95, "energie": 0.55, "mineraux": 0.30},
+            "ete": {"proteines": 0.90, "energie": 0.60, "mineraux": 0.25},
+            "automne": {"proteines": 0.80, "energie": 0.85, "mineraux": 0.30},
+            "hiver": {"proteines": 0.95, "energie": 0.90, "mineraux": 0.25},
+        },
+    },
 }
 
 SPECIES_LIST = list(ALIM_PROFILES.keys())

@@ -50,9 +50,20 @@ SPECIES_REGISTRY = {
         "frontend_ids": ["wapiti"],
         "salines_enabled": True,
     },
+    # P22ΩΩ_ADD_COYOTE_TO_MULTI_SPECIES_Ω (2026-05-21 · COMMANDANT STEEVE-MAX)
+    # Coyote (Canis latrans) — prédateur opportuniste, présent Québec méridional
+    # et progression continue vers le nord (Saguenay, BSL, Côte-Nord).
+    # salines_enabled=False (carnivore — recettes saline n/a).
+    "COYOTE": {
+        "id": "coyote",
+        "nom_fr": "Coyote",
+        "nom_scientifique": "Canis latrans",
+        "frontend_ids": ["coyote", "canis_latrans"],
+        "salines_enabled": False,
+    },
 }
 
-# Liste canonique (ordre: CERF, ORIGNAL, OURS, DINDON, WAPITI)
+# Liste canonique (ordre: CERF, ORIGNAL, OURS, DINDON, WAPITI, COYOTE)
 SPECIES_LIST = list(SPECIES_REGISTRY.keys())
 
 # Mapping frontend → backend (tous les alias connus)

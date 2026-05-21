@@ -35,6 +35,14 @@ COMPATIBILITY_MATRIX = {
     ("OURS", "DINDON"):   0.3,
     ("OURS", "WAPITI"):   0.4,
     ("DINDON", "WAPITI"):  0.7,
+    # P22ΩΩ_ADD_COYOTE_TO_MULTI_SPECIES_Ω (2026-05-21 · STEEVE-MAX)
+    # Coyote prédateur : compatibilité faible avec ongulés (prédation faons),
+    # incompatibilité forte avec gibier à plumes (dindon), neutralité avec ours.
+    ("COYOTE", "CERF"):    0.25,   # prédation faons + pression chronique
+    ("COYOTE", "ORIGNAL"): 0.30,   # rare prédation veaux nouveau-nés
+    ("COYOTE", "OURS"):    0.40,   # cohabitation neutre (compétition charogne)
+    ("COYOTE", "DINDON"):  0.15,   # prédation directe poussins + adultes
+    ("COYOTE", "WAPITI"):  0.30,   # prédation faons
 }
 
 # Competition pour les ressources (0=pas de competition, 1=forte)
@@ -44,10 +52,19 @@ COMPETITION_MATRIX = {
     ("ORIGNAL", "WAPITI"): 0.5,
     ("OURS", "CERF"):     0.2,
     ("DINDON", "CERF"):   0.1,
+    # P22ΩΩ_ADD_COYOTE_TO_MULTI_SPECIES_Ω
+    # Coyote : compétition charogne avec ours (modérée), micromammifères
+    # nuls avec ongulés (pas de chevauchement régime).
+    ("COYOTE", "OURS"):    0.50,   # charogne grosse partagée
+    ("COYOTE", "CERF"):    0.10,   # régimes disjoints (prédation ≠ compétition)
+    ("COYOTE", "ORIGNAL"): 0.05,
+    ("COYOTE", "DINDON"):  0.20,   # micromammifères / petits gibiers partagés
 }
 
 SPECIES_CAPACITY = {
     "CERF": 8, "ORIGNAL": 2, "OURS": 1, "DINDON": 15, "WAPITI": 5,
+    # P22ΩΩ_ADD_COYOTE_TO_MULTI_SPECIES_Ω : meutes ~5-7 ind. / 100 km²
+    "COYOTE": 7,
 }
 
 SEASONAL_INTERACTION = {

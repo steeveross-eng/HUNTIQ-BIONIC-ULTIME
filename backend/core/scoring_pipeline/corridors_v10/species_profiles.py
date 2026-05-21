@@ -152,6 +152,33 @@ CORRIDOR_PROFILES = {
             "hiver": {"mobilite": 0.45, "couvert": 0.90, "hydro": 0.35},
         },
     },
+    # P22ΩΩ_ADD_COYOTE_TO_MULTI_SPECIES_Ω (2026-05-21 · COMMANDANT STEEVE-MAX)
+    # Coyote (Canis latrans) — canidé opportuniste, locomotion longue distance,
+    # forte tolérance aux interfaces forêt/ouverture (lisières, friches).
+    # Sensibilité pression humaine modérée (espèce sympanthropique en zones péri-urbaines).
+    "COYOTE": {
+        "id": "coyote",
+        "nom_fr": "Coyote",
+        "nom_scientifique": "Canis latrans",
+        "pente_optimale_deg": 12,
+        "pente_max_deg": 35,
+        "sensibilite_pression": 0.45,
+        "style_deplacement": "transitoire_lineaire",
+        "tolerance_obstacles": 0.80,
+        "distance_route_evitement_m": 50,
+        "distance_batiment_evitement_m": 100,
+        "largeur_corridor_m": 40,
+        "preference_forestiere": 0.45,
+        "affinite_hydro": 0.30,
+        "influence_dominants": 0.30,
+        "vitesse_deplacement": "rapide",
+        "saisonnalite": {
+            "printemps": {"mobilite": 0.80, "couvert": 0.55, "hydro": 0.35},
+            "ete": {"mobilite": 0.70, "couvert": 0.65, "hydro": 0.40},
+            "automne": {"mobilite": 0.90, "couvert": 0.60, "hydro": 0.30},
+            "hiver": {"mobilite": 0.85, "couvert": 0.70, "hydro": 0.25},
+        },
+    },
 }
 
 SPECIES_LIST = list(CORRIDOR_PROFILES.keys())

@@ -22,6 +22,31 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_ADD_COYOTE_TO_MULTI_SPECIES_Ω** (2026-05-21) — Intégration **COYOTE** dans le pipeline multi-espèces (additif strict, Verrou Phase III maintenu) :
+  - **PHASE 1 — Registry** : COYOTE ajouté à `SPECIES_REGISTRY` (common/species.py) · alias `coyote` + `canis_latrans` → ID canonique `COYOTE` · `salines_enabled=False` (carnivore)
+  - **PHASE 2 — Pipelines** :
+    - Corridors V10 : profil COYOTE (pente_opt=12°, max=35°, tolérance obstacles 0.80, largeur corridor 40 m, transitoire_linéaire)
+    - Alimentation V1 : profil carnivore opportuniste (micromammifères 0.95, charogne 0.85, fruits sauvages automne 0.70)
+    - Multi-species V1 : COMPATIBILITY_MATRIX (5 paires) + COMPETITION_MATRIX (4 paires) + SPECIES_CAPACITY=7
+    - β2-ΣΤ daemon : COYOTE déjà présent (no-op)
+    - Biogéographie JSON : entrée COYOTE distribution CA+US complète (toutes provinces continentales)
+  - **PHASE 3 — Normalisation** :
+    - V8 score national : HTTP 200 (stub neutre 50/100)
+    - PHASE-E ultime-score : HTTP 200 (score complet 45.11 / DÉFAVORABLE, chain C1-C6)
+    - V20 salines placement : HTTP 200 (terrain-only, indépendant species)
+    - V12-SUPRA+ Fiche Saline Ultime : HTTP 200 (10 blocs doctrinaux complets)
+    - V20 bundle : HTTP 202 NEVER BLANK Ω (background compute lancé · LKG IndexedDB)
+  - **PHASE 4 — UI/UX** :
+    - Frontend `SPECIES.coyote` déjà défini (speciesConfig.js)
+    - `SPECIES_LIST` toolbar cycle inclut COYOTE
+    - Pas de fallback chevreuil (chaîne species_alias_to_canonical → coyote → coyote)
+  - **Validation** : 5/5 tests Python directs OK · 10 modules backend imports propres
+  - **Fichiers modifiés** (additifs uniquement) :
+    - `/app/backend/core/scoring_pipeline/common/species.py`
+    - `/app/backend/core/scoring_pipeline/corridors_v10/species_profiles.py`
+    - `/app/backend/core/scoring_pipeline/alimentation_v1/species_profiles.py`
+    - `/app/backend/core/scoring_pipeline/multi_species_v1/engine.py`
+    - `/app/backend/modules/bionic_ecological_engine/bionic_species_biogeography.json`
 - ✅ **FRONTEND_FICHE_SALINE_ULTIME_Ω** (2026-02-20) — Câblage UI V12-SUPRA+ :
   - **Hook** `useFicheSalineUltimeV12Plus` (cache mémoire par saline×species×mois)
   - **Composant** `FicheSalineUltimeV12PlusBlock` (10 blocs doctrinaux collapsibles)
