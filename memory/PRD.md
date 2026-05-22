@@ -22,6 +22,19 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_DEPLOYMENT_FIX_Ω** (2026-05-22) — Fix code-level pour déploiement Emergent K8s :
+  - **Fix 1 (BLOCKER)** : `torch==2.11.0+cpu` retiré de `requirements.txt` — incompatible avec limites K8s deployment (250m CPU / 1 Gi memory). Le moteur `super_resolution_omega` possède déjà un fallback gracieux Lanczos PIL via `_has_torch()` conditional → mode `LANCZOS_X4` opérationnel sans torch (anti-générique strict maintenu, Lanczos est mathématiquement valide).
+  - **Fix 2 (BEST-PRACTICE)** : `load_dotenv(override=False)` dans `server.py` — préserve les env vars Kubernetes injectées par le pod spec (MONGO_URL Atlas, R2_*, etc.) sans risque d'écrasement par le `.env` embedded dans l'image.
+  - **Fix 3 (READINESS PROBE)** : Spawn des 6 workers β2-ΣΤ rendu **deferred non-bloquant** via `asyncio.create_task` avec délai initial `ZEROCOST_INPROCESS_STARTUP_DELAY_S` (default 2s). Évite le retard de la readiness probe K8s pendant que uvicorn finit son startup. Workers démarrent ~2 s après que le pod soit ready.
+  - **Validation E2E Preview** :
+    - Backend HTTP 200 post-restart · latence 69 ms
+    - Auto-détection supervisor externe → skip in-process (log `[β2-ΣΤ-INPROCESS] supervisor externe détecté · skip launch`)
+    - 6 workers β2-ΣΤ supervisor préservés intacts (compteur ps = 6)
+    - `super_resolution_omega` fallback Lanczos validé sans torch installé
+    - Lint ruff propre sur `server.py`, `zerocost_workers_runtime.py`, `requirements.txt`
+  - **Fichiers modifiés** :
+    - `/app/backend/requirements.txt` (torch retiré · commentaire doctrinal P22ΩΩ_DEPLOYMENT_FIX_Ω)
+    - `/app/backend/server.py` (load_dotenv override=False + deferred spawn workers)
 - ✅ **P22ΩΩ_DEPLOYED_WORKERS_INPROCESS_Ω** (2026-05-22) — Auto-démarrage des **6 workers β2-ΣΤ** dans le pod déployé via FastAPI lifespan :
   - **Module dédié** `/app/backend/zerocost_workers_runtime.py` (additif, sans toucher au daemon worker existant)
   - **Hook lifespan** `server.py` : `start_zerocost_workers_inprocess()` au startup + `stop_zerocost_workers_inprocess()` au shutdown

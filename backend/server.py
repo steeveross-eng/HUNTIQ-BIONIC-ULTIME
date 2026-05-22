@@ -23,7 +23,11 @@ from fastapi.openapi.utils import get_openapi
 
 # Load environment variables
 from dotenv import load_dotenv
-load_dotenv()
+# P22ΩΩ_DEPLOYMENT_FIX_Ω (2026-05-22) — override=False : les env vars Kubernetes
+# (injectées par le pod spec deployed) priment sur le .env disk. Préserve les
+# secrets de production (MONGO_URL, R2_*, etc.) sans risque d'écrasement par le
+# .env Preview embedded dans l'image.
+load_dotenv(override=False)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -233,12 +237,30 @@ async def lifespan(app: FastAPI):
     #   - asyncio watchdog interne (check liveness toutes les 60 s)
     #   - relance automatique si workers vivants < ZEROCOST_INPROCESS_MIN_WORKERS
     #   - terminé proprement au shutdown du backend
+    #
+    # P22ΩΩ_DEPLOYMENT_FIX_Ω : spawn non-bloquant via asyncio.create_task pour
+    # ne pas retarder la K8s readiness probe pendant le boot. Les workers
+    # démarreront ~2 s après que uvicorn soit ready (gain de readiness OK).
     # ──────────────────────────────────────────────────────────────────────
+    import os as _os_p22
+    import asyncio as _asyncio_p22
+
+    async def _deferred_zerocost_start():
+        try:
+            # Délai bref pour permettre à uvicorn de finir son startup
+            # et répondre aux readiness probes K8s avant de spawn les workers.
+            startup_delay = float(_os_p22.environ.get("ZEROCOST_INPROCESS_STARTUP_DELAY_S", "2"))
+            await _asyncio_p22.sleep(startup_delay)
+            from zerocost_workers_runtime import start_zerocost_workers_inprocess
+            await start_zerocost_workers_inprocess()
+        except Exception as e:
+            logger.warning(f"[P22ΩΩ_DEPLOYED_WORKERS_INPROCESS_Ω] deferred start failed: {e}")
+
     try:
-        from zerocost_workers_runtime import start_zerocost_workers_inprocess
-        await start_zerocost_workers_inprocess()
+        _asyncio_p22.create_task(_deferred_zerocost_start())
+        logger.info("[P22ΩΩ_DEPLOYED_WORKERS_INPROCESS_Ω] β2-ΣΤ workers spawn scheduled (deferred non-blocking)")
     except Exception as e:
-        logger.warning(f"[P22ΩΩ_DEPLOYED_WORKERS_INPROCESS_Ω] startup failed: {e}")
+        logger.warning(f"[P22ΩΩ_DEPLOYED_WORKERS_INPROCESS_Ω] task scheduling failed: {e}")
 
     logger.info("=" * 60)
     logger.info("✓ All modules loaded successfully")
