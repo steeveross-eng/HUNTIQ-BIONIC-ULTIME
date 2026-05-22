@@ -22,6 +22,25 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_DEPLOYED_WORKERS_INPROCESS_Ω** (2026-05-22) — Auto-démarrage des **6 workers β2-ΣΤ** dans le pod déployé via FastAPI lifespan :
+  - **Module dédié** `/app/backend/zerocost_workers_runtime.py` (additif, sans toucher au daemon worker existant)
+  - **Hook lifespan** `server.py` : `start_zerocost_workers_inprocess()` au startup + `stop_zerocost_workers_inprocess()` au shutdown
+  - **Auto-détection Preview vs Deployed** : `pgrep zerocost_worker_seed_r5` ≥ 3 → supervisor externe présent → skip in-process (zéro doublon)
+  - **Asyncio watchdog interne** : check liveness toutes les 60 s · relance si workers vivants < MIN_WORKERS (3 par défaut) · heartbeat log toutes les 5 min
+  - **R2 credentials** : chargées via `load_dotenv()` depuis `/app/backend/.env` (CF_R2_BUCKET, R2_S3_ENDPOINT, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY) — vérifiés au démarrage avec soft-fail
+  - **Configuration env vars** :
+    - `ZEROCOST_INPROCESS_DISABLE=1` → désactivation explicite
+    - `ZEROCOST_INPROCESS_FORCE=1` → force le lancement (override détection supervisor)
+    - `ZEROCOST_INPROCESS_WORKER_COUNT=6` → nombre de workers (défaut 6)
+    - `ZEROCOST_INPROCESS_CHECK_INTERVAL_S=60` → période watchdog (défaut 60 s)
+    - `ZEROCOST_INPROCESS_MIN_WORKERS=3` → seuil de relance (défaut 3)
+  - **Validation E2E** :
+    - Preview : supervisor externe détecté → skip launch (log `[β2-ΣΤ-INPROCESS] supervisor externe détecté · skip`)
+    - Deployed (simulé FORCE=1) : 2/2 workers spawnés · watchdog asyncio actif · SIGTERM cleanup OK
+    - Backend nominal post-restart · pas de régression V20/V12-SUPRA+/COYOTE
+  - **Fichiers** :
+    - `/app/backend/zerocost_workers_runtime.py` (créé)
+    - `/app/backend/server.py` (additif : 2 blocs dans `lifespan()`)
 - ✅ **P22ΩΩ_ADD_COYOTE_TO_MULTI_SPECIES_Ω** (2026-05-21) — Intégration **COYOTE** dans le pipeline multi-espèces (additif strict, Verrou Phase III maintenu) :
   - **PHASE 1 — Registry** : COYOTE ajouté à `SPECIES_REGISTRY` (common/species.py) · alias `coyote` + `canis_latrans` → ID canonique `COYOTE` · `salines_enabled=False` (carnivore)
   - **PHASE 2 — Pipelines** :

@@ -220,6 +220,26 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"P22ΩΩ_ESSENTIEL_PREWARM cron daemon failed to schedule: {e}")
     
+    # P22ΩΩ_DEPLOYED_WORKERS_INPROCESS_Ω · 2026-05-22 · COMMANDANT STEEVE-MAX
+    # ──────────────────────────────────────────────────────────────────────
+    # OBJECTIF : démarrer les 6 workers β2-ΣΤ directement dans le pod déployé
+    # (où le supervisor managed externe `zerocost-seed-r5-watchdog` n'existe
+    # pas). En Preview, le supervisor externe est auto-détecté → ce launcher
+    # in-process se désactive automatiquement (skip) pour éviter le doublon.
+    #
+    # GARANTIES :
+    #   - additif strict (Verrou Phase III maintenu)
+    #   - soft-fail : aucune exception ne bloque le boot
+    #   - asyncio watchdog interne (check liveness toutes les 60 s)
+    #   - relance automatique si workers vivants < ZEROCOST_INPROCESS_MIN_WORKERS
+    #   - terminé proprement au shutdown du backend
+    # ──────────────────────────────────────────────────────────────────────
+    try:
+        from zerocost_workers_runtime import start_zerocost_workers_inprocess
+        await start_zerocost_workers_inprocess()
+    except Exception as e:
+        logger.warning(f"[P22ΩΩ_DEPLOYED_WORKERS_INPROCESS_Ω] startup failed: {e}")
+
     logger.info("=" * 60)
     logger.info("✓ All modules loaded successfully")
     logger.info("=" * 60)
@@ -228,6 +248,12 @@ async def lifespan(app: FastAPI):
     
     # Shutdown
     logger.info("Server shutting down...")
+    # P22ΩΩ_DEPLOYED_WORKERS_INPROCESS_Ω — arrêt propre du watchdog et SIGTERM aux workers β2-ΣΤ
+    try:
+        from zerocost_workers_runtime import stop_zerocost_workers_inprocess
+        await stop_zerocost_workers_inprocess()
+    except Exception as e:
+        logger.warning(f"[P22ΩΩ_DEPLOYED_WORKERS_INPROCESS_Ω] shutdown failed: {e}")
     # P22ΩΩ_DISK_PERSIST · 2026-05-14 · STEEVE-MAX
     # Sauvegarder le cache LRU sur disque avant l'arrêt (containers éphémères).
     try:
