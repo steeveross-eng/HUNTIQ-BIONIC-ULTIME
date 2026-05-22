@@ -262,6 +262,81 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"[P22ΩΩ_DEPLOYED_WORKERS_INPROCESS_Ω] task scheduling failed: {e}")
 
+    # ──────────────────────────────────────────────────────────────────────
+    # P22ΩΩ_MANIFEST_CRON_Ω · 2026-05-22 · COMMANDANT STEEVE-MAX
+    # ──────────────────────────────────────────────────────────────────────
+    # OBJECTIF : régénérer le manifest CDN R2 toutes les 30 min pour corriger
+    # le drift R2 ↔ manifest (mesuré à 6.6× avant ce fix). Le script
+    # `/app/backend/tools/zerocost_manifest_update.py` est invoqué en
+    # subprocess non-bloquant via asyncio.create_subprocess_exec.
+    #
+    # GARANTIES :
+    #   - additif strict (Verrou Phase III maintenu)
+    #   - soft-fail : aucune exception ne bloque le boot
+    #   - tick configurable via env var ZEROCOST_MANIFEST_INTERVAL_S (défaut 1800 s)
+    #   - première exécution après ZEROCOST_MANIFEST_FIRST_DELAY_S (défaut 30 s)
+    #   - désactivation explicite via ZEROCOST_MANIFEST_CRON_DISABLE=1
+    # ──────────────────────────────────────────────────────────────────────
+    async def _manifest_rotation_cron():
+        manifest_script = "/app/backend/tools/zerocost_manifest_update.py"
+        # Résolution du Python du venv backend (boto3 installé là, pas dans /usr/bin/python3)
+        import sys as _sys_p22
+        from pathlib import Path as _Path_p22
+        _venv_py = "/root/.venv/bin/python3"
+        python_bin = _venv_py if _Path_p22(_venv_py).is_file() else _sys_p22.executable
+        first_delay = float(_os_p22.environ.get("ZEROCOST_MANIFEST_FIRST_DELAY_S", "30"))
+        interval = float(_os_p22.environ.get("ZEROCOST_MANIFEST_INTERVAL_S", "1800"))  # 30 min
+        run_count = 0
+        try:
+            await _asyncio_p22.sleep(first_delay)
+            while True:
+                run_count += 1
+                started_at = _asyncio_p22.get_event_loop().time()
+                try:
+                    proc = await _asyncio_p22.create_subprocess_exec(
+                        python_bin, manifest_script,
+                        stdout=_asyncio_p22.subprocess.PIPE,
+                        stderr=_asyncio_p22.subprocess.PIPE,
+                    )
+                    stdout, stderr = await _asyncio_p22.wait_for(proc.communicate(), timeout=120.0)
+                    elapsed = _asyncio_p22.get_event_loop().time() - started_at
+                    if proc.returncode == 0:
+                        last_line = (stdout.decode("utf-8", errors="replace").strip().split("\n") or [""])[-1]
+                        logger.info(
+                            f"[P22ΩΩ_MANIFEST_CRON_Ω] run #{run_count} OK · {elapsed:.1f}s · {last_line[:160]}"
+                        )
+                    else:
+                        err_tail = stderr.decode("utf-8", errors="replace").strip().split("\n")[-1][:200]
+                        logger.warning(
+                            f"[P22ΩΩ_MANIFEST_CRON_Ω] run #{run_count} FAILED · "
+                            f"exit={proc.returncode} · {elapsed:.1f}s · err={err_tail}"
+                        )
+                except _asyncio_p22.TimeoutError:
+                    logger.warning(f"[P22ΩΩ_MANIFEST_CRON_Ω] run #{run_count} TIMEOUT (>120s)")
+                    try:
+                        proc.kill()
+                    except Exception:
+                        pass
+                except Exception as run_err:
+                    logger.warning(f"[P22ΩΩ_MANIFEST_CRON_Ω] run #{run_count} ERROR: {run_err}")
+                await _asyncio_p22.sleep(interval)
+        except _asyncio_p22.CancelledError:
+            logger.info("[P22ΩΩ_MANIFEST_CRON_Ω] cancelled cleanly")
+        except Exception as e:
+            logger.warning(f"[P22ΩΩ_MANIFEST_CRON_Ω] cron crashed: {e}")
+
+    if _os_p22.environ.get("ZEROCOST_MANIFEST_CRON_DISABLE", "").strip() in ("1", "true", "yes"):
+        logger.info("[P22ΩΩ_MANIFEST_CRON_Ω] désactivé par ZEROCOST_MANIFEST_CRON_DISABLE=1")
+    else:
+        try:
+            _asyncio_p22.create_task(_manifest_rotation_cron())
+            logger.info(
+                "[P22ΩΩ_MANIFEST_CRON_Ω] manifest rotation scheduled "
+                "(first=30s · interval=30min · non-blocking background)"
+            )
+        except Exception as e:
+            logger.warning(f"[P22ΩΩ_MANIFEST_CRON_Ω] task scheduling failed: {e}")
+
     logger.info("=" * 60)
     logger.info("✓ All modules loaded successfully")
     logger.info("=" * 60)

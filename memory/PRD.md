@@ -22,6 +22,23 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_DEPLOYMENT_FIX_2_Ω** (2026-05-22) — 2 fixes additifs pré-redéploiement :
+  - **Fix A — Module `x5100_mineral_score` rétabli** :
+    - Création `/app/backend/engines/nutrition_intelligence/x5100_mineral_score.py` (V1.0 anti-générique : 8 minéraux pondérés × 6 espèces × modulation saisonnière × modulation sol · output `score_global` 0-100 + carences dominantes).
+    - Refonte `engines/nutrition_intelligence/__init__.py` en **imports tolérants** via `_safe_import()` : `x5100` garanti, les 13 autres modules optionnels (x5200-x6030) émettent un WARNING soft-fail si fichier absent (pas de crash boot).
+    - Création `engines/__init__.py` (validation package importable).
+    - **Validation** : warning `No module named x5100` ÉLIMINÉ des logs · `compute_mineral_score('orignal', 'automne', 'limoneux', {'Na':25, 'Ca':75}) → score=44, carence=['Na']` (cohérence doctrinale).
+  - **Fix B — Cron manifest CDN rotation 30 min** :
+    - Ajout dans `server.py` lifespan : `_manifest_rotation_cron()` task asyncio non-bloquante.
+    - Invoque `python3 /app/backend/tools/zerocost_manifest_update.py` via `asyncio.create_subprocess_exec` (utilise `/root/.venv/bin/python3` pour accès `boto3`).
+    - Première exécution à T+30 s · interval 1800 s (30 min) · timeout 120 s · soft-fail strict.
+    - Env vars : `ZEROCOST_MANIFEST_INTERVAL_S` · `ZEROCOST_MANIFEST_FIRST_DELAY_S` · `ZEROCOST_MANIFEST_CRON_DISABLE=1`.
+    - **Validation** : `[P22ΩΩ_MANIFEST_CRON_Ω] run #1 OK · 7.6s` confirmé dans les logs Preview.
+  - **Fichiers** :
+    - `/app/backend/engines/__init__.py` (créé)
+    - `/app/backend/engines/nutrition_intelligence/__init__.py` (refonte tolérante)
+    - `/app/backend/engines/nutrition_intelligence/x5100_mineral_score.py` (créé)
+    - `/app/backend/server.py` (cron manifest additif dans `lifespan()`)
 - ✅ **P22ΩΩ_DEPLOYMENT_FIX_Ω** (2026-05-22) — Fix code-level pour déploiement Emergent K8s :
   - **Fix 1 (BLOCKER)** : `torch==2.11.0+cpu` retiré de `requirements.txt` — incompatible avec limites K8s deployment (250m CPU / 1 Gi memory). Le moteur `super_resolution_omega` possède déjà un fallback gracieux Lanczos PIL via `_has_torch()` conditional → mode `LANCZOS_X4` opérationnel sans torch (anti-générique strict maintenu, Lanczos est mathématiquement valide).
   - **Fix 2 (BEST-PRACTICE)** : `load_dotenv(override=False)` dans `server.py` — préserve les env vars Kubernetes injectées par le pod spec (MONGO_URL Atlas, R2_*, etc.) sans risque d'écrasement par le `.env` embedded dans l'image.
