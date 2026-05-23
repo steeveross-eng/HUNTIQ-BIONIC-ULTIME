@@ -63,6 +63,14 @@ GRID_FILE = Path(os.environ.get(
     str(BACKEND_ROOT / "cache" / "zerocost_v1" / "canada_h3_grid_r5_seed.json"),
 ))
 
+# P22ΩΩ_3RF_ACCELERATION_P0_Ω · BLOCK_OUTSIDE_3RF strict (additif, défaut ON)
+BLOCK_OUTSIDE_3RF = os.environ.get("BLOCK_OUTSIDE_3RF", "1") == "1"
+ALLOWED_RF_LABELS = {
+    "OUTAOUAIS_RF_PAPINEAU_VERENDRYE_SUD",
+    "LAURENTIDES_RF_LAURENTIDES_ROUGE_MATAWIN",
+    "MAURICIE_RF_MASTIGOUCHE_ST_MAURICE",
+}
+
 SPECIES = ["chevreuil", "orignal", "ours_noir", "wapiti", "dindon_sauvage", "coyote"]
 MONTHS = [4, 9, 10, 11]
 HOURS = [7, 14, 19]
@@ -152,6 +160,11 @@ async def main():
 
                     # PHASE 2 : FAN-OUT vers chaque R6 enfant
                     for r6_child in r6_children:
+                        # P22ΩΩ_3RF_ACCELERATION_P0_Ω · skip si R6 hors 3 RF
+                        if BLOCK_OUTSIDE_3RF:
+                            rf_lbl = r6_child.get("rf_label")
+                            if rf_lbl not in ALLOWED_RF_LABELS:
+                                continue
                         r6_id = r6_child["h3_r6"]
                         r6_lat = r6_child["lat_r6"]
                         r6_lng = r6_child["lng_r6"]

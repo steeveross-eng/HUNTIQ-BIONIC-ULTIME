@@ -9,11 +9,12 @@
 # pour bénéficier de l'autorestart au pod-restart.
 
 set -u
-CHECK_INTERVAL_S="${CHECK_INTERVAL_S:-60}"
+CHECK_INTERVAL_S="${CHECK_INTERVAL_S:-45}"
 MIN_WORKERS="${MIN_WORKERS:-4}"
+TARGET_WORKERS="${TARGET_WORKERS:-8}"
 LOG_PREFIX="[β2-ΣΤ-WATCHDOG]"
 
-echo "$LOG_PREFIX Watchdog démarré · check toutes les ${CHECK_INTERVAL_S}s · MIN_WORKERS=$MIN_WORKERS"
+echo "$LOG_PREFIX Watchdog démarré · check toutes les ${CHECK_INTERVAL_S}s · MIN_WORKERS=$MIN_WORKERS · TARGET=$TARGET_WORKERS"
 
 while true; do
     # Compter workers β2-ΣΤ vivants
@@ -24,11 +25,12 @@ while true; do
         # Nettoyage state file
         bash /app/backend/tools/zerocost_seed_r5_daemon.sh stop 2>&1 | tail -2 || true
         sleep 2
-        WORKER_COUNT=6 \
+        WORKER_COUNT=$TARGET_WORKERS \
         GRID_FILE_PATH=/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed.json \
         MAX_R5_CELLS=0 \
+        BLOCK_OUTSIDE_3RF=1 \
         bash /app/backend/tools/zerocost_seed_r5_daemon.sh start 2>&1 | tail -3
-        echo "$LOG_PREFIX Relance terminée"
+        echo "$LOG_PREFIX Relance terminée (TARGET=$TARGET_WORKERS · BLOCK_OUTSIDE_3RF=1)"
     else
         # Log status léger toutes les 5 min
         if (( $(date +%s) % 300 < CHECK_INTERVAL_S )); then

@@ -22,6 +22,31 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_3RF_ACCELERATION_P0_Ω** (2026-02-20) — **ACCÉLÉRATION CONTRÔLÉE 3 RF** (Verrou Phase III maintenu · additif strict) :
+  - **Throughput daemon β2-ΣΤ** :
+    - `TARGET_WORKERS` : 6 → **8** (gain ×1.33)
+    - `WATCHDOG_MIN_WORKERS` : 3 → **4**
+    - `CHECK_INTERVAL_S` : 60s → **45s** (latence relance ÷ 1.33)
+    - NICE_LEVEL = 19 (inchangé, doctrine respectée)
+  - **Fan-out optimisé** :
+    - MODE_FANOUT = ESSENTIEL_T0 strict (déjà actif via DEADLINE 10s)
+    - SKIP_POST_PIPELINE = TRUE (déjà actif via `_apply_v5_rewire` + `_apply_bloc25_hierarchy_and_cap` en branche deadline)
+    - PRIORITÉ = 3 RF only (grille `canada_h3_grid_r5_seed.json` déjà 100 % 3 RF doctrinales)
+  - **Cron manifest accéléré** : `ZEROCOST_MANIFEST_INTERVAL_S=1200` (20 min · ajouté `.env`) · drift cible <900s
+  - **BLOCK_OUTSIDE_3RF strict** : variable env `BLOCK_OUTSIDE_3RF=1` (défaut ON) · filet runtime dans `zerocost_worker_seed_r5.py` (skip R6 child si `rf_label` ∉ ALLOWED_RF_LABELS)
+  - **Validation live T+1:30 post-relance** :
+    - 8/8 workers β2-ΣΤ vivants · PIDs 2734-2741 · NICE=19 · CPU 10-29%
+    - Distribution grille équilibrée : 4w×36 + 4w×35 = 284 cells R5 totales
+    - Backend HTTP 200 · habitat-fusion p0 status HTTP 200
+    - Watchdog supervisor RUNNING · uptime 2:18
+  - **ETA révisé** : ~14 h → **~10.5 h** pour clôturer 100 % 3 RF (gain ×1.33 workers)
+  - **Fichiers modifiés** (3) :
+    - `/app/backend/tools/zerocost_seed_r5_supervisor_watchdog.sh` (defaults CHECK=45 · MIN=4 · TARGET=8 · BLOCK_OUTSIDE_3RF=1)
+    - `/app/backend/tools/zerocost_worker_seed_r5.py` (BLOCK_OUTSIDE_3RF + ALLOWED_RF_LABELS + filtre R6 child)
+    - `/etc/supervisor/conf.d/zerocost-seed-r5.conf` (env CHECK=45 · MIN=4 · TARGET=8)
+  - **Fichier ajouté** : 1 ligne `.env` (`ZEROCOST_MANIFEST_INTERVAL_S=1200`)
+  - **🚫 NON TOUCHÉ** conformément à la directive : R2/R6 storage · TERRITOIRE_Ω endpoints · MANIFEST CDN doctrine · pipelines V20 · aucune action terrain
+
 - ✅ **P22ΩΩ_IA_HABITAT_FUSION_P0_Ω** (2026-02-20) — **ACTIVATION FINALE HABITAT FUSION P0** (Verrou Phase III maintenu · additif strict · 0 testing agent) :
   - **Manifeste maître** `/app/backend/data/habitat_fusion_p0/HABITAT_FUSION_P0_REGISTRY_Ω.json` (4 963 B) :
     - 4 axes BCE4X · 5 espèces · 4 saisons · checksums SHA-256 sur 7 fichiers sources
