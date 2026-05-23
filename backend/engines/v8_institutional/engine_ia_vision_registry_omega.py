@@ -19,6 +19,12 @@ from fastapi import APIRouter
 
 from engines.v8_institutional.engine_science_omega import register_engine, mark_call
 
+# P22ΩΩ_NDVI_LIDAR_PANCA_P0_Ω (2026-05-23) — Registry HR-ready (additif read-only).
+try:
+    from engines.v8_institutional import ndvi_lidar_p0_registry_omega as NDVI_LIDAR_P0  # noqa: F401
+except ImportError:
+    NDVI_LIDAR_P0 = None  # type: ignore
+
 ENGINE_NAME = "ENGINE-IA-VISION-REGISTRY-Ω"
 ENGINE_VERSION = "V1.0-PHASE-XI-SUPRA-K-2026-04"
 

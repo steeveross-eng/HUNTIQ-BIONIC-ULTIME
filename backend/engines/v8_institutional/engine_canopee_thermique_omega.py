@@ -5,6 +5,12 @@ RÔLE : SECONDAIRE · PRIORITÉ : MAJEUR
 """
 from typing import Dict, Any
 
+# P22ΩΩ_NDVI_LIDAR_PANCA_P0_Ω (2026-05-23) — Registry HR-ready (additif read-only).
+try:
+    from engines.v8_institutional import ndvi_lidar_p0_registry_omega as NDVI_LIDAR_P0  # noqa: F401
+except ImportError:
+    NDVI_LIDAR_P0 = None  # type: ignore
+
 ENGINE_NAME = "ENGINE_CANOPÉE_THERMIQUE_Ω"
 ENGINE_VERSION = "V1-SUPRA-2026-04"
 

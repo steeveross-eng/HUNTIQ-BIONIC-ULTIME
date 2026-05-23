@@ -1,0 +1,96 @@
+{
+  "_doctrine": "P22ΩΩ_NDVI_LIDAR_PANCA_P0_Ω · COMMANDANT STEEVE-MAX · 2026-05-23",
+  "_status": "STRUCTURAL_ACTIVATED_PRE_INGESTION",
+  "_generated_at": "2026-05-23T14:48:38Z",
+  "dataset_name": "LIDAR_PANCA",
+  "target_specifications": {
+    "resolution_m": "0.5-1.0",
+    "crs": "EPSG:3857",
+    "vertical_datum": "CGVD2013",
+    "spatial_coverage": "PAN_CANADA (priority RF Outaouais / Mauricie / Laurentides)",
+    "bbox_wgs84": {
+      "minlon": -141.0,
+      "minlat": 41.0,
+      "maxlon": -52.0,
+      "maxlat": 70.0
+    },
+    "format": "LAS_v1.4",
+    "point_record_format": 6,
+    "density_pts_per_m2": "8-25",
+    "classification": [
+      "ground",
+      "vegetation_low",
+      "vegetation_med",
+      "vegetation_high",
+      "building",
+      "water"
+    ]
+  },
+  "future_sources": {
+    "NRCAN_HRDEM": {
+      "name": "Natural Resources Canada · High Resolution Digital Elevation Model",
+      "provider": "NRCan",
+      "url": "https://natural-resources.canada.ca/science-data/science-research/earth-sciences/geomatics/canadian-digital-elevation-data/high-resolution-digital-elevation-model-hrdem",
+      "api": "WMS / WCS / TIFF download",
+      "license": "OPEN_GOVERNMENT_LICENSE_CANADA",
+      "resolution_m": 1.0,
+      "coverage": "Selected areas Canada · ongoing acquisition",
+      "_status": "AVAILABLE_NOT_INGESTED"
+    },
+    "MFFP_LIDAR_QC": {
+      "name": "Ministère des Forêts, Faune et Parcs Québec · LiDAR Forêt Ouverte",
+      "provider": "Gouvernement du Québec",
+      "url": "https://www.donneesquebec.ca/recherche/dataset/produits-derives-de-base-du-lidar",
+      "api": "WCS",
+      "license": "Creative Commons 4.0 International",
+      "resolution_m": 1.0,
+      "coverage": "Province de Québec",
+      "_status": "AVAILABLE_NOT_INGESTED"
+    },
+    "IRDA_PEDOLOGIE": {
+      "name": "Institut de Recherche et de Développement en Agroenvironnement",
+      "provider": "IRDA Québec",
+      "url": "https://irda.qc.ca/fr/outils/donnees-pedologiques-sols/",
+      "api": "REST / OGC",
+      "license": "Conditions IRDA",
+      "products": [
+        "Sols",
+        "Drainage 7 classes",
+        "Zones humides",
+        "Perméabilité"
+      ],
+      "_status": "AVAILABLE_NOT_INGESTED"
+    },
+    "PROVINCIAL_LIDAR": {
+      "name": "LiDAR provinciaux (ON, NB, NS, BC, AB)",
+      "provider": "Provinces canadiennes individuelles",
+      "url": "Per province portal",
+      "_status": "PARTIAL_AVAILABILITY_NOT_INGESTED"
+    }
+  },
+  "consumer_engines": [
+    "lidar_irda_v11",
+    "engine_terrain_v10_supra",
+    "engine_canopee_thermique_omega",
+    "engine_ia_vision_ecologique_omega",
+    "habitat_fusion_engine_p0"
+  ],
+  "ingestion_plan_p1": {
+    "step_1": "Acquérir credentials NRCan FTP + MFFP Forêt Ouverte",
+    "step_2": "Setup pipeline LAS download tiles → tile_index R5/R6",
+    "step_3": "Process LAS → DEM 1m + DSM 1m + Canopy Height Model (CHM)",
+    "step_4": "Derive slope/aspect/curvature/TPI/TWI rasters 1m",
+    "step_5": "Classification ground/vegetation/building (existing standards)",
+    "step_6": "Push tiles vers R2 (post Verrou Phase III · paged regional)"
+  },
+  "placeholder_file": {
+    "path": "/app/backend/data/ndvi_lidar_p0/lidar_pancanada_placeholder.las",
+    "size_b": 375,
+    "sha256": "79713b49c0af55b1275fbbdc7fb64b7302b80dbeca3986011342df7c7dd60577",
+    "header_format": "LAS_v1.4_PointFormat6",
+    "n_points": 0,
+    "schema_only": true
+  },
+  "_anti_generique_strict": true,
+  "_aucune_donnee_fabriquee": true
+}

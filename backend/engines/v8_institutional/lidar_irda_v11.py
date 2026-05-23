@@ -23,6 +23,14 @@ import logging
 import httpx
 from datetime import datetime, timezone
 
+# P22ΩΩ_NDVI_LIDAR_PANCA_P0_Ω (2026-05-23) — Registry HR-ready (additif read-only).
+# Extension du mode V11 : si registry HR pan-Canada ingéré, le pipeline peut
+# basculer sur les sources nationales NRCan/Provinces au lieu de MFFP uniquement.
+try:
+    from engines.v8_institutional import ndvi_lidar_p0_registry_omega as NDVI_LIDAR_P0  # noqa: F401
+except ImportError:
+    NDVI_LIDAR_P0 = None  # type: ignore
+
 logger = logging.getLogger("bionic.lidar_irda_v11")
 
 # ═══════════════════════════════════════════════════════

@@ -1,0 +1,56 @@
+{
+  "_doctrine": "P22ΩΩ_NDVI_LIDAR_PANCA_P0_Ω · COMMANDANT STEEVE-MAX · 2026-05-23",
+  "_generated_at": "2026-05-23T14:48:38Z",
+  "_verrou_phase_iii": "MAINTENU",
+  "_anti_generique_strict": true,
+  "_status": "STRUCTURAL_ACTIVATED_PRE_INGESTION",
+  "datasets": {
+    "ndvi_hr_placeholder.tif": {
+      "path": "/app/backend/data/ndvi_lidar_p0/ndvi_hr_placeholder.tif",
+      "size_b": 1598,
+      "sha256": "0b4a4e491da8dfb40aa2c05f8b9ae3f52ae8175d6a951f6c673d72cdcede8172",
+      "type": "geotiff_schema_only",
+      "target_resolution_m": "1-10"
+    },
+    "ndvi_hr_registry_Ω.json": {
+      "path": "/app/backend/data/ndvi_lidar_p0/ndvi_hr_registry_Ω.json",
+      "size_b": 2683,
+      "sha256": "dbb05eda91401023b261d5d1df126a9dc08b3497f2f57e1856af7d230b487eb5"
+    },
+    "lidar_pancanada_placeholder.las": {
+      "path": "/app/backend/data/ndvi_lidar_p0/lidar_pancanada_placeholder.las",
+      "size_b": 375,
+      "sha256": "79713b49c0af55b1275fbbdc7fb64b7302b80dbeca3986011342df7c7dd60577",
+      "type": "las_v1.4_header_only",
+      "target_resolution_m": "0.5-1.0"
+    },
+    "lidar_pancanada_registry_Ω.json": {
+      "path": "/app/backend/data/ndvi_lidar_p0/lidar_pancanada_registry_Ω.json",
+      "size_b": 3526,
+      "sha256": "5ec38864a81bfbaf6ac03c9f2d66c546206bab5c34a9761863403ca80f1c7397"
+    },
+    "habitat_fusion_sources_manifest.json": {
+      "path": "/app/backend/data/ndvi_lidar_p0/habitat_fusion_sources_manifest.json",
+      "size_b": 2552,
+      "sha256": "5b4165c513fe0cb812cb4189b63d406303e4e6e586a9af69a5263ae916ebe925"
+    }
+  },
+  "consumer_engines_hr_ready": [
+    "engine_ia_vision_ecologique_omega",
+    "engine_ia_vision_registry_omega",
+    "lidar_irda_v11",
+    "engine_terrain_v10_supra",
+    "engine_canopee_thermique_omega",
+    "ecological_orchestrator_omega",
+    "habitat_fusion_engine_p0"
+  ],
+  "species_supported": [
+    "chevreuil",
+    "orignal",
+    "ours_noir",
+    "coyote",
+    "dindon_sauvage"
+  ],
+  "_aucune_donnee_telechargee": true,
+  "_aucune_donnee_fabriquee": true
+}

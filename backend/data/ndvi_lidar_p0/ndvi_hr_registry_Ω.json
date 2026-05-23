@@ -1,0 +1,85 @@
+{
+  "_doctrine": "P22ΩΩ_NDVI_LIDAR_PANCA_P0_Ω · COMMANDANT STEEVE-MAX · 2026-05-23",
+  "_status": "STRUCTURAL_ACTIVATED_PRE_INGESTION",
+  "_generated_at": "2026-05-23T14:48:38Z",
+  "dataset_name": "NDVI_HR_PANCA",
+  "target_specifications": {
+    "resolution_m": "1-10",
+    "crs": "EPSG:3857",
+    "spatial_coverage": "PAN_CANADA",
+    "bbox_wgs84": {
+      "minlon": -141.0,
+      "minlat": 41.0,
+      "maxlon": -52.0,
+      "maxlat": 70.0
+    },
+    "temporal_resolution": "16_days_revisit",
+    "temporal_coverage": "2015-present (Sentinel-2) / 2017-present (HLS)",
+    "ndvi_range": [
+      -1.0,
+      1.0
+    ],
+    "dtype": "float32",
+    "band_count": 1
+  },
+  "future_sources": {
+    "NASA_HLS": {
+      "name": "Harmonized Landsat Sentinel-2",
+      "provider": "NASA Earthdata",
+      "url": "https://hls.gsfc.nasa.gov/",
+      "api": "STAC",
+      "license": "PUBLIC_DOMAIN",
+      "resolution_m": 30,
+      "products": [
+        "HLSL30.020 (Landsat-9)",
+        "HLSS30.020 (Sentinel-2)"
+      ],
+      "_status": "AVAILABLE_NOT_INGESTED"
+    },
+    "ESA_SENTINEL2_L2A": {
+      "name": "Sentinel-2 MSI Level 2A",
+      "provider": "ESA Copernicus",
+      "url": "https://browser.dataspace.copernicus.eu/",
+      "api": "OData / STAC",
+      "license": "CC-BY-NC-4.0",
+      "resolution_m": 10,
+      "products": [
+        "S2A_MSIL2A",
+        "S2B_MSIL2A",
+        "S2C_MSIL2A"
+      ],
+      "_status": "AVAILABLE_NOT_INGESTED"
+    },
+    "NOAA_VEGETATION": {
+      "name": "NOAA Vegetation Drought Response Index",
+      "provider": "NOAA STAR",
+      "url": "https://www.star.nesdis.noaa.gov/smcd/emb/vci/VH/",
+      "api": "OPeNDAP",
+      "license": "PUBLIC_DOMAIN",
+      "resolution_m": 4000,
+      "_status": "AVAILABLE_NOT_INGESTED"
+    }
+  },
+  "consumer_engines": [
+    "engine_ia_vision_ecologique_omega",
+    "engine_ia_vision_registry_omega",
+    "engine_canopee_thermique_omega",
+    "habitat_fusion_engine_p0"
+  ],
+  "ingestion_plan_p1": {
+    "step_1": "Acquérir credentials NASA Earthdata + ESA Copernicus",
+    "step_2": "Setup pipeline STAC search → COG tiles 1-10m",
+    "step_3": "Crop pan-Canada bbox + reproject EPSG:3857",
+    "step_4": "Compute NDVI = (NIR - RED) / (NIR + RED) avec masks nuages",
+    "step_5": "Stack temporel + temporal aggregation (16 jours)",
+    "step_6": "Push vers R2 ZEROCOST CDN (post Verrou Phase III)"
+  },
+  "placeholder_file": {
+    "path": "/app/backend/data/ndvi_lidar_p0/ndvi_hr_placeholder.tif",
+    "size_b": 1598,
+    "sha256": "0b4a4e491da8dfb40aa2c05f8b9ae3f52ae8175d6a951f6c673d72cdcede8172",
+    "schema_only": true
+  },
+  "_anti_generique_strict": true,
+  "_aucune_donnee_fabriquee": true
+}

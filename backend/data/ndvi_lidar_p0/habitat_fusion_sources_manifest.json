@@ -1,0 +1,77 @@
+{
+  "_doctrine": "P22ΩΩ_NDVI_LIDAR_PANCA_P0_Ω · COMMANDANT STEEVE-MAX · 2026-05-23",
+  "_status": "STRUCTURAL_PRE_FUSION_HABITAT_P0",
+  "_generated_at": "2026-05-23T14:48:38Z",
+  "phase": "PRE_FUSION_HABITAT_BCE4X",
+  "fusion_axes_p0": {
+    "vegetation_ndvi_hr": {
+      "source_dataset": "NDVI_HR_PANCA",
+      "registry_path": "/app/backend/data/ndvi_lidar_p0/ndvi_hr_registry_Ω.json",
+      "fusion_weight": 0.3,
+      "engines_consumers": [
+        "engine_ia_vision_ecologique_omega",
+        "engine_canopee_thermique_omega"
+      ],
+      "status": "PRE_INGESTION"
+    },
+    "topography_lidar": {
+      "source_dataset": "LIDAR_PANCA",
+      "registry_path": "/app/backend/data/ndvi_lidar_p0/lidar_pancanada_registry_Ω.json",
+      "fusion_weight": 0.35,
+      "engines_consumers": [
+        "lidar_irda_v11",
+        "engine_terrain_v10_supra"
+      ],
+      "status": "PRE_INGESTION"
+    },
+    "corridors_behavior": {
+      "source_dataset": "IA_CORRIDORS_P0_Ω",
+      "registry_path": "/app/backend/data/ia_corridors/IA_CORRIDORS_REGISTRY_Ω.json",
+      "fusion_weight": 0.2,
+      "engines_consumers": [
+        "engine_ia_corridors_organic_omega",
+        "ecological_orchestrator_omega"
+      ],
+      "status": "READY"
+    },
+    "species_biogeography": {
+      "source_dataset": "BIONIC_BIOGEOGRAPHY",
+      "registry_path": "/app/backend/modules/bionic_ecological_engine/bionic_species_biogeography.json",
+      "fusion_weight": 0.15,
+      "engines_consumers": [
+        "engine_ia_corridors_organic_omega",
+        "species_presence_mask_omega"
+      ],
+      "status": "READY"
+    }
+  },
+  "species_supported": [
+    "chevreuil",
+    "orignal",
+    "ours_noir",
+    "coyote",
+    "dindon_sauvage"
+  ],
+  "seasonal_dimensions": [
+    "printemps",
+    "ete",
+    "automne",
+    "hiver"
+  ],
+  "hr_ready_mode": true,
+  "ingestion_priorities": [
+    "NRCan HRDEM (Outaouais + Mauricie + Laurentides en priorité)",
+    "MFFP LiDAR Forêt Ouverte (Province Québec exhaustif)",
+    "NASA HLS NDVI (16 jours pan-Canada temporel)",
+    "ESA Sentinel-2 L2A (10m haute résolution spectrale)"
+  ],
+  "doctrine_phase": "P0_STRUCTURAL_ACTIVATION",
+  "next_phases": {
+    "P1": "Acquisition credentials + ingestion test régional (Outaouais)",
+    "P2": "Pipeline ingestion automated 16 jours NDVI + LiDAR full",
+    "P3": "Habitat Fusion Engine compute_habitat_score(lat,lon,species,season)",
+    "P4": "Integration ZEROCOST R2 CDN (post Verrou Phase III)"
+  },
+  "_anti_generique_strict": true,
+  "_aucune_donnee_fabriquee": true
+}

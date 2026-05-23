@@ -22,6 +22,33 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_NDVI_LIDAR_PANCA_P0_Ω** (2026-05-23) — Activation STRUCTURELLE NDVI HR + LiDAR Pan-Canada (anti-générique strict · ZÉRO téléchargement · ZÉRO donnée fabriquée) :
+  - **Génération script** `/app/backend/tools/gen_ndvi_lidar_p0_omega.py` :
+    - 5 placeholders structurels (`/app/backend/data/ndvi_lidar_p0/`)
+    - `ndvi_hr_placeholder.tif` (1.6 KB · GeoTIFF schema · sentinel -9999 · CRS EPSG:3857 · bbox pan-Canada · target 1-10m)
+    - `lidar_pancanada_placeholder.las` (375 B · LAS v1.4 PointFormat 6 · header doctrinal · 0 points · target 0.5-1m)
+    - `ndvi_hr_registry_Ω.json` (2.7 KB · 3 sources futures NASA HLS / ESA Sentinel-2 / NOAA · plan ingestion P1)
+    - `lidar_pancanada_registry_Ω.json` (3.6 KB · 4 sources futures NRCan HRDEM / MFFP Forêt Ouverte / IRDA / Provinces · plan ingestion P1)
+    - `habitat_fusion_sources_manifest.json` (2.5 KB · 4 axes fusion BCE4X · poids 0.30/0.35/0.20/0.15)
+    - `NDVI_LIDAR_P0_REGISTRY_Ω.json` (3.0 KB · master registry + SHA-256 checksums)
+  - **2 nouveaux engines créés** :
+    - `engine_terrain_v10_supra.py` (HR-ready · expose `get_hr_mode()` → STANDARD_V10 / HR_READY / HR_INGESTED + `get_terrain_v10_supra()` enrichi `_hr_pipeline_status`)
+    - `habitat_fusion_engine_p0.py` (pré-fusion BCE4X · 4 axes · 2 READY + 2 PRE_INGESTION · `compute_habitat_score_p0(lat, lon, species, season)` retourne score partiel + completion_ratio)
+  - **Registry loader** `ndvi_lidar_p0_registry_omega.py` (API : get_status · has_ndvi_hr · has_lidar_pancanada · is_hr_ingested · get_ndvi_hr_registry · get_lidar_pancanada_registry · get_habitat_fusion_manifest · cache mémoire · soft-fail)
+  - **Câblage additif** dans 5 engines existants + 2 nouveaux engines (7 total) :
+    - engine_ia_vision_ecologique_omega · engine_ia_vision_registry_omega · lidar_irda_v11 (mode étendu) · engine_terrain_v10_supra · engine_canopee_thermique_omega · ecological_orchestrator_omega · habitat_fusion_engine_p0
+  - **TRIPLE AUDIT STRUCTUREL validé** :
+    - ✅ Registry loader : `STRUCTURAL_ACTIVATED_PRE_INGESTION` · `is_hr_ingested=False` (correct P0)
+    - ✅ 7 moteurs importent `NDVI_LIDAR_P0=True` sans régression
+    - ✅ engine_terrain_v10_supra mode = `HR_READY` · payload `_hr_pipeline_status` correct
+    - ✅ habitat_fusion_engine_p0 phase = `P0_PRE_FUSION` · 2/4 axes READY · scores partiels 5 espèces différenciés (chevreuil 51.1 / orignal 93.4 / ours_noir 93.4 / coyote 82.4 / dindon 9.9 — divergence stricte)
+    - ✅ Backend HTTP 200 sustained
+  - **Doctrine clarifiée** :
+    - Mode P0 : **STRUCTURAL_ACTIVATED_PRE_INGESTION** (placeholders structurels, aucune donnée fabriquée)
+    - Mode P1 cible : ingestion NRCan HRDEM + MFFP LiDAR + NASA HLS NDVI + ESA Sentinel-2
+    - Mode P2 cible : Habitat Fusion compute_habitat_score complet (4 axes)
+    - Mode P3 cible : Integration ZEROCOST R2 CDN (post Verrou Phase III)
+  - **🚫 NON TOUCHÉ** conformément à la directive : R2/R6 · TERRITOIRE_Ω · MANIFEST CDN · PIPELINES V20
 - ✅ **P22ΩΩ_IA_CORRIDORS_P0_Ω** (2026-05-23) — Génération automatique des 4 datasets IA Corridors P0 (anti-générique strict · Verrou Phase III maintenu) :
   - **Génération script** `/app/backend/tools/gen_ia_corridors_p0_omega.py` :
     - Synthèse depuis sources scientifiques réelles : `CORRIDOR_PROFILES` (corridors_v10) + `SPECIES_BEHAVIOR` (ia_organic) + `bionic_species_biogeography.json`
