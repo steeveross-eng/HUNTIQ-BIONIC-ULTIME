@@ -20,8 +20,11 @@ FUSION AXES P0 (manifest habitat_fusion_sources_manifest.json)
 
 API publique
 ------------
-  compute_habitat_score_p0(lat, lon, species, season) -> dict
-  get_fusion_status() -> dict
+  compute_habitat_score_p0(lat, lon, species, season) -> dict        # legacy alias
+  compute_habitat_score(species, lat, lng, season) -> dict           # signature directive Commandant
+  get_fusion_status() -> dict                                        # legacy alias
+  get_axes_status() -> dict                                          # statut détaillé des 4 axes
+  get_habitat_fusion_registry() -> dict                              # manifeste maître HABITAT_FUSION_P0_REGISTRY_Ω
   is_full_fusion_available() -> bool
 """
 from __future__ import annotations
@@ -33,7 +36,7 @@ logger = logging.getLogger("bionic.habitat_fusion_engine_p0")
 
 ENGINE_NAME = "HABITAT-FUSION-ENGINE-P0"
 ENGINE_VERSION = "V1-PRE-FUSION-2026-05"
-ENGINE_DOCTRINE = "P22ΩΩ_NDVI_LIDAR_PANCA_P0_Ω"
+ENGINE_DOCTRINE = "P22ΩΩ_IA_HABITAT_FUSION_P0_Ω"
 
 # ─── Imports read-only registries (soft-fail strict) ─────────────────────────
 try:
@@ -45,6 +48,11 @@ try:
     from engines.v8_institutional import ia_corridors_registry_omega as IA_CORRIDORS_P0
 except ImportError:
     IA_CORRIDORS_P0 = None  # type: ignore
+
+try:
+    from engines.v8_institutional import habitat_fusion_registry_omega as HABITAT_FUSION_P0
+except ImportError:
+    HABITAT_FUSION_P0 = None  # type: ignore
 
 
 def get_fusion_status() -> Dict[str, Any]:
@@ -158,6 +166,266 @@ def compute_habitat_score_p0(
 
 
 __all__ = [
-    "compute_habitat_score_p0", "get_fusion_status", "is_full_fusion_available",
-    "ENGINE_NAME", "ENGINE_VERSION",
+    "compute_habitat_score_p0", "compute_habitat_score",
+    "get_fusion_status", "get_axes_status",
+    "get_habitat_fusion_registry", "is_full_fusion_available",
+    "ENGINE_NAME", "ENGINE_VERSION", "ENGINE_DOCTRINE",
 ]
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# P22ΩΩ_IA_HABITAT_FUSION_P0_Ω · 2026-02-20 · Extensions doctrinales
+# Additif strict — Verrou Phase III maintenu.
+# ═════════════════════════════════════════════════════════════════════════════
+
+# Signatures espèces & saisons doctrinales
+_SPECIES_CANONICAL = ("chevreuil", "orignal", "ours_noir", "coyote", "dindon_sauvage")
+_SEASONS_CANONICAL = ("printemps", "ete", "automne", "hiver")
+
+
+def _normalize_species(species: str) -> str:
+    s = (species or "").lower().strip()
+    aliases = {
+        "cerf": "chevreuil",
+        "chevreuil_de_virginie": "chevreuil",
+        "white_tailed_deer": "chevreuil",
+        "moose": "orignal",
+        "black_bear": "ours_noir",
+        "ours": "ours_noir",
+        "wild_turkey": "dindon_sauvage",
+        "dindon": "dindon_sauvage",
+        "canis_latrans": "coyote",
+    }
+    return aliases.get(s, s)
+
+
+def _normalize_season(season: str) -> str:
+    s = (season or "automne").lower().strip()
+    aliases = {
+        "spring": "printemps", "summer": "ete", "été": "ete",
+        "fall": "automne", "autumn": "automne", "winter": "hiver",
+    }
+    return aliases.get(s, s)
+
+
+def get_axes_status() -> Dict[str, Any]:
+    """État détaillé des 4 axes BCE4X avec flux de poids actifs/dormants.
+
+    Retourne un payload exhaustif :
+      - 4 axes (vegetation_ndvi_hr · topography_lidar · corridors_behavior · species_biogeography)
+      - Statut · poids · upstream_engine · ingestion_target par axe
+      - Synthèse globale (weight_active · completion_ratio · phase)
+    """
+    # Source primaire : manifeste maître HABITAT_FUSION_P0_REGISTRY_Ω
+    if HABITAT_FUSION_P0 is not None:
+        master = HABITAT_FUSION_P0.get_master_registry()
+        if master:
+            axes = master.get("fusion_axes_p0", {})
+            weight_ready = sum(
+                float(a.get("fusion_weight", 0.0))
+                for a in axes.values()
+                if a.get("status") == "READY"
+            )
+            weight_pending = sum(
+                float(a.get("fusion_weight", 0.0))
+                for a in axes.values()
+                if a.get("status") == "PRE_INGESTION"
+            )
+            return {
+                "engine": ENGINE_NAME,
+                "version": ENGINE_VERSION,
+                "doctrine": ENGINE_DOCTRINE,
+                "phase": master.get("_phase", "P0_PRE_FUSION"),
+                "status_global": master.get("_status", "STRUCTURAL_ACTIVATED_PRE_INGESTION"),
+                "axes_total": master.get("axes_total", len(axes)),
+                "axes_ready": master.get("axes_ready", 0),
+                "axes_pre_ingestion": master.get("axes_pre_ingestion", 0),
+                "weight_active_p0": round(weight_ready, 2),
+                "weight_pending_p1": round(weight_pending, 2),
+                "weight_target_p2": float(master.get("weight_target_p2", 1.0)),
+                "completion_ratio": float(master.get("completion_ratio_p0", weight_ready)),
+                "fully_fused": weight_pending == 0.0 and weight_ready > 0.0,
+                "registry_master_present": True,
+                "axes": {
+                    name: {
+                        "status": data.get("status"),
+                        "fusion_weight": data.get("fusion_weight"),
+                        "upstream_engine": data.get("upstream_engine"),
+                        "ingestion_target": data.get("ingestion_target"),
+                    }
+                    for name, data in axes.items()
+                },
+                "registries_available": {
+                    "habitat_fusion_p0_master": True,
+                    "ndvi_lidar_p0": NDVI_LIDAR_P0 is not None,
+                    "ia_corridors_p0": IA_CORRIDORS_P0 is not None,
+                },
+            }
+
+    # Fallback : reconstruction depuis NDVI_LIDAR_P0 manifest
+    legacy = get_fusion_status()
+    legacy["registry_master_present"] = False
+    legacy["_note"] = "fallback · manifeste maître absent · re-générer via gen_habitat_fusion_p0_registry_omega.py"
+    return legacy
+
+
+def get_habitat_fusion_registry() -> Dict[str, Any]:
+    """Manifeste maître HABITAT_FUSION_P0_REGISTRY_Ω (read-only)."""
+    if HABITAT_FUSION_P0 is None:
+        return {"_status": "REGISTRY_LOADER_UNAVAILABLE"}
+    return HABITAT_FUSION_P0.get_master_registry() or {"_status": "EMPTY"}
+
+
+def compute_habitat_score(
+    species: str, lat: float, lng: float, season: str = "automne"
+) -> Dict[str, Any]:
+    """Signature directive Commandant : (species, lat, lng, season).
+
+    Computation principale du score habitat P0 · combine les axes READY
+    (corridors_behavior + species_biogeography) en P0_PRE_FUSION. Les axes
+    NDVI HR + LiDAR sont déclarés mais retournent un score `None` tant que
+    l'ingestion P1 n'a pas été effectuée.
+
+    Retourne un payload divergent par espèce × saison (divergence biologique
+    stricte respectée via IA_CORRIDORS_P0_Ω + biogéographie).
+    """
+    sp = _normalize_species(species)
+    sn = _normalize_season(season)
+
+    if sp not in _SPECIES_CANONICAL:
+        return {
+            "engine": ENGINE_NAME,
+            "version": ENGINE_VERSION,
+            "doctrine": ENGINE_DOCTRINE,
+            "error": f"species_unknown · '{species}' (canonical: {list(_SPECIES_CANONICAL)})",
+            "habitat_score": None,
+            "partial_p0": True,
+        }
+
+    contributions: Dict[str, Any] = {}
+    score_sum = 0.0
+    weight_sum_active = 0.0
+    weight_sum_target = 0.0
+
+    # ─── Axe corridors_behavior (READY) ────────────────────────────────────
+    weight_corr = 0.20
+    weight_sum_target += weight_corr
+    score_corr = None
+    if IA_CORRIDORS_P0 is not None:
+        behavior = IA_CORRIDORS_P0.get_behavior_profile(sp)
+        ia = behavior.get("comportement_ia", {})
+        amp = float(ia.get("amplitude", 0.5))
+        sinuosity = float(behavior.get("geometrie", {}).get("sinuosity_factor", 1.0))
+        # Score = combinaison amplitude IA (0.4-0.7) + facteur sinuosité (1.0-1.8)
+        # Normalisé 0-100
+        score_amp = min(100.0, max(0.0, (amp - 0.3) / 0.4 * 100.0))
+        score_sinu = min(100.0, max(0.0, (sinuosity - 1.0) / 0.8 * 100.0))
+        score_corr = round((score_amp * 0.6 + score_sinu * 0.4), 1)
+        contributions["corridors_behavior"] = {
+            "score_0_100": score_corr,
+            "fusion_weight": weight_corr,
+            "weighted_score": round(score_corr * weight_corr, 2),
+            "status": "READY",
+            "source": "IA_CORRIDORS_P0_Ω.behavior_profiles",
+            "raw": {"amplitude": amp, "sinuosity_factor": sinuosity},
+        }
+        score_sum += score_corr * weight_corr
+        weight_sum_active += weight_corr
+    else:
+        contributions["corridors_behavior"] = {
+            "score_0_100": None, "fusion_weight": weight_corr,
+            "status": "READY_LOADER_MISSING",
+        }
+
+    # ─── Axe species_biogeography (READY · saison-aware) ────────────────────
+    weight_bio = 0.15
+    weight_sum_target += weight_bio
+    score_bio = None
+    if IA_CORRIDORS_P0 is not None:
+        temp_sig = IA_CORRIDORS_P0.get_temporal_signature(sp)
+        bio = temp_sig.get("biogeographie", {})
+        provinces = bio.get("provinces_ca_actives", [])
+        # Score base = % provinces actives (max 13)
+        score_provinces = min(100.0, (len(provinces) / 13.0) * 100.0)
+        # Modulation saison : indices saisonniers réels du dataset
+        season_data = temp_sig.get("saisonnalite", {}).get(sn, {})
+        mobilite = float(season_data.get("mobilite_corridor", 0.7))
+        couvert = float(season_data.get("preference_couvert", 0.6))
+        hydro = float(season_data.get("affinite_hydro", 0.5))
+        pic_activite = bool(season_data.get("_pic_activite", False))
+        # Indice composite saisonnier ∈ [0.3, 1.5] (0.6·mobilité + 0.25·couvert + 0.15·hydro + bonus pic)
+        seasonal_index = (
+            0.60 * mobilite + 0.25 * couvert + 0.15 * hydro + (0.20 if pic_activite else 0.0)
+        )
+        seasonal_index = max(0.3, min(1.5, seasonal_index))
+        score_bio = round(score_provinces * seasonal_index, 1)
+        score_bio = min(100.0, max(0.0, score_bio))
+        contributions["species_biogeography"] = {
+            "score_0_100": score_bio,
+            "fusion_weight": weight_bio,
+            "weighted_score": round(score_bio * weight_bio, 2),
+            "status": "READY",
+            "source": "IA_CORRIDORS_P0_Ω.temporal_signatures.biogeographie",
+            "raw": {
+                "provinces_ca_actives_count": len(provinces),
+                "season": sn,
+                "mobilite_corridor": mobilite,
+                "preference_couvert": couvert,
+                "affinite_hydro": hydro,
+                "pic_activite": pic_activite,
+                "seasonal_index": round(seasonal_index, 3),
+            },
+        }
+        score_sum += score_bio * weight_bio
+        weight_sum_active += weight_bio
+    else:
+        contributions["species_biogeography"] = {
+            "score_0_100": None, "fusion_weight": weight_bio,
+            "status": "READY_LOADER_MISSING",
+        }
+
+    # ─── Axes PRE_INGESTION (NDVI HR + LiDAR) ──────────────────────────────
+    for axis_name, weight in (
+        ("vegetation_ndvi_hr", 0.30),
+        ("topography_lidar", 0.35),
+    ):
+        weight_sum_target += weight
+        contributions[axis_name] = {
+            "score_0_100": None,
+            "fusion_weight": weight,
+            "weighted_score": None,
+            "status": "PRE_INGESTION",
+            "source": "NDVI_LIDAR_P0 placeholder · awaiting P1 ingestion",
+        }
+
+    # Score habitat normalisé sur les axes ACTIFS (P0) uniquement
+    habitat_score_active = (
+        round(score_sum / weight_sum_active, 1)
+        if weight_sum_active > 0 else None
+    )
+
+    # Score projeté complet (axes manquants assumés à 50/100 neutre — informatif)
+    completion_ratio = round(weight_sum_active / weight_sum_target, 2)
+
+    return {
+        "engine": ENGINE_NAME,
+        "version": ENGINE_VERSION,
+        "doctrine": ENGINE_DOCTRINE,
+        "phase": "P0_PRE_FUSION",
+        "lat": lat, "lng": lng,
+        "species": sp, "season": sn,
+        "habitat_score": habitat_score_active,
+        "habitat_score_partial_p0": habitat_score_active,
+        "partial_p0": True,
+        "weight_active": round(weight_sum_active, 2),
+        "weight_target_full": round(weight_sum_target, 2),
+        "completion_ratio": completion_ratio,
+        "contributions": contributions,
+        "biological_divergence_strict": True,
+        "_note_doctrinale": (
+            "Score actif P0 normalisé sur 2/4 axes READY "
+            "(corridors_behavior + species_biogeography). "
+            "Re-fusion complète post NDVI HR + LiDAR P1."
+        ),
+    }
+

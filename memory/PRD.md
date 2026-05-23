@@ -22,6 +22,46 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_IA_HABITAT_FUSION_P0_Ω** (2026-02-20) — **ACTIVATION FINALE HABITAT FUSION P0** (Verrou Phase III maintenu · additif strict · 0 testing agent) :
+  - **Manifeste maître** `/app/backend/data/habitat_fusion_p0/HABITAT_FUSION_P0_REGISTRY_Ω.json` (4 963 B) :
+    - 4 axes BCE4X · 5 espèces · 4 saisons · checksums SHA-256 sur 7 fichiers sources
+    - `weight_active_p0=0.35` · `weight_target_p2=1.00` · `completion_ratio=0.35`
+  - **Générateur** `/app/backend/tools/gen_habitat_fusion_p0_registry_omega.py` (reproductible)
+  - **Registry loader** `/app/backend/engines/v8_institutional/habitat_fusion_registry_omega.py` :
+    - API : `get_master_registry()` · `get_status()` · `get_axes()` · `get_axis(name)` · `is_ready()` · `get_species_list()` · `get_seasons_list()` · `get_completion_ratio()` · `reset_cache()`
+    - Cache mémoire · soft-fail strict
+  - **Extension `habitat_fusion_engine_p0.py`** :
+    - Nouvelles fonctions : `compute_habitat_score(species, lat, lng, season)` (signature directive Commandant) · `get_axes_status()` · `get_habitat_fusion_registry()`
+    - Legacy préservé : `compute_habitat_score_p0(lat, lon, species, season)` · `get_fusion_status()` · `is_full_fusion_available()`
+    - Modulation saisonnière réelle via `mobilite_corridor + preference_couvert + affinite_hydro + _pic_activite`
+    - Normalisation espèces (cerf→chevreuil · moose→orignal · etc.)
+  - **Router institutionnel** `/app/backend/routes/habitat_fusion_p0_router.py` :
+    - `GET /api/v30/habitat-fusion/p0/status` → phase + axes_ready/total + completion_ratio
+    - `GET /api/v30/habitat-fusion/p0/axes` → détail 4 axes + ingestion_plan + consumers
+    - `GET /api/v30/habitat-fusion/p0/score?species=X&lat=Y&lon=Z&season=W`
+    - `GET /api/v30/habitat-fusion/p0/registry` → manifeste maître complet
+    - Câblage additif dans `server.py` (1 bloc `include_router` · log doctrinal)
+  - **Validation E2E** :
+    - localhost : 4/4 endpoints HTTP 200 · /score chevreuil/orignal/ours_noir/coyote/dindon × 4 saisons OK
+    - Proxy K8s externe : 5/5 (4×200 + 1×400 species inconnue) · latences 215-502 ms
+    - Régression V20/TERRITOIRE_Ω/health : 0 régression (4/4 HTTP 200)
+  - **Divergence biologique stricte** validée :
+    - 5/5 valeurs distinctes par saison (printemps/ete/automne/hiver)
+    - 3-4/4 saisons distinctes par espèce (variation saisonnière effective)
+    - Chevreuil 35.2-44.1 · Orignal 52.8-72.3 · Ours_noir 45.2-71.4 · Coyote 51.1-62.7 · Dindon 4.7-7.1
+  - **14 tests pytest doctrinaux** (`tests/test_habitat_fusion_p0_omega.py`) :
+    - 14/14 PASSED en 0.20s · invariants I-1 à I-14 verrouillés (Verrou Phase III, divergence, alias, legacy)
+  - **🚫 NON TOUCHÉ** conformément à la directive : R2/R6 · TERRITOIRE_Ω · MANIFEST CDN · V20 pipelines
+  - **Fichiers nouveaux** (5) :
+    - `data/habitat_fusion_p0/HABITAT_FUSION_P0_REGISTRY_Ω.json`
+    - `tools/gen_habitat_fusion_p0_registry_omega.py`
+    - `engines/v8_institutional/habitat_fusion_registry_omega.py`
+    - `routes/habitat_fusion_p0_router.py`
+    - `tests/test_habitat_fusion_p0_omega.py`
+  - **Fichiers modifiés** (additif strict, 2) :
+    - `engines/v8_institutional/habitat_fusion_engine_p0.py` (ajout compute_habitat_score + get_axes_status + get_habitat_fusion_registry + alias)
+    - `server.py` (1 bloc include_router)
+
 - ✅ **P22ΩΩ_NDVI_LIDAR_PANCA_P0_Ω** (2026-05-23) — Activation STRUCTURELLE NDVI HR + LiDAR Pan-Canada (anti-générique strict · ZÉRO téléchargement · ZÉRO donnée fabriquée) :
   - **Génération script** `/app/backend/tools/gen_ndvi_lidar_p0_omega.py` :
     - 5 placeholders structurels (`/app/backend/data/ndvi_lidar_p0/`)

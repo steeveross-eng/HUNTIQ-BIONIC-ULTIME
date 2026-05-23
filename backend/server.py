@@ -1121,6 +1121,25 @@ except Exception as e:
 
 logger.info("[P22ΩΩ.EXTRACTION] V8-PHASE-A MIGRATED → /api/v20/territoire/{relocalisation,salines-placement}")
 
+# P22ΩΩ_IA_HABITAT_FUSION_P0_Ω · 2026-02-20 · STEEVE-MAX
+# Router institutionnel HABITAT-FUSION_P0_Ω (additif strict · Verrou Phase III maintenu).
+# Endpoints :
+#   - GET /api/v30/habitat-fusion/p0/status
+#   - GET /api/v30/habitat-fusion/p0/axes
+#   - GET /api/v30/habitat-fusion/p0/score?species=X&lat=Y&lon=Z&season=W
+#   - GET /api/v30/habitat-fusion/p0/registry
+# Fusion 4 axes BCE4X (2 READY · 2 PRE_INGESTION) · 5 espèces · 4 saisons.
+try:
+    from routes.habitat_fusion_p0_router import router as habitat_fusion_p0_router
+    app.include_router(habitat_fusion_p0_router)
+    logger.info(
+        "✓ HABITAT-FUSION-P0-Ω registered — "
+        "/api/v30/habitat-fusion/p0/{status,axes,score,registry} "
+        "(P0_PRE_FUSION · 2/4 axes effectifs)"
+    )
+except Exception as e:
+    logger.warning(f"HABITAT-FUSION-P0-Ω router not loaded: {e}")
+
 # V8-PHASE-B — P22ΩΩ_PALIERS_1_4_PURGE_IMMEDIATE_Ω · 2026-05-18 · STEEVE-MAX
 # Module engines/v8_national/phase_b_engines.py supprimé physiquement (PALIER 1).
 logger.info("[P22ΩΩ.PALIER_1] V8-PHASE-B PURGED — engines/v8_national/phase_b_engines.py removed")

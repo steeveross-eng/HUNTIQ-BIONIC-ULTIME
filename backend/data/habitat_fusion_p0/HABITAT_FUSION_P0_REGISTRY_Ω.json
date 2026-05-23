@@ -1,0 +1,150 @@
+{
+  "_doctrine": "P22ΩΩ_IA_HABITAT_FUSION_P0_Ω",
+  "_version": "V1-PRE-FUSION-P0",
+  "_generated_at": "2026-05-23T19:27:45.043179+00:00",
+  "_commandant": "STEEVE-MAX",
+  "_phase": "P0_PRE_FUSION",
+  "_status": "STRUCTURAL_ACTIVATED_PRE_INGESTION",
+  "_anti_generique_strict": true,
+  "_verrou_phase_iii": true,
+  "engine": {
+    "name": "HABITAT-FUSION-ENGINE-P0",
+    "module": "engines/v8_institutional/habitat_fusion_engine_p0.py",
+    "version": "V1-PRE-FUSION-2026-05"
+  },
+  "router": {
+    "module": "routes/habitat_fusion_p0_router.py",
+    "endpoints": [
+      "GET /api/v30/habitat-fusion/p0/status",
+      "GET /api/v30/habitat-fusion/p0/axes",
+      "GET /api/v30/habitat-fusion/p0/score"
+    ]
+  },
+  "fusion_axes_p0": {
+    "vegetation_ndvi_hr": {
+      "fusion_weight": 0.3,
+      "status": "PRE_INGESTION",
+      "upstream_engine": "engine_canopee_thermique_omega",
+      "ingestion_target": "P1 · NASA HLS / ESA Sentinel-2 / NOAA",
+      "source_dir": "data/ndvi_lidar_p0",
+      "source_files": [
+        "ndvi_hr_placeholder.tif",
+        "ndvi_hr_registry_Ω.json"
+      ],
+      "checksums": {
+        "ndvi_hr_placeholder.tif": {
+          "size_bytes": 1598,
+          "sha256": "sha256:0b4a4e491da8dfb40aa2c05f8b9ae3f52ae8175d6a951f6c673d72cdcede8172",
+          "present": true
+        },
+        "ndvi_hr_registry_Ω.json": {
+          "size_bytes": 2683,
+          "sha256": "sha256:dbb05eda91401023b261d5d1df126a9dc08b3497f2f57e1856af7d230b487eb5",
+          "present": true
+        }
+      }
+    },
+    "topography_lidar": {
+      "fusion_weight": 0.35,
+      "status": "PRE_INGESTION",
+      "upstream_engine": "lidar_irda_v11 (mode HR)",
+      "ingestion_target": "P1 · NRCan HRDEM / MFFP Forêt Ouverte / IRDA / Provinces",
+      "source_dir": "data/ndvi_lidar_p0",
+      "source_files": [
+        "lidar_pancanada_placeholder.las",
+        "lidar_pancanada_registry_Ω.json"
+      ],
+      "checksums": {
+        "lidar_pancanada_placeholder.las": {
+          "size_bytes": 375,
+          "sha256": "sha256:79713b49c0af55b1275fbbdc7fb64b7302b80dbeca3986011342df7c7dd60577",
+          "present": true
+        },
+        "lidar_pancanada_registry_Ω.json": {
+          "size_bytes": 3526,
+          "sha256": "sha256:5ec38864a81bfbaf6ac03c9f2d66c546206bab5c34a9761863403ca80f1c7397",
+          "present": true
+        }
+      }
+    },
+    "corridors_behavior": {
+      "fusion_weight": 0.2,
+      "status": "READY",
+      "upstream_engine": "engine_ia_corridors_organic_omega + IA_CORRIDORS_P0_Ω",
+      "ingestion_target": "ACTIF · runtime-dynamic geometries",
+      "source_dir": "data/ia_corridors",
+      "source_files": [
+        "corridors_behavior_profiles.json",
+        "corridors_fragmentation_index.tif"
+      ],
+      "checksums": {
+        "corridors_behavior_profiles.json": {
+          "size_bytes": 6209,
+          "sha256": "sha256:be59a40c778a2e067f61c4d259befa611f273adcc4ef793cfe21ecfec1b5bfb3",
+          "present": true
+        },
+        "corridors_fragmentation_index.tif": {
+          "size_bytes": 163727,
+          "sha256": "sha256:ed5fe7b85b5849cef74a882537b9bee0eb0275096818ed46e4fb55f9bf9c8fb2",
+          "present": true
+        }
+      }
+    },
+    "species_biogeography": {
+      "fusion_weight": 0.15,
+      "status": "READY",
+      "upstream_engine": "bionic_species_biogeography.json + IA_CORRIDORS_P0_Ω",
+      "ingestion_target": "ACTIF · 13 provinces CA · 4 saisons",
+      "source_dir": "data/ia_corridors",
+      "source_files": [
+        "corridors_temporal_signatures.json"
+      ],
+      "checksums": {
+        "corridors_temporal_signatures.json": {
+          "size_bytes": 7672,
+          "sha256": "sha256:710ac2d856498630bf031dd2ef13f709a5b927c1a54e99b1e23ed583c2c722db",
+          "present": true
+        }
+      }
+    }
+  },
+  "axes_total": 4,
+  "axes_ready": 2,
+  "axes_pre_ingestion": 2,
+  "weight_active_p0": 0.35,
+  "weight_target_p2": 1.0,
+  "completion_ratio_p0": 0.35,
+  "species_targeted": [
+    "chevreuil",
+    "orignal",
+    "ours_noir",
+    "coyote",
+    "dindon_sauvage"
+  ],
+  "seasons_targeted": [
+    "printemps",
+    "ete",
+    "automne",
+    "hiver"
+  ],
+  "biological_divergence_strict": true,
+  "ingestion_plan": {
+    "P0_current": "Pré-fusion structurelle · 2 axes READY (Corridors IA + Biogéographie)",
+    "P1_target": "Ingestion réelle NDVI HR (NASA HLS) + LiDAR (NRCan HRDEM / MFFP)",
+    "P2_target": "Fusion complète 4 axes · compute_habitat_score complet 0-100",
+    "P3_target": "Intégration ZEROCOST R2 CDN (post Verrou Phase III)"
+  },
+  "consumers_registered": [
+    "engine_ia_corridors_organic_omega",
+    "engine_connectivite_ecologique_omega",
+    "corridors_vitaux_omega",
+    "ecological_orchestrator_omega",
+    "engine_terrain_v10_supra"
+  ],
+  "constraints_verrou_phase_iii": {
+    "R2_R6_untouched": true,
+    "TERRITOIRE_Ω_untouched": true,
+    "MANIFEST_CDN_untouched": true,
+    "V20_pipelines_untouched": true
+  }
+}
