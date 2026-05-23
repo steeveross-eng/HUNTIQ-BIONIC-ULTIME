@@ -1,0 +1,313 @@
+{
+  "_doctrine": "P22ΩΩ_IA_CORRIDORS_P0_Ω · COMMANDANT STEEVE-MAX · 2026-05-23",
+  "_engine_source": "core.scoring_pipeline.corridors_v10 · saisonnalite",
+  "_biogeography_source": "/app/backend/modules/bionic_ecological_engine/bionic_species_biogeography.json",
+  "_generated_at": "2026-05-23T13:57:49Z",
+  "_seasons": [
+    "printemps",
+    "ete",
+    "automne",
+    "hiver"
+  ],
+  "_species_count": 5,
+  "_schema_version": "P0_Ω.1.0",
+  "signatures": {
+    "chevreuil": {
+      "saisonnalite": {
+        "printemps": {
+          "mobilite_corridor": 0.8,
+          "preference_couvert": 0.7,
+          "affinite_hydro": 0.65,
+          "_pic_activite": false
+        },
+        "ete": {
+          "mobilite_corridor": 0.85,
+          "preference_couvert": 0.75,
+          "affinite_hydro": 0.7,
+          "_pic_activite": false
+        },
+        "automne": {
+          "mobilite_corridor": 0.95,
+          "preference_couvert": 0.8,
+          "affinite_hydro": 0.55,
+          "_pic_activite": true
+        },
+        "hiver": {
+          "mobilite_corridor": 0.5,
+          "preference_couvert": 0.95,
+          "affinite_hydro": 0.4,
+          "_pic_activite": false
+        }
+      },
+      "cycle_phenologique": {
+        "rut": "mi_oct_mi_nov",
+        "lactation": "mai_juin",
+        "nais": "fin_mai_mi_juin",
+        "yarding_winter": true
+      },
+      "biogeographie": {
+        "provinces_ca_actives": [
+          "QC",
+          "ON",
+          "NB",
+          "NS",
+          "MB",
+          "SK",
+          "AB",
+          "BC",
+          "PE"
+        ],
+        "n_provinces": 9,
+        "abundance_par_province": {
+          "QC": "high",
+          "ON": "very_high",
+          "NB": "moderate",
+          "NS": "moderate",
+          "MB": "high",
+          "SK": "high",
+          "AB": "moderate",
+          "BC": "low",
+          "PE": "moderate"
+        }
+      }
+    },
+    "orignal": {
+      "saisonnalite": {
+        "printemps": {
+          "mobilite_corridor": 0.85,
+          "preference_couvert": 0.65,
+          "affinite_hydro": 0.9,
+          "_pic_activite": false
+        },
+        "ete": {
+          "mobilite_corridor": 0.8,
+          "preference_couvert": 0.6,
+          "affinite_hydro": 0.95,
+          "_pic_activite": false
+        },
+        "automne": {
+          "mobilite_corridor": 0.95,
+          "preference_couvert": 0.7,
+          "affinite_hydro": 0.7,
+          "_pic_activite": true
+        },
+        "hiver": {
+          "mobilite_corridor": 0.4,
+          "preference_couvert": 0.9,
+          "affinite_hydro": 0.3,
+          "_pic_activite": false
+        }
+      },
+      "cycle_phenologique": {
+        "rut": "fin_sep_mi_oct",
+        "lactation": "mai_juillet",
+        "nais": "fin_mai",
+        "yarding_winter": false
+      },
+      "biogeographie": {
+        "provinces_ca_actives": [
+          "QC",
+          "ON",
+          "NB",
+          "NS",
+          "MB",
+          "SK",
+          "AB",
+          "BC",
+          "YT",
+          "NT",
+          "NL"
+        ],
+        "n_provinces": 11,
+        "abundance_par_province": {
+          "QC": "high",
+          "ON": "high",
+          "NB": "moderate",
+          "NS": "low",
+          "MB": "high",
+          "SK": "high",
+          "AB": "high",
+          "BC": "high",
+          "YT": "moderate",
+          "NT": "moderate",
+          "NL": "high"
+        }
+      }
+    },
+    "ours_noir": {
+      "saisonnalite": {
+        "printemps": {
+          "mobilite_corridor": 0.9,
+          "preference_couvert": 0.8,
+          "affinite_hydro": 0.55,
+          "_pic_activite": true
+        },
+        "ete": {
+          "mobilite_corridor": 0.85,
+          "preference_couvert": 0.85,
+          "affinite_hydro": 0.5,
+          "_pic_activite": false
+        },
+        "automne": {
+          "mobilite_corridor": 0.95,
+          "preference_couvert": 0.75,
+          "affinite_hydro": 0.45,
+          "_pic_activite": true
+        },
+        "hiver": {
+          "mobilite_corridor": 0.05,
+          "preference_couvert": 0.95,
+          "affinite_hydro": 0.1,
+          "_pic_activite": false
+        }
+      },
+      "cycle_phenologique": {
+        "hibernation": "nov_avr",
+        "lactation": "jan_avr_in_den",
+        "nais": "janvier_in_den",
+        "hyperphagia": "sep_oct"
+      },
+      "biogeographie": {
+        "provinces_ca_actives": [
+          "QC",
+          "ON",
+          "NB",
+          "NS",
+          "MB",
+          "SK",
+          "AB",
+          "BC",
+          "YT",
+          "NT",
+          "NL"
+        ],
+        "n_provinces": 11,
+        "abundance_par_province": {
+          "QC": "high",
+          "ON": "high",
+          "NB": "high",
+          "NS": "moderate",
+          "MB": "high",
+          "SK": "moderate",
+          "AB": "high",
+          "BC": "very_high",
+          "YT": "moderate",
+          "NT": "low",
+          "NL": "moderate"
+        }
+      }
+    },
+    "coyote": {
+      "saisonnalite": {
+        "printemps": {
+          "mobilite_corridor": 0.8,
+          "preference_couvert": 0.55,
+          "affinite_hydro": 0.35,
+          "_pic_activite": false
+        },
+        "ete": {
+          "mobilite_corridor": 0.7,
+          "preference_couvert": 0.65,
+          "affinite_hydro": 0.4,
+          "_pic_activite": false
+        },
+        "automne": {
+          "mobilite_corridor": 0.9,
+          "preference_couvert": 0.6,
+          "affinite_hydro": 0.3,
+          "_pic_activite": true
+        },
+        "hiver": {
+          "mobilite_corridor": 0.85,
+          "preference_couvert": 0.7,
+          "affinite_hydro": 0.25,
+          "_pic_activite": false
+        }
+      },
+      "cycle_phenologique": {
+        "rut": "fev_mars",
+        "lactation": "avr_juin",
+        "nais": "avr_mai",
+        "yarding_winter": false
+      },
+      "biogeographie": {
+        "provinces_ca_actives": [
+          "QC",
+          "ON",
+          "NB",
+          "NS",
+          "PE",
+          "NL",
+          "MB",
+          "SK",
+          "AB",
+          "BC",
+          "YT",
+          "NT"
+        ],
+        "n_provinces": 12,
+        "abundance_par_province": {
+          "QC": "high",
+          "ON": "high",
+          "NB": "high",
+          "NS": "high",
+          "PE": "moderate",
+          "NL": "moderate",
+          "MB": "high",
+          "SK": "high",
+          "AB": "high",
+          "BC": "high",
+          "YT": "moderate",
+          "NT": "low"
+        }
+      }
+    },
+    "dindon_sauvage": {
+      "saisonnalite": {
+        "printemps": {
+          "mobilite_corridor": 0.85,
+          "preference_couvert": 0.6,
+          "affinite_hydro": 0.4,
+          "_pic_activite": false
+        },
+        "ete": {
+          "mobilite_corridor": 0.8,
+          "preference_couvert": 0.65,
+          "affinite_hydro": 0.45,
+          "_pic_activite": false
+        },
+        "automne": {
+          "mobilite_corridor": 0.7,
+          "preference_couvert": 0.75,
+          "affinite_hydro": 0.35,
+          "_pic_activite": false
+        },
+        "hiver": {
+          "mobilite_corridor": 0.35,
+          "preference_couvert": 0.9,
+          "affinite_hydro": 0.25,
+          "_pic_activite": false
+        }
+      },
+      "cycle_phenologique": {
+        "display": "avr_mai",
+        "ponte": "avr_juin",
+        "elevage": "juin_juillet",
+        "regroupement_hiver": true
+      },
+      "biogeographie": {
+        "provinces_ca_actives": [
+          "QC",
+          "ON",
+          "MB"
+        ],
+        "n_provinces": 3,
+        "abundance_par_province": {
+          "QC": "moderate",
+          "ON": "high",
+          "MB": "low"
+        }
+      }
+    }
+  }
+}

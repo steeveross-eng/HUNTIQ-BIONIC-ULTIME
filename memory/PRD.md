@@ -22,6 +22,34 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_IA_CORRIDORS_P0_Ω** (2026-05-23) — Génération automatique des 4 datasets IA Corridors P0 (anti-générique strict · Verrou Phase III maintenu) :
+  - **Génération script** `/app/backend/tools/gen_ia_corridors_p0_omega.py` :
+    - Synthèse depuis sources scientifiques réelles : `CORRIDOR_PROFILES` (corridors_v10) + `SPECIES_BEHAVIOR` (ia_organic) + `bionic_species_biogeography.json`
+    - 5 espèces COMMANDANT : chevreuil · orignal · ours_noir · coyote · dindon_sauvage
+    - 4 saisons : printemps · été · automne · hiver
+  - **4 datasets produits** (`/app/backend/data/ia_corridors/`) :
+    - `corridors_behavior_profiles.json` (6.2 KB · 5 espèces · paramètres geometrie/affinites/pression_humaine/comportement_ia)
+    - `corridors_temporal_signatures.json` (7.7 KB · 5×4 saisons + cycles phénologiques + biogéographie provinces CA)
+    - `corridors_species.geojson` (1.8 KB · schéma RUNTIME_DYNAMIC · geometries calculées par `engine_ia_corridors_organic_omega.ia_fusion()`)
+    - `corridors_fragmentation_index.tif` (148 KB · raster **30m EPSG:3857 strict** · prototype bbox sample Mauricie · 5 bandes/espèces · compression deflate)
+    - `IA_CORRIDORS_REGISTRY_Ω.json` (2.2 KB · registry doctrinal + SHA-256 checksums)
+  - **Registry loader** `/app/backend/engines/v8_institutional/ia_corridors_registry_omega.py` :
+    - API : `get_behavior_profile(species)` · `get_temporal_signature(species, season)` · `get_fragmentation_index(species, lat, lon)` · `get_corridors_species_schema()` · `is_ready()`
+    - Cache mémoire + soft-fail strict
+  - **Câblage additif** dans les 4 engines consommateurs (import read-only `IA_CORRIDORS_P0` via try/except) :
+    - `engine_ia_corridors_organic_omega.py`
+    - `engine_connectivite_ecologique_omega.py`
+    - `corridors_vitaux_omega.py`
+    - `ecological_orchestrator_omega.py`
+  - **Validation TRIPLE AUDIT** :
+    - ✅ Registry status : 4 datasets indexés · 5 espèces (is_ready=True)
+    - ✅ Divergence stricte par espèce confirmée : chevreuil sinuosity=1.80 ≠ orignal=1.00 ≠ ours_noir=1.55 ≠ coyote=1.40 ≠ dindon_sauvage=1.30
+    - ✅ Cohérence temporelle 4 saisons × 5 espèces avec cycles phénologiques différenciés
+    - ✅ Fragmentation index différencié par espèce (chevreuil=0.49 ≠ orignal=0.45 ≠ coyote=0.31)
+    - ✅ Backend HTTP 200 · 4 engines importent IA_CORRIDORS_P0 sans régression
+  - **Doctrine clarifiée** :
+    - Géométries corridors_species.geojson = **runtime-dynamic** (engine_ia_corridors_organic_omega génère à la demande lat/lng)
+    - Raster fragmentation = **prototype 30m bbox Mauricie** (génération pan-Canada nécessite LIDAR/DEM sources ~17To non présents)
 - ✅ **P22ΩΩ_DEPLOYMENT_FIX_2_Ω** (2026-05-22) — 2 fixes additifs pré-redéploiement :
   - **Fix A — Module `x5100_mineral_score` rétabli** :
     - Création `/app/backend/engines/nutrition_intelligence/x5100_mineral_score.py` (V1.0 anti-générique : 8 minéraux pondérés × 6 espèces × modulation saisonnière × modulation sol · output `score_global` 0-100 + carences dominantes).

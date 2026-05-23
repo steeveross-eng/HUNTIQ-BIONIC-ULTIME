@@ -1,6 +1,12 @@
 """ENGINE-CONNECTIVITE-ECOLOGIQUE-Ω — Connectivité corridors + evitement routes."""
 from engines.v8_institutional.engine_science_omega import register_engine, mark_call
 
+# P22ΩΩ_IA_CORRIDORS_P0_Ω (2026-05-23) — Registry IA P0 (additif read-only).
+try:
+    from engines.v8_institutional import ia_corridors_registry_omega as IA_CORRIDORS_P0  # noqa: F401
+except ImportError:
+    IA_CORRIDORS_P0 = None  # type: ignore
+
 ENGINE_NAME = "ENGINE-CONNECTIVITE-ECOLOGIQUE-Ω"
 ENGINE_VERSION = "V1-SUPRA-2026-04"
 

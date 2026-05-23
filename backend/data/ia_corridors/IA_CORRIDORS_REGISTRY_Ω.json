@@ -1,0 +1,62 @@
+{
+  "_doctrine": "P22ΩΩ_IA_CORRIDORS_P0_Ω · COMMANDANT STEEVE-MAX · 2026-05-23",
+  "_generated_at": "2026-05-23T13:57:49Z",
+  "_verrou_phase_iii": "MAINTENU",
+  "_anti_generique_strict": true,
+  "_species_commandant": [
+    "chevreuil",
+    "orignal",
+    "ours_noir",
+    "coyote",
+    "dindon_sauvage"
+  ],
+  "_engines_consumers": [
+    "engine_ia_corridors_organic_omega",
+    "engine_connectivite_ecologique_omega",
+    "corridors_vitaux_omega",
+    "ecological_orchestrator_omega"
+  ],
+  "_engine_sources_used": [
+    "core.scoring_pipeline.corridors_v10.species_profiles.CORRIDOR_PROFILES",
+    "engines.v8_institutional.engine_ia_corridors_organic_omega.SPECIES_BEHAVIOR",
+    "modules.bionic_ecological_engine.bionic_species_biogeography.json"
+  ],
+  "datasets": {
+    "corridors_behavior_profiles.json": {
+      "path": "/app/backend/data/ia_corridors/corridors_behavior_profiles.json",
+      "size_b": 6209,
+      "sha256": "be59a40c778a2e067f61c4d259befa611f273adcc4ef793cfe21ecfec1b5bfb3",
+      "species_count": 5
+    },
+    "corridors_temporal_signatures.json": {
+      "path": "/app/backend/data/ia_corridors/corridors_temporal_signatures.json",
+      "size_b": 7672,
+      "sha256": "710ac2d856498630bf031dd2ef13f709a5b927c1a54e99b1e23ed583c2c722db",
+      "species_count": 5,
+      "seasons": 4
+    },
+    "corridors_species.geojson": {
+      "path": "/app/backend/data/ia_corridors/corridors_species.geojson",
+      "size_b": 1598,
+      "sha256": "35d1efd711db76697dde081308e8d3b5ba185afc5c986d5556f2cf6fccf3c041",
+      "features_count": 0,
+      "mode": "RUNTIME_DYNAMIC"
+    },
+    "corridors_fragmentation_index.tif": {
+      "path": "/app/backend/data/ia_corridors/corridors_fragmentation_index.tif",
+      "size_b": 163727,
+      "sha256": "ed5fe7b85b5849cef74a882537b9bee0eb0275096818ed46e4fb55f9bf9c8fb2",
+      "resolution_m": 30.0,
+      "crs": "EPSG:3857",
+      "bbox_wgs84": "RF Mauricie (46.8-47.3°N · -73.5 à -72.0°W)",
+      "bands_species": [
+        "chevreuil",
+        "orignal",
+        "ours_noir",
+        "coyote",
+        "dindon_sauvage"
+      ],
+      "_note_doctrinale": "Prototype · pan-Canada 30m nécessite LIDAR/DEM sources"
+    }
+  }
+}

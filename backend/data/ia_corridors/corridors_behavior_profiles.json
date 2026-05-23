@@ -1,0 +1,182 @@
+{
+  "_doctrine": "P22ΩΩ_IA_CORRIDORS_P0_Ω · COMMANDANT STEEVE-MAX · 2026-05-23",
+  "_engine_source_a": "core.scoring_pipeline.corridors_v10.species_profiles.CORRIDOR_PROFILES",
+  "_engine_source_b": "ENGINE-IA-CORRIDORS-ORGANIC-Ω · V2.0-PHASE-XI-SUPRA-N-Ω-NETWORK_LOCKED-2026-04 · SPECIES_BEHAVIOR",
+  "_generated_at": "2026-05-23T13:57:49Z",
+  "_species_count": 5,
+  "_species_list": [
+    "chevreuil",
+    "orignal",
+    "ours_noir",
+    "coyote",
+    "dindon_sauvage"
+  ],
+  "_schema_version": "P0_Ω.1.0",
+  "profiles": {
+    "chevreuil": {
+      "nom_fr": "Cerf de Virginie",
+      "nom_scientifique": "Odocoileus virginianus",
+      "description_corridor": "Corridors etroits, sinueux, opportunistes, suivant lisieres, mosaiques, regenerations, clairieres, friches. Recherche pentes sud, nourriture, micro-reliefs. Deplacements prudents, segmentes. Connectivite fine entre ALIMENTATION-V1, REPOS-V1, zones calmes.",
+      "geometrie": {
+        "pente_optimale_deg": 5,
+        "pente_max_deg": 15,
+        "style_deplacement": "sinueux",
+        "largeur_corridor_m": 100,
+        "vitesse_deplacement": "modere"
+      },
+      "affinites": {
+        "preference_forestiere": 0.85,
+        "affinite_hydro": 0.6,
+        "influence_dominants": 0.7,
+        "tolerance_obstacles": 0.3
+      },
+      "pression_humaine": {
+        "sensibilite_pression": 0.75,
+        "distance_route_evitement_m": 150,
+        "distance_batiment_evitement_m": 200
+      },
+      "comportement_ia": {
+        "prudence": 0.8,
+        "amplitude": 0.45,
+        "vitesse_normalisee": 0.55,
+        "ouverture_preferee": 0.35,
+        "hydro_dependance": 0.3,
+        "couvert_preference": 0.75,
+        "sinuosity_factor": 1.8,
+        "n_corridors_target": 14
+      }
+    },
+    "orignal": {
+      "nom_fr": "Orignal",
+      "nom_scientifique": "Alces americanus",
+      "description_corridor": "Corridors massifs, directionnels, ancres dans vallons humides, zones fraiches, coniferes denses, cuvettes, replats, coulees encaissees. Forte affinite zones humides. Evitement strict pression humaine. Deplacements rectilignes. Connectivite obligatoire entre zones humides, repos thermiques, alimentation.",
+      "geometrie": {
+        "pente_optimale_deg": 8,
+        "pente_max_deg": 25,
+        "style_deplacement": "lineaire",
+        "largeur_corridor_m": 150,
+        "vitesse_deplacement": "modere"
+      },
+      "affinites": {
+        "preference_forestiere": 0.75,
+        "affinite_hydro": 0.85,
+        "influence_dominants": 0.55,
+        "tolerance_obstacles": 0.6
+      },
+      "pression_humaine": {
+        "sensibilite_pression": 0.8,
+        "distance_route_evitement_m": 300,
+        "distance_batiment_evitement_m": 400
+      },
+      "comportement_ia": {
+        "prudence": 0.55,
+        "amplitude": 0.8,
+        "vitesse_normalisee": 0.4,
+        "ouverture_preferee": 0.2,
+        "hydro_dependance": 0.95,
+        "couvert_preference": 0.8,
+        "sinuosity_factor": 1.0,
+        "n_corridors_target": 10
+      }
+    },
+    "ours_noir": {
+      "nom_fr": "Ours noir",
+      "nom_scientifique": "Ursus americanus",
+      "description_corridor": "Corridors mixtes, frais, couverts, proches eau, fourres denses, regenerations productives, blocs rocheux. Recherche nourriture + fraicheur + refuge. Evitement zones ouvertes. Connectivite entre nourriture, zones humides, refuges.",
+      "geometrie": {
+        "pente_optimale_deg": 12,
+        "pente_max_deg": 35,
+        "style_deplacement": "opportuniste",
+        "largeur_corridor_m": 80,
+        "vitesse_deplacement": "rapide"
+      },
+      "affinites": {
+        "preference_forestiere": 0.9,
+        "affinite_hydro": 0.5,
+        "influence_dominants": 0.4,
+        "tolerance_obstacles": 0.8
+      },
+      "pression_humaine": {
+        "sensibilite_pression": 0.85,
+        "distance_route_evitement_m": 200,
+        "distance_batiment_evitement_m": 300
+      },
+      "comportement_ia": {
+        "prudence": 0.8,
+        "amplitude": 0.85,
+        "vitesse_normalisee": 0.5,
+        "ouverture_preferee": 0.2,
+        "hydro_dependance": 0.55,
+        "couvert_preference": 0.7,
+        "sinuosity_factor": 1.55,
+        "n_corridors_target": 12
+      }
+    },
+    "coyote": {
+      "nom_fr": "Coyote",
+      "nom_scientifique": "Canis latrans",
+      "description_corridor": null,
+      "geometrie": {
+        "pente_optimale_deg": 12,
+        "pente_max_deg": 35,
+        "style_deplacement": "transitoire_lineaire",
+        "largeur_corridor_m": 40,
+        "vitesse_deplacement": "rapide"
+      },
+      "affinites": {
+        "preference_forestiere": 0.45,
+        "affinite_hydro": 0.3,
+        "influence_dominants": 0.3,
+        "tolerance_obstacles": 0.8
+      },
+      "pression_humaine": {
+        "sensibilite_pression": 0.45,
+        "distance_route_evitement_m": 50,
+        "distance_batiment_evitement_m": 100
+      },
+      "comportement_ia": {
+        "prudence": 0.85,
+        "amplitude": 0.6,
+        "vitesse_normalisee": 0.75,
+        "ouverture_preferee": 0.45,
+        "hydro_dependance": 0.35,
+        "couvert_preference": 0.6,
+        "sinuosity_factor": 1.4,
+        "n_corridors_target": 10
+      }
+    },
+    "dindon_sauvage": {
+      "nom_fr": "Dindon sauvage",
+      "nom_scientifique": "Meleagris gallopavo",
+      "description_corridor": null,
+      "geometrie": {
+        "pente_optimale_deg": 3,
+        "pente_max_deg": 12,
+        "style_deplacement": "territorial",
+        "largeur_corridor_m": 60,
+        "vitesse_deplacement": "lent"
+      },
+      "affinites": {
+        "preference_forestiere": 0.7,
+        "affinite_hydro": 0.35,
+        "influence_dominants": 0.8,
+        "tolerance_obstacles": 0.2
+      },
+      "pression_humaine": {
+        "sensibilite_pression": 0.65,
+        "distance_route_evitement_m": 100,
+        "distance_batiment_evitement_m": 150
+      },
+      "comportement_ia": {
+        "prudence": 0.7,
+        "amplitude": 0.3,
+        "vitesse_normalisee": 0.6,
+        "ouverture_preferee": 0.75,
+        "hydro_dependance": 0.35,
+        "couvert_preference": 0.45,
+        "sinuosity_factor": 1.3,
+        "n_corridors_target": 12
+      }
+    }
+  }
+}

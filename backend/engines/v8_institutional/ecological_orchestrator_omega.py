@@ -38,6 +38,12 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+# P22ΩΩ_IA_CORRIDORS_P0_Ω (2026-05-23) — Registry IA P0 (additif read-only).
+try:
+    from engines.v8_institutional import ia_corridors_registry_omega as IA_CORRIDORS_P0  # noqa: F401
+except ImportError:
+    IA_CORRIDORS_P0 = None  # type: ignore
+
 # ═══════════════════════════════════════════════════════════════════════
 # 1. Heatmaps registry — chemins canoniques
 # ═══════════════════════════════════════════════════════════════════════

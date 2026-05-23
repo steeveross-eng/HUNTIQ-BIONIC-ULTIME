@@ -20,6 +20,9 @@ Enrichissements par rapport à `engine_ia_corridors_omega.py` (Phase H) :
      contamination, pentes)
   9. Modes de rendu : DENSITY, HEAT, VEINE_ANIMALE
  10. Préparation IA prédictive / générative / adaptative (hooks)
+ 11. P22ΩΩ_IA_CORRIDORS_P0_Ω (2026-05-23) : intégration registry IA datasets
+     P0 (behavior_profiles · temporal_signatures · fragmentation_index ·
+     corridors_species). Imports additifs read-only via ia_corridors_registry_omega.
 
 Endpoints :
   GET  /api/v20/territoire/corridors-organic/status
@@ -38,6 +41,15 @@ import math
 import random
 import time
 from datetime import datetime, timezone
+
+# P22ΩΩ_IA_CORRIDORS_P0_Ω (2026-05-23 · COMMANDANT STEEVE-MAX)
+# Import read-only du registry IA Corridors P0 (additif, Verrou Phase III maintenu).
+# Soft-fail strict : si datasets non générés, le moteur continue avec
+# SPECIES_BEHAVIOR/CORRIDOR_PROFILES historiques.
+try:
+    from engines.v8_institutional import ia_corridors_registry_omega as IA_CORRIDORS_P0
+except ImportError:
+    IA_CORRIDORS_P0 = None  # type: ignore
 from pathlib import Path
 from typing import Any
 
