@@ -2,7 +2,7 @@
   "_doctrine": "P22ΩΩ_AUTOPILOT_4D_SAFE_Ω",
   "armed_at": "2026-05-24T02:45:01.983819+00:00",
   "current_phase": "PHASE_1_3RF",
-  "current_3rf_pct": 97.92,
+  "current_3rf_pct": 98.7,
   "phase_history": [],
   "reports_emitted": {
     "RAPPORT_3RF_T+100%_Ω_FINAL": null,
@@ -11,7 +11,7 @@
     "RAPPORT_QC_PROGRESS_Ω_last": null,
     "HABITAT_FUSION_STRUCTURAL_REPORT_Ω_last": null
   },
-  "check_count": 1,
-  "last_check_at": "2026-05-24T02:45:01.983831+00:00",
+  "check_count": 3,
+  "last_check_at": "2026-05-24T03:25:00.285961+00:00",
   "last_error": null
 }
