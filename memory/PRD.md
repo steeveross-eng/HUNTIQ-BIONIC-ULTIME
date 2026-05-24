@@ -22,6 +22,42 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_AUTOPILOT_4D_SAFE_Ω** (2026-02-20) — **AUTOPILOT 4 JOURS ARMÉ** (Verrou Phase III · additif strict · 0 ingestion réelle · 0 extension pan-Canada) :
+  - **Grille structurale QC complète** générée via `gen_grid_qc_r5_r6_omega.py` :
+    - `cache/zerocost_v1/canada_h3_grid_r5_seed_qc_full.json` (6.9 MB · 4 614 R5 / 32 065 R6)
+    - Priorité 1 (LIMITROPHES Lanaudière + Mauricie Est + Outaouais Nord) : 332 R5 / 2 292 R6 → cible Phase 2 active
+    - Priorité 2 (3 RF existantes) : 248 R5 / 1 754 R6 (couvertes Phase 1)
+    - Priorité 3 (QC sud reste) : 4 034 R5 / 28 019 R6 → STRUCTURAL_DECLARED_NOT_COMPUTED
+  - **Orchestrateur** `tools/autopilot_4d_safe_omega.py` (~340 L) :
+    - Récupère `global_pct` via rapport_3rf_t95_omega.py (mode JSON)
+    - Phase 1→2 automatique à 99.5% : émet 3 rapports finaux + génère grille limitrophes + crée PHASE_2_TRANSITION_READY (manuel supervisor)
+    - Émet QC_PROGRESS toutes 12h · HABITAT_FUSION_STRUCTURAL toutes 24h
+    - State persistant `/app/backend/state/autopilot_4d_safe_state.json`
+  - **3 nouveaux rapports auto-émis** :
+    - `RAPPORT_3RF_T+100%_Ω_FINAL.{md,json}` (Phase 1→2 transition · 1×)
+    - `MANIFEST_CHECKPOINT_Ω.{md,json}` (Phase 1→2 transition · 1×)
+    - `AUDIT_DIVERGENCE_BIO_Ω.{md,json}` (Phase 1→2 transition · 1×)
+    - `RAPPORT_QC_PROGRESS_Ω.{md,json}` (Phase 2 · toutes 12h)
+    - `HABITAT_FUSION_STRUCTURAL_REPORT_Ω.{md,json}` (Phase 2+ · toutes 24h)
+    - `PHASE_2_TRANSITION_READY_Ω.md` (instructions Commandant bascule workers · sage)
+  - **Watcher asyncio** dans `server.py` lifespan (3ème watcher additif) :
+    - first_delay=240s · interval=30 min · timeout subprocess 600s · soft-fail strict
+    - env vars : `AUTOPILOT_4D_SAFE_FIRST_DELAY_S` · `AUTOPILOT_4D_SAFE_INTERVAL_S` · `AUTOPILOT_4D_SAFE_DISABLE=1`
+  - **Validation E2E post-restart** :
+    - Backend HTTP 200 · habitat-fusion P0/P1 endpoints HTTP 200
+    - 3 watchers actifs (manifest cron + RAPPORT_3RF_T95 + AUTOPILOT_4D_SAFE)
+    - Premier check autopilot OK · phase=PHASE_1_3RF · 3RF=97.92% (progression +2.88 pts depuis dernier)
+    - Habitat fusion structural report opérationnel · divergence biologique 5/5 par saison
+    - QC progress report opérationnel · scan 80.5s · 124 099 clés
+  - **🚫 NON TOUCHÉ** : R2/R6 doctrine · TERRITOIRE_Ω · MANIFEST CDN · pipelines V20 · aucune ingestion réelle NDVI/LiDAR · aucune extension pan-Canada · pas de modification automatique supervisor (transition Phase 2 = action Commandant manuelle via instructions de PHASE_2_TRANSITION_READY_Ω.md)
+  - **Fichiers nouveaux** (5) :
+    - `tools/autopilot_4d_safe_omega.py`
+    - `tools/gen_grid_qc_r5_r6_omega.py`
+    - `tools/rapport_qc_progress_omega.py`
+    - `tools/rapport_habitat_fusion_structural_omega.py`
+    - `cache/zerocost_v1/canada_h3_grid_r5_seed_qc_full.json` (6.9 MB)
+  - **Fichier modifié** (additif strict) : `server.py` (1 bloc watcher autopilot · ~70 L)
+
 - ✅ **P22ΩΩ_NDVI_LIDAR_P1_STRUCTURAL+_Ω** (2026-02-20) — **TRANSITION P0 → P1 STRUCTURAL+** (Verrou Phase III maintenu · anti-générique strict · 0 téléchargement · 0 donnée fabriquée) :
   - **Audit de blockers exposé au Commandant** :
     - Credentials NASA Earthdata + ESA Copernicus ABSENTS du `.env`
