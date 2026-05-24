@@ -1,6 +1,6 @@
 {
   "_doctrine": "P22ΩΩ_NDVI_LIDAR_PANCA_P0_Ω · COMMANDANT STEEVE-MAX · 2026-05-23",
-  "_status": "STRUCTURAL_ACTIVATED_PRE_INGESTION",
+  "_status": "P1_READY_AWAITING_CREDENTIALS",
   "_generated_at": "2026-05-23T14:48:38Z",
   "dataset_name": "LIDAR_PANCA",
   "target_specifications": {
@@ -92,5 +92,28 @@
     "schema_only": true
   },
   "_anti_generique_strict": true,
-  "_aucune_donnee_fabriquee": true
+  "_aucune_donnee_fabriquee": true,
+  "_phase": "P1_STRUCTURAL+",
+  "_doctrine_p1": "P22ΩΩ_NDVI_LIDAR_P1_STRUCTURAL+_Ω",
+  "_updated_at_p1": "2026-05-24T02:16:40.075819+00:00",
+  "_p1_clients": {
+    "nrcan_hrdem": {
+      "module": "integrations/ingestion_p1/nrcan_hrdem_client.py",
+      "lib": "rasterio + requests",
+      "license": "Open Government Licence — Canada (no credentials)",
+      "armed_flag": "INGESTION_P1_ARMED=1 + INGESTION_P1_DISK_AUTHORIZED=1",
+      "cache_dir": "/app/backend/cache/lidar_ingestion/",
+      "validation": "density > 6 pts/m²"
+    },
+    "mffp_foret_ouverte": {
+      "module": "integrations/ingestion_p1/mffp_foret_ouverte_client.py",
+      "lib": "laspy + requests",
+      "license": "Licence ouverte Québec 2.0 (no credentials)",
+      "armed_flag": "INGESTION_P1_ARMED=1 + INGESTION_P1_DISK_AUTHORIZED=1",
+      "cache_dir": "/app/backend/cache/lidar_ingestion/",
+      "validation": "density > 6 pts/m²"
+    }
+  },
+  "_p1_target_resolution_m": 0.5,
+  "_p1_target_density_pts_m2": 6.0
 }

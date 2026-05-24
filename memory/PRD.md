@@ -22,6 +22,56 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_NDVI_LIDAR_P1_STRUCTURAL+_Ω** (2026-02-20) — **TRANSITION P0 → P1 STRUCTURAL+** (Verrou Phase III maintenu · anti-générique strict · 0 téléchargement · 0 donnée fabriquée) :
+  - **Audit de blockers exposé au Commandant** :
+    - Credentials NASA Earthdata + ESA Copernicus ABSENTS du `.env`
+    - Disque `/app` à 77 % (2.3 GB libres), incompatible avec ingestion 50-100 GB
+    - Option P1_STRUCTURAL+ choisie par Commandant (vs P1_FULL/P1_PILOT/P1_BLOCKED)
+  - **4 clients d'ingestion CODE-READY** (inertes par défaut) :
+    - `integrations/ingestion_p1/nasa_hls_client.py` (lib `earthaccess` · HLSL30/HLSS30 30m · awaiting EDL_TOKEN)
+    - `integrations/ingestion_p1/esa_sentinel2_client.py` (lib `sentinelhub`+`pystac_client` · S2 L2A 10m · awaiting COPERNICUS_USERNAME/PASSWORD)
+    - `integrations/ingestion_p1/nrcan_hrdem_client.py` (open data CC-BY · 1m · awaiting ARM+DISK)
+    - `integrations/ingestion_p1/mffp_foret_ouverte_client.py` (open data QC 2.0 · 0.5m · awaiting ARM+DISK)
+    - Chaque client : `get_status()` · `is_credential_ready()` · `is_armed()` · `search_*()` read-only · `download_*()` raise RuntimeError si non armé
+  - **Dépendances installées** : `laspy 2.7.0` + `earthaccess 0.17.0` + `sentinelhub 3.11.5` (gdal skippé — système trop lourd)
+  - **Engine P1** `engines/v8_institutional/habitat_fusion_engine_p1.py` :
+    - `get_p1_status()` · `get_ingestion_clients_status()` · `is_p1_ready_for_ingestion()` · `compute_habitat_score()` (PROXY strict vers P0)
+    - **weight_active=0.35 INCHANGÉ** (anti-générique strict respecté)
+    - axes vegetation_ndvi_hr + topography_lidar → `P1_READY_AWAITING_CREDENTIALS` (active_in_compute=False)
+  - **Router institutionnel** `routes/habitat_fusion_p1_router.py` (additif strict) :
+    - `GET /api/v30/habitat-fusion/p1/status` (HTTP 200 · 418 ms ext)
+    - `GET /api/v30/habitat-fusion/p1/clients` (HTTP 200 · 313 ms ext)
+    - `GET /api/v30/habitat-fusion/p1/score?...` (HTTP 200 · 216 ms ext · score=P0 proxy)
+    - Câblage `server.py` (additif après router P0)
+  - **Caches créés** : `/app/backend/cache/ndvi_hr_ingestion/` · `/app/backend/cache/lidar_ingestion/`
+  - **Registries P1 mis à jour** (via `tools/gen_p1_structural_registries.py`) :
+    - `ndvi_hr_registry_Ω.json` → `_status=P1_READY_AWAITING_CREDENTIALS` + `_p1_clients` (NASA + ESA)
+    - `lidar_pancanada_registry_Ω.json` → `_status=P1_READY_AWAITING_CREDENTIALS` + `_p1_clients` (NRCan + MFFP)
+    - `habitat_fusion_sources_manifest.json` → `_status=P1_STRUCTURAL_READY` + weight_active=0.35 + weight_p1_awaiting_arm=0.65
+  - **10 tests pytest doctrinaux** (`tests/test_habitat_fusion_p1_structural_omega.py`) :
+    - **10/10 PASSED en 0.29s** · invariants J-1 à J-10 verrouillés
+    - J-3 vérifie explicitement `weight_active=0.35` inchangé
+    - J-5 vérifie tous les clients INERTES (RuntimeError sur download)
+    - J-8 vérifie identité parfaite scores P0/P1 (proxy strict)
+  - **Réveil P1 → P2 conditionnel** (à fournir par Commandant) :
+    - `EDL_TOKEN` ou `EARTHDATA_USERNAME+PASSWORD` (NASA · https://urs.earthdata.nasa.gov)
+    - `COPERNICUS_USERNAME+PASSWORD` (ESA · https://dataspace.copernicus.eu)
+    - `INGESTION_P1_ARMED=1` (flag commandement)
+    - `INGESTION_P1_DISK_AUTHORIZED=1` (extension disque plateforme)
+  - **🚫 NON TOUCHÉ** : R2/R6 · TERRITOIRE_Ω · MANIFEST CDN · pipelines V20 · aucune ingestion · aucune donnée fabriquée
+  - **Fichiers nouveaux** (10) :
+    - `integrations/__init__.py`
+    - `integrations/ingestion_p1/__init__.py`
+    - `integrations/ingestion_p1/nasa_hls_client.py`
+    - `integrations/ingestion_p1/esa_sentinel2_client.py`
+    - `integrations/ingestion_p1/nrcan_hrdem_client.py`
+    - `integrations/ingestion_p1/mffp_foret_ouverte_client.py`
+    - `engines/v8_institutional/habitat_fusion_engine_p1.py`
+    - `routes/habitat_fusion_p1_router.py`
+    - `tools/gen_p1_structural_registries.py`
+    - `tests/test_habitat_fusion_p1_structural_omega.py`
+  - **Fichiers modifiés** (4 additifs) : `server.py` (1 bloc include_router p1) · `data/ndvi_lidar_p0/{ndvi_hr,lidar_pancanada,habitat_fusion_sources_manifest}.json`
+
 - ✅ **P22ΩΩ_RAPPORT_3RF_T95_WATCHER_Ω** (2026-02-20) — **AUTO-EMIT RAPPORT_3RF_T+95%_Ω ARMÉ** (LECTURE SEULE · additif strict · Verrou Phase III) :
   - **Wrapper** `/app/backend/tools/rapport_3rf_t95_emit.py` :
     - Appelle `rapport_3rf_t95_omega.py` en mode JSON pour récupérer `global_pct`

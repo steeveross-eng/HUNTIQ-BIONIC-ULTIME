@@ -1,6 +1,6 @@
 {
   "_doctrine": "P22ΩΩ_NDVI_LIDAR_PANCA_P0_Ω · COMMANDANT STEEVE-MAX · 2026-05-23",
-  "_status": "STRUCTURAL_PRE_FUSION_HABITAT_P0",
+  "_status": "P1_STRUCTURAL_READY",
   "_generated_at": "2026-05-23T14:48:38Z",
   "phase": "PRE_FUSION_HABITAT_BCE4X",
   "fusion_axes_p0": {
@@ -12,7 +12,11 @@
         "engine_ia_vision_ecologique_omega",
         "engine_canopee_thermique_omega"
       ],
-      "status": "PRE_INGESTION"
+      "status": "P1_READY_AWAITING_CREDENTIALS",
+      "p1_clients": [
+        "nasa_hls",
+        "esa_sentinel2_l2a"
+      ]
     },
     "topography_lidar": {
       "source_dataset": "LIDAR_PANCA",
@@ -22,7 +26,11 @@
         "lidar_irda_v11",
         "engine_terrain_v10_supra"
       ],
-      "status": "PRE_INGESTION"
+      "status": "P1_READY_AWAITING_CREDENTIALS",
+      "p1_clients": [
+        "nrcan_hrdem",
+        "mffp_foret_ouverte"
+      ]
     },
     "corridors_behavior": {
       "source_dataset": "IA_CORRIDORS_P0_Ω",
@@ -73,5 +81,12 @@
     "P4": "Integration ZEROCOST R2 CDN (post Verrou Phase III)"
   },
   "_anti_generique_strict": true,
-  "_aucune_donnee_fabriquee": true
+  "_aucune_donnee_fabriquee": true,
+  "_phase": "P1_STRUCTURAL+",
+  "_doctrine_p1": "P22ΩΩ_NDVI_LIDAR_P1_STRUCTURAL+_Ω",
+  "_updated_at_p1": "2026-05-24T02:16:40.075819+00:00",
+  "weight_active": 0.35,
+  "weight_p1_awaiting_arm": 0.65,
+  "weight_target_p2": 1.0,
+  "_note_doctrinale": "P1 STRUCTURAL+ · 2 axes READY (corridors_behavior + species_biogeography) · 2 axes P1_READY_AWAITING_CREDENTIALS (vegetation_ndvi_hr + topography_lidar). weight_active reste 0.35 conformément à l'anti-générique strict. Réveil 0.35 → 1.00 conditionné à fourniture credentials + ARM flags."
 }

@@ -1214,6 +1214,20 @@ try:
 except Exception as e:
     logger.warning(f"HABITAT-FUSION-P0-Ω router not loaded: {e}")
 
+# P22ΩΩ_NDVI_LIDAR_P1_STRUCTURAL+_Ω · 2026-02-20 · STEEVE-MAX
+# Router institutionnel HABITAT-FUSION_P1_STRUCTURAL+_Ω (additif strict · Verrou Phase III).
+# weight_active reste 0.35 (anti-générique strict) · clients ingestion code-ready inertes.
+try:
+    from routes.habitat_fusion_p1_router import router as habitat_fusion_p1_router
+    app.include_router(habitat_fusion_p1_router)
+    logger.info(
+        "✓ HABITAT-FUSION-P1-STRUCTURAL+_Ω registered — "
+        "/api/v30/habitat-fusion/p1/{status,clients,score} "
+        "(P1_STRUCTURAL+ · 4 clients code-ready awaiting credentials)"
+    )
+except Exception as e:
+    logger.warning(f"HABITAT-FUSION-P1-Ω router not loaded: {e}")
+
 # V8-PHASE-B — P22ΩΩ_PALIERS_1_4_PURGE_IMMEDIATE_Ω · 2026-05-18 · STEEVE-MAX
 # Module engines/v8_national/phase_b_engines.py supprimé physiquement (PALIER 1).
 logger.info("[P22ΩΩ.PALIER_1] V8-PHASE-B PURGED — engines/v8_national/phase_b_engines.py removed")

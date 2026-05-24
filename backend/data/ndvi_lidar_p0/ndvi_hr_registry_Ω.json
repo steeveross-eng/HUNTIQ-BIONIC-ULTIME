@@ -1,6 +1,6 @@
 {
   "_doctrine": "P22ΩΩ_NDVI_LIDAR_PANCA_P0_Ω · COMMANDANT STEEVE-MAX · 2026-05-23",
-  "_status": "STRUCTURAL_ACTIVATED_PRE_INGESTION",
+  "_status": "P1_READY_AWAITING_CREDENTIALS",
   "_generated_at": "2026-05-23T14:48:38Z",
   "dataset_name": "NDVI_HR_PANCA",
   "target_specifications": {
@@ -81,5 +81,31 @@
     "schema_only": true
   },
   "_anti_generique_strict": true,
-  "_aucune_donnee_fabriquee": true
+  "_aucune_donnee_fabriquee": true,
+  "_phase": "P1_STRUCTURAL+",
+  "_doctrine_p1": "P22ΩΩ_NDVI_LIDAR_P1_STRUCTURAL+_Ω",
+  "_updated_at_p1": "2026-05-24T02:16:40.075819+00:00",
+  "_p1_clients": {
+    "nasa_hls": {
+      "module": "integrations/ingestion_p1/nasa_hls_client.py",
+      "lib": "earthaccess",
+      "credentials_required": [
+        "EDL_TOKEN OR EARTHDATA_USERNAME+PASSWORD"
+      ],
+      "armed_flag": "INGESTION_P1_ARMED=1",
+      "cache_dir": "/app/backend/cache/ndvi_hr_ingestion/",
+      "validation": "SHA-256 checksum + cloud_cover<20%"
+    },
+    "esa_sentinel2_l2a": {
+      "module": "integrations/ingestion_p1/esa_sentinel2_client.py",
+      "lib": "sentinelhub + pystac_client",
+      "credentials_required": [
+        "COPERNICUS_USERNAME+COPERNICUS_PASSWORD"
+      ],
+      "armed_flag": "INGESTION_P1_ARMED=1",
+      "cache_dir": "/app/backend/cache/ndvi_hr_ingestion/",
+      "validation": "SHA-256 checksum + cloud_cover<20%"
+    }
+  },
+  "_p1_target_resolution_m": 10.0
 }
