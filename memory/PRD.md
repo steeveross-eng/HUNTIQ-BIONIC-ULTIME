@@ -22,6 +22,25 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_RAPPORT_3RF_T95_WATCHER_Ω** (2026-02-20) — **AUTO-EMIT RAPPORT_3RF_T+95%_Ω ARMÉ** (LECTURE SEULE · additif strict · Verrou Phase III) :
+  - **Wrapper** `/app/backend/tools/rapport_3rf_t95_emit.py` :
+    - Appelle `rapport_3rf_t95_omega.py` en mode JSON pour récupérer `global_pct`
+    - Si `global_pct >= 95%` ET non encore émis : génère rapport texte + JSON dans `/app/memory/RAPPORT_3RF_T+95%_Ω_EMITTED.{md,json}` + log « RAPPORT_3RF_T+95%_Ω — ÉMIS »
+    - State persistant `/app/backend/state/rapport_3rf_t95_state.json` (idempotent · armed_at · emitted · check_count · last_global_pct)
+  - **Watcher asyncio** dans `server.py` lifespan (même pattern que cron manifest) :
+    - first_delay=120s · interval=30min · timeout subprocess 420s · soft-fail strict
+    - env vars : `RAPPORT_3RF_T95_WATCHER_FIRST_DELAY_S` · `RAPPORT_3RF_T95_WATCHER_INTERVAL_S` · `RAPPORT_3RF_T95_WATCHER_DISABLE=1`
+  - **Validation E2E** :
+    - Backend post-restart HTTP 200 · watcher armé (log explicite)
+    - Check #1 OK en 70.6s · `global_pct=93.07% < 95.0% · ETA seuil ~1.13h`
+    - Idempotence active (state.json maintenu entre checks)
+  - **🚫 NON TOUCHÉ** : R2/R6 storage · TERRITOIRE_Ω · MANIFEST CDN doctrine · pipelines V20 · aucune transition
+  - **Fichiers nouveaux** (2) : `tools/rapport_3rf_t95_omega.py` (rapport principal · 460 L) · `tools/rapport_3rf_t95_emit.py` (wrapper · 175 L)
+  - **Fichier modifié** (additif strict) : `server.py` (ajout bloc `_rapport_3rf_t95_watcher` dans lifespan, ~70 L)
+  - **Sortie automatique attendue** dès atteinte seuil :
+    - `/app/memory/RAPPORT_3RF_T+95%_Ω_EMITTED.md` (texte lisible)
+    - `/app/memory/RAPPORT_3RF_T+95%_Ω_EMITTED.json` (machine-readable)
+
 - ✅ **P22ΩΩ_3RF_ACCELERATION_P0_Ω** (2026-02-20) — **ACCÉLÉRATION CONTRÔLÉE 3 RF** (Verrou Phase III maintenu · additif strict) :
   - **Throughput daemon β2-ΣΤ** :
     - `TARGET_WORKERS` : 6 → **8** (gain ×1.33)

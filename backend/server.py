@@ -337,6 +337,80 @@ async def lifespan(app: FastAPI):
         except Exception as e:
             logger.warning(f"[P22ΩΩ_MANIFEST_CRON_Ω] task scheduling failed: {e}")
 
+    # ──────────────────────────────────────────────────────────────────────
+    # P22ΩΩ_RAPPORT_3RF_T95_WATCHER_Ω · COMMANDANT STEEVE-MAX · 2026-02-20
+    # ──────────────────────────────────────────────────────────────────────
+    # Watcher asyncio LECTURE SEULE qui invoke rapport_3rf_t95_emit.py toutes
+    # les ~30 min. Le wrapper court-circuite si déjà émis (idempotent).
+    # Dès atteinte 95 % couverture cellulaire 3 RF, le rapport FULL est
+    # écrit automatiquement dans /app/memory/RAPPORT_3RF_T+95%_Ω_EMITTED.md
+    #
+    # GARANTIES :
+    #   - additif strict (Verrou Phase III maintenu)
+    #   - LECTURE SEULE sur R2 (aucune écriture)
+    #   - soft-fail (aucune exception ne bloque le boot)
+    #   - idempotent (state persistant dans backend/state/)
+    #   - désactivation : RAPPORT_3RF_T95_WATCHER_DISABLE=1
+    # ──────────────────────────────────────────────────────────────────────
+    async def _rapport_3rf_t95_watcher():
+        emit_script = "/app/backend/tools/rapport_3rf_t95_emit.py"
+        import sys as _sys_t95
+        from pathlib import Path as _Path_t95
+        _venv_py = "/root/.venv/bin/python3"
+        python_bin = _venv_py if _Path_t95(_venv_py).is_file() else _sys_t95.executable
+        first_delay = float(_os_p22.environ.get("RAPPORT_3RF_T95_WATCHER_FIRST_DELAY_S", "120"))
+        interval = float(_os_p22.environ.get("RAPPORT_3RF_T95_WATCHER_INTERVAL_S", "1800"))  # 30 min
+        run_count = 0
+        try:
+            await _asyncio_p22.sleep(first_delay)
+            while True:
+                run_count += 1
+                started_at = _asyncio_p22.get_event_loop().time()
+                try:
+                    proc = await _asyncio_p22.create_subprocess_exec(
+                        python_bin, emit_script,
+                        stdout=_asyncio_p22.subprocess.PIPE,
+                        stderr=_asyncio_p22.subprocess.PIPE,
+                    )
+                    stdout, stderr = await _asyncio_p22.wait_for(proc.communicate(), timeout=420.0)
+                    elapsed = _asyncio_p22.get_event_loop().time() - started_at
+                    if proc.returncode == 0:
+                        last_line = (stdout.decode("utf-8", errors="replace").strip().split("\n") or [""])[-1]
+                        logger.info(
+                            f"[P22ΩΩ_RAPPORT_3RF_T95_Ω] check #{run_count} OK · {elapsed:.1f}s · {last_line[:200]}"
+                        )
+                    else:
+                        err_tail = stderr.decode("utf-8", errors="replace").strip().split("\n")[-1][:200]
+                        logger.warning(
+                            f"[P22ΩΩ_RAPPORT_3RF_T95_Ω] check #{run_count} FAILED · "
+                            f"exit={proc.returncode} · {elapsed:.1f}s · err={err_tail}"
+                        )
+                except _asyncio_p22.TimeoutError:
+                    logger.warning(f"[P22ΩΩ_RAPPORT_3RF_T95_Ω] check #{run_count} TIMEOUT (>420s)")
+                    try:
+                        proc.kill()
+                    except Exception:
+                        pass
+                except Exception as run_err:
+                    logger.warning(f"[P22ΩΩ_RAPPORT_3RF_T95_Ω] check #{run_count} ERROR: {run_err}")
+                await _asyncio_p22.sleep(interval)
+        except _asyncio_p22.CancelledError:
+            logger.info("[P22ΩΩ_RAPPORT_3RF_T95_Ω] cancelled cleanly")
+        except Exception as e:
+            logger.warning(f"[P22ΩΩ_RAPPORT_3RF_T95_Ω] watcher crashed: {e}")
+
+    if _os_p22.environ.get("RAPPORT_3RF_T95_WATCHER_DISABLE", "").strip() in ("1", "true", "yes"):
+        logger.info("[P22ΩΩ_RAPPORT_3RF_T95_Ω] désactivé par RAPPORT_3RF_T95_WATCHER_DISABLE=1")
+    else:
+        try:
+            _asyncio_p22.create_task(_rapport_3rf_t95_watcher())
+            logger.info(
+                "[P22ΩΩ_RAPPORT_3RF_T95_Ω] watcher armé (first=120s · interval=30min · "
+                "seuil=95% · LECTURE SEULE · sortie=/app/memory/RAPPORT_3RF_T+95%_Ω_EMITTED.md)"
+            )
+        except Exception as e:
+            logger.warning(f"[P22ΩΩ_RAPPORT_3RF_T95_Ω] watcher scheduling failed: {e}")
+
     logger.info("=" * 60)
     logger.info("✓ All modules loaded successfully")
     logger.info("=" * 60)

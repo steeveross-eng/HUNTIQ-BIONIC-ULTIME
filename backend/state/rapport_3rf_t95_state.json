@@ -1,0 +1,10 @@
+{
+  "_doctrine": "P22ΩΩ_3RF_ACCELERATION_P0_Ω",
+  "threshold_pct": 95.0,
+  "armed_at": "2026-05-24T01:07:37.347471+00:00",
+  "emitted": false,
+  "emitted_at": null,
+  "last_check_at": "2026-05-24T01:13:01.069272+00:00",
+  "last_global_pct": 93.07,
+  "check_count": 3
+}
