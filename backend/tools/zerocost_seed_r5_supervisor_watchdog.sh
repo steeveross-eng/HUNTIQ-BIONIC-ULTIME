@@ -20,6 +20,8 @@ while true; do
     # Compter workers β2-ΣΤ vivants
     n=$(ps -ef 2>/dev/null | grep zerocost_worker_seed_r5 | grep -v grep | wc -l)
 
+    # Politique : respawn si vivants < MIN_WORKERS (=4) · TARGET=8 lance count
+    # P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_Ω · décision conservatrice (pas de respawn agressif)
     if [[ $n -lt $MIN_WORKERS ]]; then
         echo "$LOG_PREFIX $(date -u +%Y-%m-%dT%H:%M:%SZ) · workers vivants=$n < MIN=$MIN_WORKERS · RELANCE"
         # Nettoyage state file

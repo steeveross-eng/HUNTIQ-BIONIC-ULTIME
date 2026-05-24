@@ -1,0 +1,19 @@
+{
+  "present": true,
+  "doctrine": "P22ΩΩ_ZEROCOST_CANADA_H3R6_Ω",
+  "generated_at": "2026-05-24T11:28:46.381374+00:00",
+  "drift_seconds": 400.94996,
+  "drift_target_max_s": 900,
+  "drift_ok": true,
+  "n_tiles": 128475,
+  "cells_unique": 1818,
+  "total_size_mb": 2216.24,
+  "by_species": {
+    "chevreuil": 1818,
+    "coyote": 1787,
+    "dindon_sauvage": 1787,
+    "orignal": 1795,
+    "ours_noir": 1787,
+    "wapiti": 1787
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_doctrine": "P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_Ω",
+  "_emitted_at": "2026-05-24T11:47:51.530558+00:00",
+  "manifest": {
+    "doctrine": "P22ΩΩ_ZEROCOST_CANADA_H3R6_Ω",
+    "generated_at": "2026-05-24T11:45:53.070562+00:00",
+    "drift_seconds": 118.459973,
+    "drift_ok": true,
+    "drift_alert": false,
+    "n_tiles": 128475,
+    "cells_unique": 1818,
+    "total_size_mb": 2215.71,
+    "by_species": {
+      "chevreuil": 1818,
+      "coyote": 1787,
+      "dindon_sauvage": 1787,
+      "orignal": 1795,
+      "ours_noir": 1787,
+      "wapiti": 1787
+    }
+  }
+}

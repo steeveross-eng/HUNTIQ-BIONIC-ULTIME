@@ -1,0 +1,594 @@
+{
+  "_doctrine": "P22ΩΩ_3RF_ACCELERATION_P0_Ω",
+  "_report": "RAPPORT_3RF_T+95%_Ω",
+  "_commandant": "STEEVE-MAX",
+  "_generated_at": "2026-05-24T11:35:26.975053+00:00",
+  "_mode": "FULL",
+  "_threshold_pct": 95.0,
+  "_threshold_reached": true,
+  "_force_full": true,
+  "verrou_phase_iii": true,
+  "lecture_seule": true,
+  "grid_doctrine": "P22ΩΩ_PHASE3_BUNDLE_SEED_H3R5_BETA2_SIGMA_TAU_Ω",
+  "grid_n_r6_target": 1775,
+  "coverage_cellular": {
+    "by_rf": {
+      "OUTAOUAIS_RF_PAPINEAU_VERENDRYE_SUD": {
+        "cells_target": 129,
+        "cells_covered": 130,
+        "pct": 100.8
+      },
+      "MAURICIE_RF_MASTIGOUCHE_ST_MAURICE": {
+        "cells_target": 412,
+        "cells_covered": 412,
+        "pct": 100.0
+      },
+      "LAURENTIDES_RF_LAURENTIDES_ROUGE_MATAWIN": {
+        "cells_target": 1234,
+        "cells_covered": 1235,
+        "pct": 100.1
+      }
+    },
+    "global_cells_target": 1775,
+    "global_cells_covered": 1777,
+    "global_pct": 100.11
+  },
+  "coverage_tiles": {
+    "by_rf_species": {
+      "OUTAOUAIS_RF_PAPINEAU_VERENDRYE_SUD": {
+        "chevreuil": 1597,
+        "coyote": 1549,
+        "dindon_sauvage": 1549,
+        "orignal": 1567,
+        "ours_noir": 1549,
+        "wapiti": 1549
+      },
+      "MAURICIE_RF_MASTIGOUCHE_ST_MAURICE": {
+        "chevreuil": 4944,
+        "coyote": 4944,
+        "dindon_sauvage": 4944,
+        "orignal": 4944,
+        "ours_noir": 4944,
+        "wapiti": 4944
+      },
+      "LAURENTIDES_RF_LAURENTIDES_ROUGE_MATAWIN": {
+        "chevreuil": 14839,
+        "coyote": 14818,
+        "dindon_sauvage": 14827,
+        "orignal": 14839,
+        "ours_noir": 14833,
+        "wapiti": 14833
+      }
+    },
+    "total_tiles_3rf": 128013,
+    "target_tiles_historique": 127800,
+    "pct_tiles": 100.17
+  },
+  "manifest_checkpoint": {
+    "present": true,
+    "doctrine": "P22ΩΩ_ZEROCOST_CANADA_H3R6_Ω",
+    "generated_at": "2026-05-24T11:28:46.381374+00:00",
+    "drift_seconds": 400.94996,
+    "drift_target_max_s": 900,
+    "drift_ok": true,
+    "n_tiles": 128475,
+    "cells_unique": 1818,
+    "total_size_mb": 2216.24,
+    "by_species": {
+      "chevreuil": 1818,
+      "coyote": 1787,
+      "dindon_sauvage": 1787,
+      "orignal": 1795,
+      "ours_noir": 1787,
+      "wapiti": 1787
+    }
+  },
+  "biological_divergence_audit": {
+    "sampled_counts": {
+      "OUTAOUAIS_RF_PAPINEAU_VERENDRYE_SUD": 18,
+      "MAURICIE_RF_MASTIGOUCHE_ST_MAURICE": 18,
+      "LAURENTIDES_RF_LAURENTIDES_ROUGE_MATAWIN": 18
+    },
+    "divergence_check": {
+      "OUTAOUAIS_RF_PAPINEAU_VERENDRYE_SUD": {
+        "samples": [
+          {
+            "key": "v1/chevreuil/45.5126_-74.0733/m04_h14.json.gz",
+            "species": "chevreuil",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 62.23,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/chevreuil/45.5126_-74.0733/m04_h07.json.gz",
+            "species": "chevreuil",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 62.23,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/chevreuil/45.5126_-74.0733/m09_h19.json.gz",
+            "species": "chevreuil",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 63.98,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/coyote/45.5126_-74.0733/m09_h14.json.gz",
+            "species": "coyote",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 63.04,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/coyote/45.5126_-74.0733/m04_h14.json.gz",
+            "species": "coyote",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 61.57,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/coyote/45.5126_-74.0733/m10_h07.json.gz",
+            "species": "coyote",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 63.04,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/dindon_sauvage/45.5126_-74.0733/m04_h19.json.gz",
+            "species": "dindon_sauvage",
+            "tier": "COMPLET_T0",
+            "n_corridors": 0,
+            "score_local": 62.18,
+            "bundle_tier_ok": false
+          },
+          {
+            "key": "v1/dindon_sauvage/45.5126_-74.0733/m09_h19.json.gz",
+            "species": "dindon_sauvage",
+            "tier": "COMPLET_T0",
+            "n_corridors": 0,
+            "score_local": 63.47,
+            "bundle_tier_ok": false
+          },
+          {
+            "key": "v1/dindon_sauvage/45.5126_-74.0733/m04_h07.json.gz",
+            "species": "dindon_sauvage",
+            "tier": "COMPLET_T0",
+            "n_corridors": 0,
+            "score_local": 62.18,
+            "bundle_tier_ok": false
+          },
+          {
+            "key": "v1/orignal/45.5126_-74.0733/m04_h14.json.gz",
+            "species": "orignal",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 58.61,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/orignal/45.5126_-74.0733/m09_h14.json.gz",
+            "species": "orignal",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 59.98,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/orignal/45.5126_-74.0733/m09_h07.json.gz",
+            "species": "orignal",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 59.98,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/ours_noir/45.5126_-74.0733/m04_h07.json.gz",
+            "species": "ours_noir",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 61.46,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/ours_noir/45.5126_-74.0733/m10_h14.json.gz",
+            "species": "ours_noir",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 62.92,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/ours_noir/45.5126_-74.0733/m10_h07.json.gz",
+            "species": "ours_noir",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 62.92,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/wapiti/45.5126_-74.0733/m09_h07.json.gz",
+            "species": "wapiti",
+            "tier": null,
+            "n_corridors": 0,
+            "score_local": 62.45,
+            "bundle_tier_ok": false
+          },
+          {
+            "key": "v1/wapiti/45.5126_-74.0733/m04_h14.json.gz",
+            "species": "wapiti",
+            "tier": null,
+            "n_corridors": 0,
+            "score_local": 61.02,
+            "bundle_tier_ok": false
+          },
+          {
+            "key": "v1/wapiti/45.5126_-74.0733/m09_h14.json.gz",
+            "species": "wapiti",
+            "tier": null,
+            "n_corridors": 0,
+            "score_local": 62.45,
+            "bundle_tier_ok": false
+          }
+        ],
+        "per_species_avg_score": {
+          "chevreuil": 62.8,
+          "coyote": 62.6,
+          "dindon_sauvage": 62.6,
+          "orignal": 59.5,
+          "ours_noir": 62.4,
+          "wapiti": 62.0
+        },
+        "n_species_sampled": 6,
+        "distinct_scores": 5,
+        "divergence_ok": true
+      },
+      "MAURICIE_RF_MASTIGOUCHE_ST_MAURICE": {
+        "samples": [
+          {
+            "key": "v1/chevreuil/46.0019_-73.0532/m04_h07.json.gz",
+            "species": "chevreuil",
+            "tier": "COMPLET_T0",
+            "n_corridors": 0,
+            "score_local": 60.88,
+            "bundle_tier_ok": false
+          },
+          {
+            "key": "v1/chevreuil/46.0019_-73.0532/m09_h14.json.gz",
+            "species": "chevreuil",
+            "tier": "COMPLET_T0",
+            "n_corridors": 0,
+            "score_local": 62.67,
+            "bundle_tier_ok": false
+          },
+          {
+            "key": "v1/chevreuil/46.0019_-73.0532/m04_h14.json.gz",
+            "species": "chevreuil",
+            "tier": "COMPLET_T0",
+            "n_corridors": 0,
+            "score_local": 60.88,
+            "bundle_tier_ok": false
+          },
+          {
+            "key": "v1/coyote/46.0019_-73.0532/m10_h07.json.gz",
+            "species": "coyote",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 61.44,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/coyote/46.0019_-73.0532/m04_h14.json.gz",
+            "species": "coyote",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 60.0,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/coyote/46.0019_-73.0532/m09_h07.json.gz",
+            "species": "coyote",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 61.44,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/dindon_sauvage/46.0019_-73.0532/m09_h14.json.gz",
+            "species": "dindon_sauvage",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 62.75,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/dindon_sauvage/46.0019_-73.0532/m10_h07.json.gz",
+            "species": "dindon_sauvage",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 62.75,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/dindon_sauvage/46.0019_-73.0532/m04_h07.json.gz",
+            "species": "dindon_sauvage",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 61.45,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/orignal/46.0019_-73.0532/m04_h19.json.gz",
+            "species": "orignal",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 58.59,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/orignal/46.0019_-73.0532/m09_h19.json.gz",
+            "species": "orignal",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 59.97,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/orignal/46.0019_-73.0532/m09_h07.json.gz",
+            "species": "orignal",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 59.97,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/ours_noir/46.0019_-73.0532/m09_h19.json.gz",
+            "species": "ours_noir",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 61.89,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/ours_noir/46.0019_-73.0532/m04_h19.json.gz",
+            "species": "ours_noir",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 60.44,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/ours_noir/46.0019_-73.0532/m04_h14.json.gz",
+            "species": "ours_noir",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 60.44,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/wapiti/46.0019_-73.0532/m09_h07.json.gz",
+            "species": "wapiti",
+            "tier": null,
+            "n_corridors": 0,
+            "score_local": 61.99,
+            "bundle_tier_ok": false
+          },
+          {
+            "key": "v1/wapiti/46.0019_-73.0532/m10_h07.json.gz",
+            "species": "wapiti",
+            "tier": null,
+            "n_corridors": 0,
+            "score_local": 61.99,
+            "bundle_tier_ok": false
+          },
+          {
+            "key": "v1/wapiti/46.0019_-73.0532/m04_h19.json.gz",
+            "species": "wapiti",
+            "tier": null,
+            "n_corridors": 0,
+            "score_local": 60.57,
+            "bundle_tier_ok": false
+          }
+        ],
+        "per_species_avg_score": {
+          "chevreuil": 61.5,
+          "coyote": 61.0,
+          "dindon_sauvage": 62.3,
+          "orignal": 59.5,
+          "ours_noir": 60.9,
+          "wapiti": 61.5
+        },
+        "n_species_sampled": 6,
+        "distinct_scores": 5,
+        "divergence_ok": true
+      },
+      "LAURENTIDES_RF_LAURENTIDES_ROUGE_MATAWIN": {
+        "samples": [
+          {
+            "key": "v1/chevreuil/46.8000_-71.2253/m04_h14.json.gz",
+            "species": "chevreuil",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 60.29,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/chevreuil/46.8000_-71.2253/m04_h07.json.gz",
+            "species": "chevreuil",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 60.29,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/chevreuil/46.8000_-71.2253/m09_h07.json.gz",
+            "species": "chevreuil",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 62.05,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/coyote/46.8000_-71.2253/m04_h14.json.gz",
+            "species": "coyote",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 60.54,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/coyote/46.8000_-71.2253/m04_h19.json.gz",
+            "species": "coyote",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 60.54,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/coyote/46.8000_-71.2253/m10_h07.json.gz",
+            "species": "coyote",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 62.01,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/dindon_sauvage/46.8000_-71.2253/m09_h14.json.gz",
+            "species": "dindon_sauvage",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 61.98,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/dindon_sauvage/46.8000_-71.2253/m10_h07.json.gz",
+            "species": "dindon_sauvage",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 61.98,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/dindon_sauvage/46.8000_-71.2253/m04_h07.json.gz",
+            "species": "dindon_sauvage",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 60.72,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/orignal/46.8000_-71.2253/m10_h14.json.gz",
+            "species": "orignal",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 58.34,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/orignal/46.8000_-71.2253/m09_h14.json.gz",
+            "species": "orignal",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 58.34,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/orignal/46.8000_-71.2253/m04_h07.json.gz",
+            "species": "orignal",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 57.0,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/ours_noir/46.8000_-71.2253/m10_h07.json.gz",
+            "species": "ours_noir",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 61.76,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/ours_noir/46.8000_-71.2253/m04_h07.json.gz",
+            "species": "ours_noir",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 60.29,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/ours_noir/46.8000_-71.2253/m09_h14.json.gz",
+            "species": "ours_noir",
+            "tier": "ESSENTIEL_T0",
+            "n_corridors": 0,
+            "score_local": 61.76,
+            "bundle_tier_ok": true
+          },
+          {
+            "key": "v1/wapiti/46.8000_-71.2253/m09_h14.json.gz",
+            "species": "wapiti",
+            "tier": null,
+            "n_corridors": 0,
+            "score_local": 61.33,
+            "bundle_tier_ok": false
+          },
+          {
+            "key": "v1/wapiti/46.8000_-71.2253/m10_h07.json.gz",
+            "species": "wapiti",
+            "tier": null,
+            "n_corridors": 0,
+            "score_local": 61.33,
+            "bundle_tier_ok": false
+          },
+          {
+            "key": "v1/wapiti/46.8000_-71.2253/m09_h19.json.gz",
+            "species": "wapiti",
+            "tier": null,
+            "n_corridors": 0,
+            "score_local": 61.33,
+            "bundle_tier_ok": false
+          }
+        ],
+        "per_species_avg_score": {
+          "chevreuil": 60.9,
+          "coyote": 61.0,
+          "dindon_sauvage": 61.6,
+          "orignal": 57.9,
+          "ours_noir": 61.3,
+          "wapiti": 61.3
+        },
+        "n_species_sampled": 6,
+        "distinct_scores": 5,
+        "divergence_ok": true
+      }
+    }
+  },
+  "outside_3rf_audit": {
+    "tiles_hors_3rf_cumul": 462,
+    "by_species_hors_3rf": {
+      "chevreuil": 251,
+      "coyote": 32,
+      "dindon_sauvage": 32,
+      "orignal": 83,
+      "ours_noir": 32,
+      "wapiti": 32
+    },
+    "block_outside_3rf_status": "EFFICACE",
+    "note": "Les 462 tuiles existantes sont des résidus pilote P1 ≥ T-3j · aucune nouvelle écriture depuis activation BLOCK_OUTSIDE_3RF=1"
+  },
+  "verdict": {
+    "status": "T+95%_ATTEINT_VALIDÉ",
+    "global_pct": 100.11,
+    "all_rf_ge_90pct": true,
+    "biological_divergence_ok": true,
+    "block_outside_3rf_efficace": true,
+    "manifest_drift_ok": true,
+    "overall_pass": true
+  }
+}

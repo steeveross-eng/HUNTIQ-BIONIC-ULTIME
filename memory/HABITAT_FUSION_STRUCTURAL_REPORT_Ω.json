@@ -1,0 +1,117 @@
+{
+  "_doctrine": "P22ΩΩ_AUTOPILOT_4D_SAFE_Ω",
+  "_report": "HABITAT_FUSION_STRUCTURAL_REPORT_Ω",
+  "_generated_at": "2026-05-24T11:38:05.564538+00:00",
+  "engine_p0": {
+    "name": "HABITAT-FUSION-ENGINE-P0",
+    "version": "V1-PRE-FUSION-2026-05",
+    "phase": "P0_PRE_FUSION",
+    "status_global": "STRUCTURAL_ACTIVATED_PRE_INGESTION",
+    "axes_total": 4,
+    "axes_ready": 2,
+    "axes_pre_ingestion": 2,
+    "weight_active_p0": 0.35,
+    "completion_ratio": 0.35
+  },
+  "engine_p1": {
+    "name": "HABITAT-FUSION-ENGINE-P1",
+    "version": "V1.0-STRUCTURAL_PLUS-AWAITING-CREDENTIALS",
+    "phase": "P1_STRUCTURAL+_AWAITING_INGESTION",
+    "weight_active": 0.35,
+    "ingestion_p1_ready": false,
+    "clients_credential_ready": 2,
+    "clients_armed": 0
+  },
+  "ingestion_clients": {
+    "nasa_hls": {
+      "client": "NASA-HLS-CLIENT",
+      "version": "V1.0-CODE-READY-AWAITING-CREDENTIALS",
+      "doctrine": "P22ΩΩ_NDVI_LIDAR_P1_STRUCTURAL+_Ω",
+      "credential_ready": false,
+      "armed_for_ingestion": false,
+      "operational_mode": "AWAITING_CREDENTIALS",
+      "sources": [
+        "HLSL30",
+        "HLSS30"
+      ],
+      "egress_endpoint": "https://cmr.earthdata.nasa.gov/search/granules.json"
+    },
+    "esa_sentinel2_l2a": {
+      "client": "ESA-SENTINEL2-L2A-CLIENT",
+      "version": "V1.0-CODE-READY-AWAITING-CREDENTIALS",
+      "doctrine": "P22ΩΩ_NDVI_LIDAR_P1_STRUCTURAL+_Ω",
+      "credential_ready": false,
+      "armed_for_ingestion": false,
+      "operational_mode": "AWAITING_CREDENTIALS",
+      "source": "Sentinel-2 L2A (B04 Red + B08 NIR · 10 m)",
+      "stac_endpoint": "https://catalogue.dataspace.copernicus.eu/stac",
+      "auth_endpoint": "https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/token"
+    },
+    "nrcan_hrdem": {
+      "client": "NRCAN-HRDEM-CLIENT",
+      "version": "V1.0-CODE-READY-OPEN-DATA",
+      "doctrine": "P22ΩΩ_NDVI_LIDAR_P1_STRUCTURAL+_Ω",
+      "credential_ready": true,
+      "armed_for_ingestion": false,
+      "operational_mode": "AWAITING_COMMANDANT_ARM_AND_DISK_AUTH",
+      "license": "Open Government Licence — Canada (CC-BY 2.0)",
+      "source": "NRCan HRDEM (High Resolution DEM)",
+      "resolution_m": 1.0,
+      "ftp_endpoint": "https://ftp.maps.canada.ca/pub/elevation/dem_mne/highresolution_hauteresolution/"
+    },
+    "mffp_foret_ouverte": {
+      "client": "MFFP-FORET-OUVERTE-CLIENT",
+      "version": "V1.0-CODE-READY-OPEN-DATA",
+      "doctrine": "P22ΩΩ_NDVI_LIDAR_P1_STRUCTURAL+_Ω",
+      "credential_ready": true,
+      "armed_for_ingestion": false,
+      "operational_mode": "AWAITING_COMMANDANT_ARM_AND_DISK_AUTH",
+      "license": "Données ouvertes Québec (Licence ouverte 2.0)",
+      "source": "MFFP Forêt Ouverte · LiDAR forestier QC",
+      "resolution_m": 0.5,
+      "density_pts_m2_target": 6.0,
+      "wms_endpoint": "https://www.foretouverte.gouv.qc.ca/wms/MFFP_FORET_OUVERTE",
+      "wfs_endpoint": "https://www.foretouverte.gouv.qc.ca/wfs/MFFP_FORET_OUVERTE",
+      "atlas_endpoint": "https://www.foretouverte.gouv.qc.ca/lidar/"
+    }
+  },
+  "registries_status": {
+    "habitat_fusion_p0_master": "STRUCTURAL_ACTIVATED_PRE_INGESTION",
+    "completion_ratio": 0.35
+  },
+  "compute_validation_bsl": {
+    "samples": {
+      "chevreuil_printemps": 35.2,
+      "orignal_printemps": 63.6,
+      "ours_noir_printemps": 71.4,
+      "coyote_printemps": 52.2,
+      "dindon_sauvage_printemps": 7.1,
+      "chevreuil_ete": 36.7,
+      "orignal_ete": 62.3,
+      "ours_noir_ete": 63.2,
+      "coyote_ete": 51.1,
+      "dindon_sauvage_ete": 7.0,
+      "chevreuil_automne": 44.1,
+      "orignal_automne": 72.3,
+      "ours_noir_automne": 71.4,
+      "coyote_automne": 62.7,
+      "dindon_sauvage_automne": 6.5,
+      "chevreuil_hiver": 30.6,
+      "orignal_hiver": 52.8,
+      "ours_noir_hiver": 45.2,
+      "coyote_hiver": 54.3,
+      "dindon_sauvage_hiver": 4.7
+    },
+    "distinct_by_season": {
+      "printemps": 5,
+      "ete": 5,
+      "automne": 5,
+      "hiver": 5
+    },
+    "biological_divergence_ok": true
+  },
+  "verrou_phase_iii": true,
+  "lecture_seule": true,
+  "weight_target_p2_full": 1.0,
+  "_note_doctrinale": "weight_active=0.35 INCHANGÉ · 2/4 axes effectifs · Clients NDVI/LiDAR CODE-READY mais INERTES (anti-générique strict)."
+}

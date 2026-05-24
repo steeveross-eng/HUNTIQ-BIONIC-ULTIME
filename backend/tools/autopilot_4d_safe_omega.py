@@ -48,6 +48,13 @@ from pathlib import Path
 BACKEND_ROOT = Path("/app/backend")
 sys.path.insert(0, str(BACKEND_ROOT))
 
+# P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_Ω · charge .env pour appels directs CLI (subprocess héritera aussi)
+try:
+    from dotenv import load_dotenv as _load_dotenv
+    _load_dotenv(BACKEND_ROOT / ".env", override=False)
+except ImportError:
+    pass
+
 STATE_FILE = BACKEND_ROOT / "state" / "autopilot_4d_safe_state.json"
 MEMORY_DIR = Path("/app/memory")
 TOOLS_DIR = BACKEND_ROOT / "tools"
@@ -55,6 +62,10 @@ TOOLS_DIR = BACKEND_ROOT / "tools"
 THRESHOLD_3RF_TRANSITION = float(os.environ.get("AUTOPILOT_3RF_TRANSITION_PCT", "99.5"))
 QC_PROGRESS_INTERVAL_H = float(os.environ.get("AUTOPILOT_QC_PROGRESS_INTERVAL_H", "12"))
 HABITAT_FUSION_INTERVAL_H = float(os.environ.get("AUTOPILOT_HABITAT_FUSION_INTERVAL_H", "24"))
+# P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_Ω · 2026-02-20 · STEEVE-MAX
+MANIFEST_CHECKPOINT_INTERVAL_H = float(os.environ.get("AUTOPILOT_MANIFEST_CHECKPOINT_INTERVAL_H", "12"))
+STABILITY_WORKER_LATENCY_MAX_S = float(os.environ.get("AUTOPILOT_STABILITY_LATENCY_MAX_S", "120"))
+STABILITY_MANIFEST_DRIFT_MAX_S = float(os.environ.get("AUTOPILOT_STABILITY_MANIFEST_DRIFT_MAX_S", "900"))
 
 
 def _now() -> datetime:
@@ -83,7 +94,9 @@ def _load_state() -> dict:
             "AUDIT_DIVERGENCE_BIO_Ω": None,
             "RAPPORT_QC_PROGRESS_Ω_last": None,
             "HABITAT_FUSION_STRUCTURAL_REPORT_Ω_last": None,
+            "MANIFEST_CHECKPOINT_Ω_periodic_last": None,
         },
+        "stability_actions": [],
         "check_count": 0,
         "last_check_at": None,
         "last_error": None,
@@ -349,6 +362,201 @@ def _activate_phase_2(state: dict) -> None:
     state["workers_supervisor_action_required"] = True
 
 
+def _emit_manifest_checkpoint_periodic(state: dict) -> None:
+    """Émet MANIFEST_CHECKPOINT_Ω périodique (toutes 12h en Phase 2+)."""
+    # Fetch manifest direct (idempotent · LECTURE SEULE)
+    import boto3
+    from botocore.config import Config
+    cli = boto3.client("s3", endpoint_url=os.environ["R2_S3_ENDPOINT"],
+        aws_access_key_id=os.environ["R2_ACCESS_KEY_ID"],
+        aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"],
+        config=Config(signature_version="s3v4"))
+    o = cli.get_object(Bucket=os.environ["CF_R2_BUCKET"], Key="manifest.json")
+    m = json.loads(o["Body"].read())
+    gen_at = m.get("generated_at")
+    drift_s = None
+    if gen_at:
+        try:
+            gen_dt = datetime.fromisoformat(gen_at.replace("Z", "+00:00"))
+            drift_s = (_now() - gen_dt).total_seconds()
+        except Exception:
+            pass
+
+    drift_ok = drift_s is not None and drift_s <= STABILITY_MANIFEST_DRIFT_MAX_S
+    drift_alert = drift_s is not None and drift_s > STABILITY_MANIFEST_DRIFT_MAX_S
+
+    text = (
+        f"# MANIFEST_CHECKPOINT_Ω (périodique)\n\n"
+        f"- **Doctrine**: P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_Ω · checkpoint 12h\n"
+        f"- **Emitted at**: {_now_iso()}\n"
+        f"- **Bucket R2**: bionic-zerocost-omega\n\n"
+        f"## Manifest R2 (snapshot)\n\n"
+        f"| Champ | Valeur |\n|---|---|\n"
+        f"| doctrine | `{m.get('doctrine')}` |\n"
+        f"| generated_at | `{gen_at}` |\n"
+        f"| drift_seconds | **{drift_s:.1f} s** (cible <{STABILITY_MANIFEST_DRIFT_MAX_S}s) |\n"
+        f"| drift_ok | {'✅ OUI' if drift_ok else '🔴 NON'} |\n"
+        f"| drift_alert | {'🔴 ALERTE' if drift_alert else '✅ NORMAL'} |\n"
+        f"| n_tiles | {m.get('n_tiles')} |\n"
+        f"| cells_unique | {m.get('cells_unique')} |\n"
+        f"| total_size_mb | {(m.get('total_size_bytes', 0))/1024/1024:.2f} |\n"
+        f"| by_species | `{m.get('by_species')}` |\n\n"
+        f"## Verrou Phase III\n\n"
+        f"- ✅ Doctrine R2 préservée (`P22ΩΩ_ZEROCOST_CANADA_H3R6_Ω`)\n"
+        f"- ✅ LECTURE SEULE R2 (zéro écriture autopilot)\n"
+        f"- ✅ CDN cdn-zerocost.bionichunt.com inchangé\n"
+    )
+    payload = {
+        "_doctrine": "P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_Ω",
+        "_emitted_at": _now_iso(),
+        "manifest": {
+            "doctrine": m.get("doctrine"),
+            "generated_at": gen_at,
+            "drift_seconds": drift_s,
+            "drift_ok": drift_ok,
+            "drift_alert": drift_alert,
+            "n_tiles": m.get("n_tiles"),
+            "cells_unique": m.get("cells_unique"),
+            "total_size_mb": round((m.get("total_size_bytes", 0))/1024/1024, 2),
+            "by_species": m.get("by_species"),
+        },
+    }
+    _emit_text_report("MANIFEST_CHECKPOINT_Ω_PERIODIC", text, payload)
+    state["reports_emitted"]["MANIFEST_CHECKPOINT_Ω_periodic_last"] = _now_iso()
+    if drift_alert:
+        state.setdefault("alerts", []).append({
+            "kind": "MANIFEST_DRIFT_ALERT",
+            "at": _now_iso(),
+            "drift_seconds": drift_s,
+        })
+
+
+def _stability_check(state: dict) -> None:
+    """Watcher stabilité workers β2-ΣΤ (PIDs + latence mtime log).
+
+    Politique : si latence worker > STABILITY_WORKER_LATENCY_MAX_S (120s),
+    envoie SIGTERM au PID · le watchdog supervisor le relance automatiquement
+    via sa logique MIN_WORKERS=4 (aucune modif supervisor requise).
+    """
+    import signal
+    import re
+
+    actions = []
+    log_dir = Path("/var/log/bionic-zerocost-seed-r5")
+    if not log_dir.is_dir():
+        return
+
+    # 1) Lister workers vivants via pgrep
+    try:
+        pgrep = subprocess.run(["pgrep", "-af", "zerocost_worker_seed_r5"],
+                               capture_output=True, text=True, timeout=10)
+        worker_lines = pgrep.stdout.strip().split("\n") if pgrep.stdout.strip() else []
+    except Exception as e:
+        actions.append({"kind": "PGREP_FAILED", "at": _now_iso(), "error": str(e)[:200]})
+        worker_lines = []
+
+    workers_alive = []
+    for line in worker_lines:
+        parts = line.split(maxsplit=1)
+        if len(parts) >= 2:
+            pid = int(parts[0])
+            # WORKER_INDEX est dans /proc/PID/environ (pas dans la commande)
+            wi = None
+            try:
+                with open(f"/proc/{pid}/environ", "rb") as f:
+                    env_data = f.read().decode("utf-8", errors="replace")
+                    m = re.search(r"WORKER_INDEX=(\d+)", env_data)
+                    if m:
+                        wi = m.group(1)
+            except Exception:
+                pass
+            workers_alive.append({"pid": pid, "worker_index": wi})
+
+    actions.append({
+        "kind": "WORKERS_ALIVE_COUNT",
+        "at": _now_iso(),
+        "count": len(workers_alive),
+        "target": 8,
+        "min_required": 4,
+    })
+
+    # 2) Pour chaque log worker, mesurer mtime + détecter stale
+    now_ts = _now().timestamp()
+    stale_workers = []  # (worker_index, age_s, pid)
+    for log_file in sorted(log_dir.glob("worker_*.log")):
+        try:
+            mtime = log_file.stat().st_mtime
+            age_s = now_ts - mtime
+            worker_index_match = re.search(r"worker_(\d+)\.log$", log_file.name)
+            wi = int(worker_index_match.group(1)) if worker_index_match else None
+            if age_s > STABILITY_WORKER_LATENCY_MAX_S:
+                target_pid = None
+                for w in workers_alive:
+                    if w.get("worker_index") == str(wi):
+                        target_pid = w["pid"]
+                        break
+                stale_workers.append((wi, age_s, target_pid))
+        except Exception:
+            continue
+
+    # P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_Ω · politique conservatrice REVISÉE (2026-02-20) :
+    #  Le kill agressif a été désactivé car watchdog ne respawn que si workers<MIN(=4),
+    #  ce qui transforme "soft restart" en "full restart daemon" (8 workers tués/relancés).
+    #  Décision sage : pure DÉTECTION + ALERTE · kill activable via AUTOPILOT_STABILITY_KILL=1
+    #  Le watchdog reste responsable du respawn massif si workers<4.
+    soft_restarts = []
+    kill_enabled = os.environ.get("AUTOPILOT_STABILITY_KILL", "0") == "1"
+    if stale_workers:
+        stale_workers.sort(key=lambda x: x[1], reverse=True)
+        all_stale_logged = [{"worker_index": wi, "latency_s": round(age, 1)}
+                            for wi, age, _ in stale_workers]
+        actions.append({
+            "kind": "STALE_WORKERS_DETECTED",
+            "at": _now_iso(),
+            "stale_workers": all_stale_logged,
+            "count": len(stale_workers),
+            "kill_enabled": kill_enabled,
+        })
+        if kill_enabled and len(workers_alive) > 6:
+            wi, age, pid = stale_workers[0]
+            if pid:
+                try:
+                    os.kill(pid, signal.SIGTERM)
+                    soft_restarts.append({
+                        "worker_index": wi, "pid": pid,
+                        "latency_s": round(age, 1),
+                        "action": "SIGTERM_SENT",
+                        "policy": "conservative_max_1_per_cycle",
+                    })
+                except Exception as kill_err:
+                    soft_restarts.append({
+                        "worker_index": wi, "pid": pid,
+                        "latency_s": round(age, 1),
+                        "action": "SIGTERM_FAILED",
+                        "error": str(kill_err)[:100],
+                    })
+        else:
+            soft_restarts.append({
+                "action": "DETECTION_ONLY",
+                "kill_enabled": kill_enabled,
+                "workers_alive": len(workers_alive),
+                "note": "Définir AUTOPILOT_STABILITY_KILL=1 pour activer SIGTERM · "
+                        "Watchdog respawn massif si workers<4 (MIN_WORKERS)",
+            })
+
+    if soft_restarts:
+        actions.append({
+            "kind": "SOFT_RESTART_DECISION",
+            "at": _now_iso(),
+            "soft_restarts": soft_restarts,
+        })
+
+    state["stability_actions"] = state.get("stability_actions", []) + actions
+    # Garder uniquement les 50 derniers événements
+    if len(state["stability_actions"]) > 50:
+        state["stability_actions"] = state["stability_actions"][-50:]
+
+
 def _interval_elapsed(last_iso: str | None, interval_h: float) -> bool:
     if not last_iso:
         return True
@@ -411,6 +619,21 @@ def main() -> int:
                 _emit_habitat_fusion_structural(state)
             except Exception as e:
                 state["last_error"] = f"habitat_fusion: {str(e)[:200]}"
+
+    # 5) MANIFEST_CHECKPOINT_Ω périodique 12h (P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_Ω)
+    if state["current_phase"] in ("PHASE_2_QC_LIMITROPHES", "PHASE_3_HABITAT_FUSION"):
+        last_mc = state["reports_emitted"].get("MANIFEST_CHECKPOINT_Ω_periodic_last")
+        if _interval_elapsed(last_mc, MANIFEST_CHECKPOINT_INTERVAL_H):
+            try:
+                _emit_manifest_checkpoint_periodic(state)
+            except Exception as e:
+                state["last_error"] = f"manifest_checkpoint_periodic: {str(e)[:200]}"
+
+    # 6) Watcher stabilité (chaque check · P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_Ω)
+    try:
+        _stability_check(state)
+    except Exception as e:
+        state["last_error"] = f"stability_check: {str(e)[:200]}"
 
     _save_state(state)
     print(f"[AUTOPILOT_4D_SAFE_Ω] check #{state['check_count']} DONE")

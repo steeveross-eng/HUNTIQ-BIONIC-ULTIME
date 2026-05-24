@@ -22,6 +22,38 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_Ω** (2026-02-20) — **STABILITÉ MAXIMALE 4 JOURS** (Verrou Phase III · additif strict · LECTURE SEULE) :
+  - **Transition Phase 2 confirmée automatique** : `current_phase=PHASE_2_QC_LIMITROPHES` · trigger 100.11 % · 5/5 rapports émis (T+100% + manifest + divergence + QC progress + habitat fusion)
+  - **MANIFEST_CHECKPOINT_Ω périodique** (toutes 12h) ajouté dans orchestrateur · sortie `MANIFEST_CHECKPOINT_Ω_PERIODIC.{md,json}` · alerte si drift > 900s
+  - **Watcher stabilité** (chaque check 30 min) :
+    - Détecte workers stale (mtime log > 120s)
+    - Mode **DETECTION_ONLY par défaut** (kill_enabled=False · pure log + alerte)
+    - Mode kill activable via `AUTOPILOT_STABILITY_KILL=1` (politique conservatrice · max 1 worker/cycle · marge nb_workers>6)
+    - State persistant `stability_actions[]` (rolling 50 entries)
+    - PID extraction via `/proc/PID/environ` pour matching WORKER_INDEX
+  - **Constantes paramétrables** (`.env`) :
+    - `AUTOPILOT_MANIFEST_CHECKPOINT_INTERVAL_H=12`
+    - `AUTOPILOT_STABILITY_LATENCY_MAX_S=120`
+    - `AUTOPILOT_STABILITY_MANIFEST_DRIFT_MAX_S=900`
+    - `AUTOPILOT_STABILITY_KILL=0` (défaut · activer pour kill)
+  - **Validation E2E** :
+    - 8/8 workers stables · backend HTTP 200
+    - Manifest drift live 115.7s (cible <900s) ✅
+    - 3RF live 100.11 % · QC progress live 48.95 % limitrophes
+    - Habitat fusion P0+P1 endpoints HTTP 200 · weight_active=0.35 INCHANGÉ
+    - Cleanup réussi suite expérimentation initiale (14 workers orphelins → 8 stables)
+  - **🚫 NON TOUCHÉ** :
+    - R2/R6 doctrine · TERRITOIRE_Ω · MANIFEST CDN · pipelines V20
+    - Aucune ingestion réelle NDVI/LiDAR (clients P1 toujours INERTES)
+    - Aucune extension pan-Canada (priority=3 reste DECLARED_NOT_COMPUTED)
+    - Aucune modification supervisor (conf /etc/supervisor/conf.d/ inchangée)
+    - BLOCK_OUTSIDE_3RF=1 maintenu sur watchdog actuel
+  - **Décision doctrinale documentée** : "redémarrage soft via SIGTERM" désactivé par défaut car le watchdog supervisor (MIN_WORKERS=4) transforme un kill individuel en restart massif daemon (8 workers). Mode DETECTION_ONLY préserve la stabilité naturelle. Le Commandant peut activer kill via env var si désiré.
+  - **Fichiers modifiés** (additifs stricts, 2) :
+    - `tools/autopilot_4d_safe_omega.py` (+ stability_check + manifest_checkpoint_periodic + load_dotenv direct CLI · 642 L)
+    - `.env` (+ 0 lignes — variables optionnelles avec défauts dans code)
+  - **Aucun nouveau fichier** (orchestrateur enrichi en place)
+
 - ✅ **P22ΩΩ_AUTOPILOT_4D_SAFE_Ω** (2026-02-20) — **AUTOPILOT 4 JOURS ARMÉ** (Verrou Phase III · additif strict · 0 ingestion réelle · 0 extension pan-Canada) :
   - **Grille structurale QC complète** générée via `gen_grid_qc_r5_r6_omega.py` :
     - `cache/zerocost_v1/canada_h3_grid_r5_seed_qc_full.json` (6.9 MB · 4 614 R5 / 32 065 R6)
