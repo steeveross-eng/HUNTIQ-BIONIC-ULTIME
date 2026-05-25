@@ -95,6 +95,7 @@ def _load_state() -> dict:
             "RAPPORT_QC_PROGRESS_Ω_last": None,
             "HABITAT_FUSION_STRUCTURAL_REPORT_Ω_last": None,
             "MANIFEST_CHECKPOINT_Ω_periodic_last": None,
+            "RAPPORT_AUTOPILOT_MIDPOINT_Ω": None,
         },
         "stability_actions": [],
         "check_count": 0,
@@ -557,6 +558,29 @@ def _stability_check(state: dict) -> None:
         state["stability_actions"] = state["stability_actions"][-50:]
 
 
+def _emit_autopilot_midpoint(state: dict) -> None:
+    """Émet RAPPORT_AUTOPILOT_MIDPOINT_Ω (1× à T+48h)."""
+    payload = _run_python(
+        TOOLS_DIR / "rapport_autopilot_midpoint_omega.py",
+        env_extra={"OUTPUT": "json"}, timeout=60,
+    )
+    data = json.loads(payload)
+    text_out = _run_python(
+        TOOLS_DIR / "rapport_autopilot_midpoint_omega.py",
+        env_extra={"OUTPUT": "text"}, timeout=60,
+    )
+    _emit_text_report(
+        "RAPPORT_AUTOPILOT_MIDPOINT_Ω",
+        f"# RAPPORT_AUTOPILOT_MIDPOINT_Ω\n\n"
+        f"- **Doctrine**: P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_LOCK_Ω · mi-parcours mission 4j\n"
+        f"- **Emitted at**: {_now_iso()}\n"
+        f"- **T+48h trigger**: armed_at={state.get('armed_at')}\n\n"
+        f"---\n\n```\n{text_out}\n```\n",
+        data,
+    )
+    state["reports_emitted"]["RAPPORT_AUTOPILOT_MIDPOINT_Ω"] = _now_iso()
+
+
 def _interval_elapsed(last_iso: str | None, interval_h: float) -> bool:
     if not last_iso:
         return True
@@ -628,6 +652,19 @@ def main() -> int:
                 _emit_manifest_checkpoint_periodic(state)
             except Exception as e:
                 state["last_error"] = f"manifest_checkpoint_periodic: {str(e)[:200]}"
+
+    # 5b) RAPPORT_AUTOPILOT_MIDPOINT_Ω à T+48h (P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_LOCK_Ω)
+    armed_at_iso = state.get("armed_at")
+    midpoint_emitted = state["reports_emitted"].get("RAPPORT_AUTOPILOT_MIDPOINT_Ω")
+    if armed_at_iso and not midpoint_emitted:
+        try:
+            armed_at = datetime.fromisoformat(armed_at_iso.replace("Z", "+00:00"))
+            hours_since = (_now() - armed_at).total_seconds() / 3600.0
+            midpoint_h = float(os.environ.get("AUTOPILOT_MIDPOINT_H", "48"))
+            if hours_since >= midpoint_h:
+                _emit_autopilot_midpoint(state)
+        except Exception as e:
+            state["last_error"] = f"midpoint_check: {str(e)[:200]}"
 
     # 6) Watcher stabilité (chaque check · P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_Ω)
     try:
