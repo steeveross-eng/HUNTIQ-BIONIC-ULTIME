@@ -20,19 +20,19 @@ while true; do
     # Compter workers β2-ΣΤ vivants
     n=$(ps -ef 2>/dev/null | grep zerocost_worker_seed_r5 | grep -v grep | wc -l)
 
-    # Politique : respawn si vivants < MIN_WORKERS (=4) · TARGET=8 lance count
-    # P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_Ω · décision conservatrice (pas de respawn agressif)
+    # P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_Ω · respawn si n < TARGET (8) pour stabilité maximale
+    # P22ΩΩ_PHASE2_WORKERS_ACTIVATE_Ω · 2026-02-20 · grille bascule limitrophes
     if [[ $n -lt $MIN_WORKERS ]]; then
         echo "$LOG_PREFIX $(date -u +%Y-%m-%dT%H:%M:%SZ) · workers vivants=$n < MIN=$MIN_WORKERS · RELANCE"
         # Nettoyage state file
         bash /app/backend/tools/zerocost_seed_r5_daemon.sh stop 2>&1 | tail -2 || true
         sleep 2
         WORKER_COUNT=$TARGET_WORKERS \
-        GRID_FILE_PATH=/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed.json \
+        GRID_FILE_PATH=/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_limitrophes.json \
         MAX_R5_CELLS=0 \
         BLOCK_OUTSIDE_3RF=1 \
         bash /app/backend/tools/zerocost_seed_r5_daemon.sh start 2>&1 | tail -3
-        echo "$LOG_PREFIX Relance terminée (TARGET=$TARGET_WORKERS · BLOCK_OUTSIDE_3RF=1)"
+        echo "$LOG_PREFIX Relance terminée (TARGET=$TARGET_WORKERS · grille=QC_LIMITROPHES · ALLOWED extended)"
     else
         # Log status léger toutes les 5 min
         if (( $(date +%s) % 300 < CHECK_INTERVAL_S )); then

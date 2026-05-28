@@ -1,0 +1,55 @@
+{
+  "_doctrine": "P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_LOCK_Ω",
+  "_report": "RAPPORT_AUTOPILOT_MIDPOINT_Ω",
+  "_emitted_at": "2026-05-28T18:59:22.920442+00:00",
+  "armed_at": "2026-05-24T02:45:01.983819+00:00",
+  "hours_since_armed": 112.24,
+  "current_phase": "PHASE_2_QC_LIMITROPHES",
+  "current_3rf_pct": 100.11,
+  "check_count": 14,
+  "phase_history": [
+    {
+      "from": "PHASE_1_3RF",
+      "to": "PHASE_2_QC_LIMITROPHES",
+      "at": "2026-05-24T11:35:34.875243+00:00",
+      "trigger_3rf_pct": 100.11,
+      "supervisor_switched_automatically": false
+    }
+  ],
+  "manifest_live": {
+    "doctrine": "P22ΩΩ_ZEROCOST_CANADA_H3R6_Ω",
+    "generated_at": "2026-05-28T18:55:47.327581+00:00",
+    "n_tiles": 128475,
+    "cells_unique": 1818,
+    "total_size_mb": 2219.49,
+    "drift_seconds": 215.592478
+  },
+  "throughput_since_last_checkpoint": {
+    "delta_tiles": 0,
+    "elapsed_minutes": 0.0,
+    "tiles_per_min": 0.0,
+    "from_checkpoint_at": "2026-05-28T18:59:21.577971+00:00"
+  },
+  "stability_summary": {
+    "events_workers_alive": 5,
+    "events_stale_detected": 5,
+    "soft_restarts_sigterm_sent": 0,
+    "alerts_total": 0,
+    "recent_alerts": []
+  },
+  "reports_emitted": {
+    "RAPPORT_3RF_T+100%_Ω_FINAL": "2026-05-24T11:35:33.075166+00:00",
+    "MANIFEST_CHECKPOINT_Ω": "2026-05-24T11:35:33.075166+00:00",
+    "AUDIT_DIVERGENCE_BIO_Ω": "2026-05-24T11:35:33.075166+00:00",
+    "RAPPORT_QC_PROGRESS_Ω_last": "2026-05-25T18:30:06.021962+00:00",
+    "HABITAT_FUSION_STRUCTURAL_REPORT_Ω_last": "2026-05-25T18:30:06.339780+00:00",
+    "MANIFEST_CHECKPOINT_Ω_periodic_last": "2026-05-25T18:30:07.519280+00:00"
+  },
+  "verrou_phase_iii_audit": {
+    "doctrine_R2_preserved": true,
+    "manifest_drift_under_900s": true,
+    "no_ndvi_lidar_ingestion": true,
+    "no_pancanada_extension": true
+  },
+  "lecture_seule": true
+}

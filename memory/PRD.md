@@ -22,6 +22,21 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_PHASE2_WORKERS_ACTIVATE_Ω** (2026-02-20) — **BASCULE EFFECTIVE WORKERS → GRILLE QC LIMITROPHES** (Verrou Phase III · additif strict · 0 modif conf supervisor) :
+  - **Bascule chirurgicale exécutée** sans toucher `/etc/supervisor/conf.d/` :
+    - Modif `/app/backend/tools/zerocost_seed_r5_supervisor_watchdog.sh` : `GRID_FILE_PATH=...qc_limitrophes.json` (était 3RF)
+    - Extension `/app/backend/tools/zerocost_worker_seed_r5.py` ALLOWED_RF_LABELS : ajout 3 labels limitrophes (LANAUDIERE + MAURICIE_EST + OUTAOUAIS_NORD)
+    - Restart **process** watchdog (pas la conf) pour relire shell modifié
+    - Backup `canada_h3_grid_r5_seed_3rf_original_backup.json` créé (idempotent)
+    - Kill workers + cleanup state file → watchdog respawn auto 8/8 en T+45s
+  - **Validation E2E live** :
+    - Workers grille active = `canada_h3_grid_r5_seed_qc_limitrophes.json` ✅
+    - Distribution : 4w × 42 R5 + 4w × 41 R5 = **332 R5 totales**
+    - **+120 tuiles R2 en ~3 min** post-bascule (throughput restauré)
+    - Worker_2 actif sur LANAUDIERE_LIMITROPHE (lat 45.93 / lng -73.74 ~Joliette)
+    - BLOCK_OUTSIDE_3RF=1 maintenu (ALLOWED étendu aux 6 labels seulement)
+  - **🚫 NON TOUCHÉ** : R2/R6 doctrine · TERRITOIRE_Ω · MANIFEST CDN · V20 · conf supervisor `/etc/supervisor/conf.d/` · binaire supervisor · ingestion NDVI/LiDAR · weight_active=0.35
+
 - ✅ **P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_Ω** (2026-02-20) — **STABILITÉ MAXIMALE 4 JOURS** (Verrou Phase III · additif strict · LECTURE SEULE) :
   - **Transition Phase 2 confirmée automatique** : `current_phase=PHASE_2_QC_LIMITROPHES` · trigger 100.11 % · 5/5 rapports émis (T+100% + manifest + divergence + QC progress + habitat fusion)
   - **MANIFEST_CHECKPOINT_Ω périodique** (toutes 12h) ajouté dans orchestrateur · sortie `MANIFEST_CHECKPOINT_Ω_PERIODIC.{md,json}` · alerte si drift > 900s

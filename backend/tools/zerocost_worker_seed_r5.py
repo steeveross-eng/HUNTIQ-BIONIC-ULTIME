@@ -64,11 +64,18 @@ GRID_FILE = Path(os.environ.get(
 ))
 
 # P22ΩΩ_3RF_ACCELERATION_P0_Ω · BLOCK_OUTSIDE_3RF strict (additif, défaut ON)
+# P22ΩΩ_PHASE2_WORKERS_ACTIVATE_Ω · 2026-02-20 · extension aux 3 régions limitrophes QC
+# (Lanaudière + Mauricie Est + Outaouais Nord) · maintient BLOCK_OUTSIDE_CANADA strict.
 BLOCK_OUTSIDE_3RF = os.environ.get("BLOCK_OUTSIDE_3RF", "1") == "1"
 ALLOWED_RF_LABELS = {
+    # 3 RF originales (Phase 1)
     "OUTAOUAIS_RF_PAPINEAU_VERENDRYE_SUD",
     "LAURENTIDES_RF_LAURENTIDES_ROUGE_MATAWIN",
     "MAURICIE_RF_MASTIGOUCHE_ST_MAURICE",
+    # Limitrophes QC priority=1 (Phase 2)
+    "LANAUDIERE_LIMITROPHE",
+    "MAURICIE_EST_LIMITROPHE",
+    "OUTAOUAIS_NORD_LIMITROPHE",
 }
 
 SPECIES = ["chevreuil", "orignal", "ours_noir", "wapiti", "dindon_sauvage", "coyote"]
