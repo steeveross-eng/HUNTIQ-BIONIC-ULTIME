@@ -11,7 +11,10 @@
 set -u
 CHECK_INTERVAL_S="${CHECK_INTERVAL_S:-45}"
 MIN_WORKERS="${MIN_WORKERS:-4}"
-TARGET_WORKERS="${TARGET_WORKERS:-8}"
+# P22ΩΩ_WORKERS_SCALE_SAFE_Ω · 2026-02-20 · STEEVE-MAX
+# Override forcé doctrinal : 12 workers SAFE LIMIT (priorité sur env supervisor).
+# Précédent : 8 workers · gain attendu +50 % throughput cellulaire QC limitrophes.
+TARGET_WORKERS=12
 LOG_PREFIX="[β2-ΣΤ-WATCHDOG]"
 
 echo "$LOG_PREFIX Watchdog démarré · check toutes les ${CHECK_INTERVAL_S}s · MIN_WORKERS=$MIN_WORKERS · TARGET=$TARGET_WORKERS"

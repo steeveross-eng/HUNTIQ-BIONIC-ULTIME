@@ -22,6 +22,24 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_WORKERS_SCALE_SAFE_Ω** (2026-02-20) — **SCALE WORKERS 8 → 12** (Verrou Phase III · additif strict · zéro modif conf supervisor) :
+  - **Override doctrinal du shell watchdog** : `TARGET_WORKERS=12` forcé (ignore env supervisor `TARGET_WORKERS="8"`)
+  - Restart process watchdog + kill workers + cleanup state → respawn 12 en T+45s
+  - **12 workers actifs · PIDs 681-692**
+  - Distribution équilibrée : **8w × 28 R5 + 4w × 27 R5 = 332 R5 totales** (= grille limitrophes complète, sub-allocation parfaite)
+  - CPU 12-19 % par worker · MEM 0.4 % chacun · load avg 4.55 (sous limite K8s 2 cores)
+  - NICE=19 préservé (doctrine respectée)
+  - **🚫 NON TOUCHÉ** :
+    - Grille limitrophes maintenue (`canada_h3_grid_r5_seed_qc_limitrophes.json`)
+    - BLOCK_OUTSIDE_3RF=1 (ALLOWED 6 labels)
+    - Conf supervisor `/etc/supervisor/conf.d/zerocost-seed-r5.conf` INCHANGÉE
+    - R2/R6/V20/TERRITOIRE_Ω/MANIFEST CDN intacts
+    - Ingestion NDVI/LiDAR INACTIVE (weight_active=0.35)
+    - WATCHER_STABILITY_MODE = DETECTION_ONLY
+    - AUTOPILOT_4D_SAFE_PLUS_LOCK_Ω actif
+  - **Observation throughput** : APIs externes (WorldPop · SoilGrids · Overpass · MFFP WMS) limitent le throughput (Deadline 10s dépassé à 203s observé pour chevreuil sur cells nouvelles). Le gain attendu de +50 % throughput est conditionné à la disponibilité des APIs externes.
+  - **Fichier modifié** (1 ligne) : `tools/zerocost_seed_r5_supervisor_watchdog.sh` (TARGET_WORKERS=12 forcé doctrinal)
+
 - ✅ **P22ΩΩ_PHASE2_WORKERS_ACTIVATE_Ω** (2026-02-20) — **BASCULE EFFECTIVE WORKERS → GRILLE QC LIMITROPHES** (Verrou Phase III · additif strict · 0 modif conf supervisor) :
   - **Bascule chirurgicale exécutée** sans toucher `/etc/supervisor/conf.d/` :
     - Modif `/app/backend/tools/zerocost_seed_r5_supervisor_watchdog.sh` : `GRID_FILE_PATH=...qc_limitrophes.json` (était 3RF)
