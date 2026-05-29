@@ -22,6 +22,55 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_APIS_CACHE_SAFE_Ω** (2026-02-20) — **CACHE LRU LOCAL 7 JOURS POUR APIs EXTERNES** (Verrou Phase III · additif strict · ZÉRO impact R2/CDN) :
+  - **Module cache** `/app/backend/integrations/api_cache_omega.py` (~280 L) :
+    - SQLite single-file thread-safe (`/app/backend/cache/api_cache_omega/cache.sqlite3`)
+    - TTL configurable défaut **604 800s = 7 jours**
+    - LRU eviction si DB > **500 MB** (purge 20 % oldest by `last_access_at`)
+    - Keyed par SHA-256(method + url + sorted_params + sorted_json_body)
+    - Allowed domains: `api.worldpop.org` · `rest.isric.org` · `overpass.osm.ch`
+    - Soft-fail strict : si cache fail → fetch réseau direct (jamais bloquant)
+    - Purge expired périodique (toutes les 200 sets)
+  - **Patch chirurgical** `engines/gis_omega/__init__.py` (point de contrôle unique) :
+    - `_safe_get()` : cache lookup avant httpx + cache write après succès
+    - `_safe_post()` : idem, avec gestion `json` ET `data` (form-encoded · Overpass)
+    - Ne cache PAS les `_error` (anti-pollution)
+  - **Router institutionnel** `/api/v30/api-cache/{status,purge-expired}` :
+    - `GET /status` HTTP 200 · 302ms ext (métriques hits/misses/n_entries/db_size)
+    - `POST /purge-expired` HTTP 200 · 298ms ext (purge idempotent)
+    - Câblage additif dans `server.py`
+  - **Tests unitaires** : 4/4 PASSED
+    - `is_cacheable_url()` correctement filtre domains
+    - `set/get` round-trip OK
+    - Domain isolation (google.com NOT cached)
+    - Params hash distinct (USA ≠ CAN)
+  - **Validation E2E** :
+    - Backend HTTP 200 · régression zéro sur P0/P1/health
+    - 12 workers respawned avec gis_omega patché
+    - DB persistante créée · 4 entrées déjà présentes (tests + 1ères requêtes workers)
+  - **🚫 NON TOUCHÉ** :
+    - R2/R6 storage doctrine (cache 100 % local disque)
+    - TERRITOIRE_Ω · MANIFEST CDN
+    - Pipelines V20
+    - Ingestion NDVI/LiDAR (INACTIVE · weight_active=0.35)
+    - Extension pan-Canada (priority=3 reste DECLARED_NOT_COMPUTED)
+  - **Variables d'env** (override possible · défauts robustes) :
+    - `API_CACHE_OMEGA_ENABLED` (défaut "1")
+    - `API_CACHE_OMEGA_TTL_S` (défaut 604800)
+    - `API_CACHE_OMEGA_MAX_BYTES` (défaut 524288000)
+    - `API_CACHE_OMEGA_DIR` (défaut `/app/backend/cache/api_cache_omega`)
+  - **Gain attendu** :
+    - Cycle 1 : full miss (cache vide) · throughput = nominal
+    - Cycle 2+ : hit rate progresse · ~30-70 % cells re-traitées (consolidation multi-saisons)
+    - Économie ~13s par cell sur cache hit (élimination 3 appels API externes)
+    - Throughput cellulaire attendu : ×2-3 à terme (7 jours stabilisé)
+  - **Fichiers nouveaux** (2) :
+    - `integrations/api_cache_omega.py`
+    - `routes/api_cache_omega_router.py`
+  - **Fichiers modifiés** (additifs stricts, 2) :
+    - `engines/gis_omega/__init__.py` (patches _safe_get / _safe_post)
+    - `server.py` (1 bloc include_router)
+
 - ✅ **P22ΩΩ_WORKERS_SCALE_SAFE_Ω** (2026-02-20) — **SCALE WORKERS 8 → 12** (Verrou Phase III · additif strict · zéro modif conf supervisor) :
   - **Override doctrinal du shell watchdog** : `TARGET_WORKERS=12` forcé (ignore env supervisor `TARGET_WORKERS="8"`)
   - Restart process watchdog + kill workers + cleanup state → respawn 12 en T+45s

@@ -70,30 +70,76 @@ def _bbox_around(lat: float, lon: float, halo_m: float = DEFAULT_BBOX_RADIUS_M
     return (lat - dlat, lon - dlon, lat + dlat, lon + dlon)
 
 
+# P22ΩΩ_APIS_CACHE_SAFE_Ω · 2026-02-20 · STEEVE-MAX
+# Cache LRU local 7j (WorldPop · SoilGrids · Overpass) · additif strict · soft-fail
+try:
+    from integrations import api_cache_omega as _API_CACHE  # type: ignore
+except Exception:
+    _API_CACHE = None  # type: ignore
+
+
 def _safe_get(url: str, **kwargs) -> dict[str, Any]:
-    """GET HTTP institutionnel avec fallback dict en cas d'échec."""
+    """GET HTTP institutionnel avec fallback dict en cas d'échec.
+
+    P22ΩΩ_APIS_CACHE_SAFE_Ω : cache local 7j si URL ∈ WorldPop/SoilGrids/Overpass.
+    """
     timeout = kwargs.pop("timeout", DEFAULT_TIMEOUT_S)
+    params = kwargs.get("params")
+
+    # CACHE LOOKUP (avant fetch)
+    if _API_CACHE is not None and _API_CACHE.is_cacheable_url(url):
+        hit = _API_CACHE.get_cached(url, method="GET", params=params, json_body=None)
+        if hit is not None:
+            return hit
+
     try:
         with httpx.Client(timeout=timeout) as client:
             r = client.get(url, **kwargs)
             r.raise_for_status()
-            return r.json() if "json" in r.headers.get("content-type", "") else {"_raw": r.text}
+            data = r.json() if "json" in r.headers.get("content-type", "") else {"_raw": r.text}
     except Exception as e:
         logger.warning("[%s] _safe_get(%s) failed: %s", ENGINE_NAME, url[:80], e)
         return {"_error": str(e), "_url": url}
 
+    # CACHE WRITE (succès uniquement · pas les _error)
+    if _API_CACHE is not None and _API_CACHE.is_cacheable_url(url):
+        _API_CACHE.set_cached(url, method="GET", params=params, json_body=None, response_data=data)
+    return data
+
 
 def _safe_post(url: str, **kwargs) -> dict[str, Any]:
-    """POST HTTP institutionnel avec fallback dict en cas d'échec."""
+    """POST HTTP institutionnel avec fallback dict en cas d'échec.
+
+    P22ΩΩ_APIS_CACHE_SAFE_Ω : cache local 7j si URL ∈ WorldPop/SoilGrids/Overpass.
+    """
     timeout = kwargs.pop("timeout", DEFAULT_TIMEOUT_S)
+    params = kwargs.get("params")
+    json_body = kwargs.get("json")
+    # Overpass envoie "data=..." (form-encoded) · cacher cette payload aussi
+    data_body = kwargs.get("data")
+    cache_body = json_body if json_body is not None else (
+        {"_data_form": str(data_body)} if data_body is not None else None
+    )
+
+    # CACHE LOOKUP
+    if _API_CACHE is not None and _API_CACHE.is_cacheable_url(url):
+        hit = _API_CACHE.get_cached(url, method="POST", params=params, json_body=cache_body)
+        if hit is not None:
+            return hit
+
     try:
         with httpx.Client(timeout=timeout) as client:
             r = client.post(url, **kwargs)
             r.raise_for_status()
-            return r.json() if "json" in r.headers.get("content-type", "") else {"_raw": r.text}
+            data = r.json() if "json" in r.headers.get("content-type", "") else {"_raw": r.text}
     except Exception as e:
         logger.warning("[%s] _safe_post(%s) failed: %s", ENGINE_NAME, url[:80], e)
         return {"_error": str(e), "_url": url}
+
+    # CACHE WRITE
+    if _API_CACHE is not None and _API_CACHE.is_cacheable_url(url):
+        _API_CACHE.set_cached(url, method="POST", params=params, json_body=cache_body, response_data=data)
+    return data
 
 
 # ═════════════════════ FETCHERS RÉELS ═════════════════════

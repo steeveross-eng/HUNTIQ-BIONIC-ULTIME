@@ -1290,6 +1290,18 @@ try:
 except Exception as e:
     logger.warning(f"HABITAT-FUSION-P0-Ω router not loaded: {e}")
 
+# P22ΩΩ_APIS_CACHE_SAFE_Ω · 2026-02-20 · STEEVE-MAX
+# Router status cache LRU APIs (additif strict · LECTURE SEULE).
+try:
+    from routes.api_cache_omega_router import router as api_cache_omega_router
+    app.include_router(api_cache_omega_router)
+    logger.info(
+        "✓ API-CACHE-Ω registered — /api/v30/api-cache/{status,purge-expired} "
+        "(LRU 7j · WorldPop/SoilGrids/Overpass)"
+    )
+except Exception as e:
+    logger.warning(f"API-CACHE-Ω router not loaded: {e}")
+
 # P22ΩΩ_NDVI_LIDAR_P1_STRUCTURAL+_Ω · 2026-02-20 · STEEVE-MAX
 # Router institutionnel HABITAT-FUSION_P1_STRUCTURAL+_Ω (additif strict · Verrou Phase III).
 # weight_active reste 0.35 (anti-générique strict) · clients ingestion code-ready inertes.

@@ -1,41 +1,41 @@
 # RAPPORT_QC_PROGRESS_Ω
 
 - **Doctrine**: P22ΩΩ_AUTOPILOT_4D_SAFE_Ω · Phase 2 limitrophes
-- **Emitted at**: 2026-05-28T18:59:19.920339+00:00
+- **Emitted at**: 2026-05-29T11:16:01.105099+00:00
 
 ---
 
 ```
 ══════════════════════════════════════════════════════════════════════════════
-  RAPPORT_QC_PROGRESS_Ω · 2026-05-28T18:59:19.804429+00:00
+  RAPPORT_QC_PROGRESS_Ω · 2026-05-29T11:16:00.871485+00:00
   Phase     : PHASE_2_QC_LIMITROPHES
 ══════════════════════════════════════════════════════════════════════════════
 
 § A · LIMITROPHES (priority=1) — CIBLE PHASE 2 ACTIVE
-  Tuiles uploadées R2  : 80763
-  Cells uniques        : 1122 / 2292
-  Couverture cells     : 48.95%
+  Tuiles uploadées R2  : 82656
+  Cells uniques        : 1158 / 2292
+  Couverture cells     : 50.52%
 
 § B · DÉTAIL PAR LABEL
-  LANAUDIERE_LIMITROPHE                     :   30357 tuiles ·   421 cells
+  LANAUDIERE_LIMITROPHE                     :   32220 tuiles ·   452 cells
   LAURENTIDES_RF_LAURENTIDES_ROUGE_MATAWIN  :   33255 tuiles ·   460 cells
-  MAURICIE_EST_LIMITROPHE                   :   50406 tuiles ·   701 cells
+  MAURICIE_EST_LIMITROPHE                   :   50436 tuiles ·   706 cells
   MAURICIE_RF_MASTIGOUCHE_ST_MAURICE        :   11088 tuiles ·   154 cells
-  OUTAOUAIS_RF_PAPINEAU_VERENDRYE_SUD       :    2907 tuiles ·    41 cells
+  OUTAOUAIS_RF_PAPINEAU_VERENDRYE_SUD       :    2979 tuiles ·    42 cells
   OUT_OF_QC                                 :     210 tuiles ·    20 cells
   QC_SUD_OTHER                              :     252 tuiles ·    21 cells
 
 § C · DISTRIBUTION PAR PRIORITÉ
-  priority=1:   80763 tuiles
-  priority=2:   47250 tuiles
+  priority=1:   82656 tuiles
+  priority=2:   47322 tuiles
   priority=3:     252 tuiles
   priority=99:     210 tuiles
 
 § D · VERROU PHASE III
   verrou_phase_iii         : True
   lecture_seule            : True
-  total_keys_scanned       : 128476
-  scan_sec                 : 85.4s
+  total_keys_scanned       : 130441
+  scan_sec                 : 83.5s
 ══════════════════════════════════════════════════════════════════════════════
 
 ```

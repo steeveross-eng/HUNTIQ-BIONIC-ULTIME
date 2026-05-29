@@ -1,10 +1,10 @@
 {
   "_doctrine": "P22ΩΩ_AUTOPILOT_4D_SAFE_Ω",
   "_report": "RAPPORT_QC_PROGRESS_Ω",
-  "_generated_at": "2026-05-28T18:57:52.881934+00:00",
+  "_generated_at": "2026-05-29T11:14:35.902967+00:00",
   "_phase": "PHASE_2_QC_LIMITROPHES",
-  "scan_sec": 89.57312035560608,
-  "total_keys_scanned": 128476,
+  "scan_sec": 82.74279713630676,
+  "total_keys_scanned": 130441,
   "targets_r6": {
     "LIMITROPHES_priority_1": 2292,
     "3RF_priority_2": 1754,
@@ -12,34 +12,34 @@
   },
   "tiles_by_priority": {
     "3": 252,
-    "2": 47250,
-    "1": 80763,
+    "2": 47322,
+    "1": 82656,
     "99": 210
   },
   "tiles_by_label": {
     "QC_SUD_OTHER": 252,
-    "OUTAOUAIS_RF_PAPINEAU_VERENDRYE_SUD": 2907,
-    "LANAUDIERE_LIMITROPHE": 30357,
+    "OUTAOUAIS_RF_PAPINEAU_VERENDRYE_SUD": 2979,
+    "LANAUDIERE_LIMITROPHE": 32220,
     "MAURICIE_RF_MASTIGOUCHE_ST_MAURICE": 11088,
-    "MAURICIE_EST_LIMITROPHE": 50406,
+    "MAURICIE_EST_LIMITROPHE": 50436,
     "LAURENTIDES_RF_LAURENTIDES_ROUGE_MATAWIN": 33255,
     "OUT_OF_QC": 210
   },
   "cells_unique_by_label": {
     "QC_SUD_OTHER": 21,
-    "OUTAOUAIS_RF_PAPINEAU_VERENDRYE_SUD": 41,
-    "LANAUDIERE_LIMITROPHE": 421,
+    "OUTAOUAIS_RF_PAPINEAU_VERENDRYE_SUD": 42,
+    "LANAUDIERE_LIMITROPHE": 452,
     "MAURICIE_RF_MASTIGOUCHE_ST_MAURICE": 154,
-    "MAURICIE_EST_LIMITROPHE": 701,
+    "MAURICIE_EST_LIMITROPHE": 706,
     "LAURENTIDES_RF_LAURENTIDES_ROUGE_MATAWIN": 460,
     "OUT_OF_QC": 20
   },
   "verrou_phase_iii": true,
   "lecture_seule": true,
   "limitrophes_summary": {
-    "tiles_done": 80763,
-    "cells_unique_done": 1122,
+    "tiles_done": 82656,
+    "cells_unique_done": 1158,
     "cells_target_total": 2292,
-    "pct_cells": 48.95
+    "pct_cells": 50.52
   }
 }
