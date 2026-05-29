@@ -21,8 +21,8 @@
     "MANIFEST_CHECKPOINT_Ω_periodic_last": "2026-05-28T18:59:21.604471+00:00",
     "RAPPORT_AUTOPILOT_MIDPOINT_Ω": "2026-05-28T18:59:24.704340+00:00"
   },
-  "check_count": 20,
-  "last_check_at": "2026-05-28T23:47:47.545348+00:00",
+  "check_count": 21,
+  "last_check_at": "2026-05-29T00:19:31.444390+00:00",
   "last_error": "stability_check: 'stability_actions'",
   "phase_2_grid_full": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_full.json",
   "phase_2_grid_limitrophes": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_limitrophes.json",
@@ -436,6 +436,53 @@
           "action": "DETECTION_ONLY",
           "kill_enabled": false,
           "workers_alive": 8,
+          "note": "Définir AUTOPILOT_STABILITY_KILL=1 pour activer SIGTERM · Watchdog respawn massif si workers<4 (MIN_WORKERS)"
+        }
+      ]
+    },
+    {
+      "kind": "WORKERS_ALIVE_COUNT",
+      "at": "2026-05-29T00:21:13.147746+00:00",
+      "count": 12,
+      "target": 8,
+      "min_required": 4
+    },
+    {
+      "kind": "STALE_WORKERS_DETECTED",
+      "at": "2026-05-29T00:21:13.148094+00:00",
+      "stale_workers": [
+        {
+          "worker_index": 10,
+          "latency_s": 244.1
+        },
+        {
+          "worker_index": 6,
+          "latency_s": 166.7
+        },
+        {
+          "worker_index": 7,
+          "latency_s": 156.8
+        },
+        {
+          "worker_index": 2,
+          "latency_s": 143.7
+        },
+        {
+          "worker_index": 8,
+          "latency_s": 132.5
+        }
+      ],
+      "count": 5,
+      "kill_enabled": false
+    },
+    {
+      "kind": "SOFT_RESTART_DECISION",
+      "at": "2026-05-29T00:21:13.148103+00:00",
+      "soft_restarts": [
+        {
+          "action": "DETECTION_ONLY",
+          "kill_enabled": false,
+          "workers_alive": 12,
           "note": "Définir AUTOPILOT_STABILITY_KILL=1 pour activer SIGTERM · Watchdog respawn massif si workers<4 (MIN_WORKERS)"
         }
       ]
