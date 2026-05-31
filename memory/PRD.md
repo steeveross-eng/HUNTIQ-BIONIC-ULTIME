@@ -22,6 +22,40 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_PHASE2_DEBLOCAGE_OUTAOUAIS_NORD_Ω** (2026-02-20) — **DÉBLOCAGE OUTAOUAIS_NORD_LIMITROPHE** (Verrou Phase III · additif strict · doctrine R2/V20/CDN/NDVI inchangée) :
+  - **Action A — Re-priorisation grille** :
+    - Backup défensif `canada_h3_grid_r5_seed_qc_limitrophes_pre_reprio_backup.json` (520 KB)
+    - Tri grille par `(priority_order[rf_label], lat_r5)` :
+      - OUTAOUAIS_NORD_LIMITROPHE : priorité 0 (était jamais visité)
+      - MAURICIE_EST_LIMITROPHE : priorité 1
+      - LANAUDIERE_LIMITROPHE : priorité 2 (déjà 100% cells consolidé)
+    - Top-50 R5 = 100 % OUTAOUAIS_NORD ✅
+    - Workers respawned avec grille V1.1-QC-LIMITROPHES-REPRIORISÉE
+  - **Action B — Extension cache LRU à donneesquebec.ca** :
+    - Ajout `www.donneesquebec.ca` aux `ALLOWED_DOMAINS` (4 domains total)
+    - Cible : CKAN endpoints (package_show · resource_show · package_list)
+    - TTL : 7 jours (catalog évolue lentement · update mensuel maximum)
+    - Risque évalué : catalog updates vus avec retard 7j (mitigation `POST /api/v30/api-cache/purge-expired` manuel)
+    - Validation 6/6 tests unitaires (cacheable detection + isolation domains)
+    - Backend redémarré · 60 entrées persistées · 2 donneesquebec.ca déjà cachés
+  - **Action C — DEADLINE ESSENTIEL_T0** : 🚫 **NON modifiée** (rapport chiffré séparé attendu sur ordre Commandant)
+  - **Résultats live (~10 min post-bascule)** :
+    - **OUTAOUAIS_NORD_LIMITROPHE : 0 → 39 cells uniques (+39)** · **0 → 222 tuiles (+222)** ✅
+    - Cells limitrophes total : 1 158 → **1 197** (+39 · +1.71 pt)
+    - % cible : 50.52 % → **52.23 %** (+1.71 pt)
+    - R2 tuiles totales : 130 618 → 130 849 (+231 tuiles · ~13.8 tuiles/min)
+  - **🚫 NON TOUCHÉ** :
+    - Doctrine R2 (`P22ΩΩ_ZEROCOST_CANADA_H3R6_Ω` inchangée)
+    - Verrou Phase III intégralement respecté
+    - Poids NDVI/LiDAR (`weight_active=0.35` INCHANGÉ)
+    - BLOCK_OUTSIDE_3RF=1 maintenu (ALLOWED 6 labels)
+    - TERRITOIRE_Ω · MANIFEST CDN · pipelines V20
+    - Deadline ESSENTIEL_T0 = 10s INCHANGÉE
+  - **Fichiers modifiés** (additifs stricts, 2) :
+    - `cache/zerocost_v1/canada_h3_grid_r5_seed_qc_limitrophes.json` (tri re-priorisé)
+    - `integrations/api_cache_omega.py` (ALLOWED_DOMAINS +1)
+  - **Fichier créé** : backup défensif `..._pre_reprio_backup.json`
+
 - ✅ **P22ΩΩ_APIS_CACHE_SAFE_Ω** (2026-02-20) — **CACHE LRU LOCAL 7 JOURS POUR APIs EXTERNES** (Verrou Phase III · additif strict · ZÉRO impact R2/CDN) :
   - **Module cache** `/app/backend/integrations/api_cache_omega.py` (~280 L) :
     - SQLite single-file thread-safe (`/app/backend/cache/api_cache_omega/cache.sqlite3`)

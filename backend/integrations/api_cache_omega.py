@@ -58,10 +58,23 @@ PURGE_EVERY_N_SETS = int(os.environ.get("API_CACHE_OMEGA_PURGE_EVERY", "200"))
 ENABLED = os.environ.get("API_CACHE_OMEGA_ENABLED", "1") == "1"
 
 # Domaines cibles (ne cache QUE ces APIs · anti-générique strict)
+# P22ΩΩ_APIS_CACHE_SAFE_Ω · V1.1 · ajout donneesquebec.ca (CKAN package_show)
+# Endpoints typiques cachés :
+#   - /recherche/api/3/action/package_show?id=territoires-fauniques-structures
+#   - /recherche/api/3/action/package_show?id=decoupages-administratifs
+#   - /recherche/api/3/action/package_list
+#   - /recherche/api/3/action/resource_show
+# Clé de cache : SHA-256(method + url + sorted_params + sorted_json_body)
+# TTL : 7 jours (catalogue CKAN évolue lentement · update mensuel maximum)
+# Risques évalués :
+#   - Catalog updates (ajout/retrait dataset) seront vus avec retard 7j max
+#   - Mitigation : POST /api/v30/api-cache/purge-expired manuelle si MFFP annonce update urgent
+#   - Aucun impact sur les données métier R2 (seul le catalog est caché, pas les ressources)
 ALLOWED_DOMAINS = {
     "api.worldpop.org",
     "rest.isric.org",
     "overpass.osm.ch",
+    "www.donneesquebec.ca",  # CKAN package_show · ajouté 2026-02-20
 }
 
 # Stats globales runtime (in-memory · sérialisées périodiquement)
