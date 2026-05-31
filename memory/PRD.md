@@ -1,5 +1,11 @@
 # PRD · TERRITOIRE Ω · BIONIC HUNT/CHASSE
-**Last updated**: 2026-02-20 · BCE-4X ULTIME ABSOLU · COMMANDANT STEEVE-MAX
+**Last updated**: 2026-05-31 · BCE-4X ULTIME ABSOLU · COMMANDANT STEEVE-MAX
+
+## RECENT ADDITIVE LOG
+
+- ✅ **PHASE_Ω_DIAGNOSTIC_CORRIDORS_V7_RESTORE_PLUS** (2026-05-31) — Diagnostic conceptuel STRICTEMENT LECTURE SEULE archivé sous `/app/memory/PHASE_OMEGA_DIAGNOSTIC_CORRIDORS_V7_RESTORE_PLUS.md` (30 KB · 582 lignes · SHA256 `1b0372f4...532c3`). Audit complet `corridor_v7.py` + 9 modules satellites + sample V7 brut généré au waypoint canonique (5 corridors `real_male` validés palette legacy `#1565C0` w=3.0 α=0.95). Endpoint `/api/v7-ultime-export/*` certifié HTTP 200 sur 5/5 sous-routes · intégrité E2E SHA256 disque = endpoint (`c8c2f6a3...d1dc29f`). Photo utilisateur authentifiée comme V10/V12+ multi-espèces (NON V7 legacy). Plan RESTORE additif flag-gated `?legacyCorridorsV7=on` formalisé (5 phases A→E, ~6h estimées) — **NON LANCÉ**, gelé sur ordre Commandant (statu quo Phase 2). Zéro mutation engine Ω · Verrou Phase III intact · AUTOPILOT_4D_SAFE_PLUS_LOCK_Ω inchangé · 12 workers β2-ΣΤ inchangés · Cache SQLite & R2 inchangés.
+
+
 
 ## ORIGINAL PROBLEM STATEMENT
 PROTOCOLE BCE-4X ULTIME ABSOLU — Stabilisation exhaustive du backend et frontend
