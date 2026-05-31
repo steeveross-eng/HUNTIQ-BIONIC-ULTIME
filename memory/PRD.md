@@ -22,6 +22,21 @@ Persona BCE-4X non-déviante.
 - Admin : `commandant@bionichunt.com` / `Commandant2026`
 
 ## REQUIREMENTS COMPLETED
+- ✅ **P22ΩΩ_NETTOYAGE_WORKSPACE_Ω** (2026-02-20) — **3.08 GB LIBÉRÉS · DISQUE 82 % → 51 %** (Verrou Phase III · doctrine intacte · zéro régression) :
+  - **Catégorie A** (835.5 MB) — Archives racines anciennes : HUNTIQ-V6-import.zip · BACKUP_x312_TOTAL_CODE.zip · BACKUP_x312_DB_DUMP.tar.gz + dossier · SUPRA_R1_BACKUP.zip · BIONIC-CARTE-PRE-RETRAIT-Omega.zip
+  - **Catégorie B** (367.0 MB) — Doublons `frontend/build/` (régénérables par `yarn build`) : 6 fichiers ZIP/tar.gz
+  - **Catégorie C** (1 952.2 MB) — Cache yarn `node_modules/.cache/` (recompile complet au prochain `yarn build`)
+  - **Intégrité 100 % validée post-nettoyage** :
+    - ✅ Verrou SHA-256 `ARCHIVE_BIONIC_V20_SUPRA.tar.gz` : `f07d2c25...bc2509` (= valeur doctrinale `registry_lock_omega.py`)
+    - ✅ Endpoint `/api/v7-ultime-export/sha256` HTTP 200
+    - ✅ 5 branches git intactes (BIONIC-ULTIME-INIT · BIONIC_REWRITE_P0 · BIONIC_STABLE_V6_LOCK · `*SUPRA_RECONSTRUCTION` · freeze/carte-pre-retrait)
+    - ✅ 1 662 fichiers backend + 695 frontend/src
+    - ✅ Grilles QC + cache LRU APIs + Habitat Fusion P0/P1 + clients ingestion P1 : intacts
+    - ✅ Services : backend RUNNING · frontend RUNNING · mongodb RUNNING · watchdog RUNNING
+    - ✅ Workers β2-ΣΤ : 12/12 (après cleanup orphelin multiprocessing.spawn)
+    - ✅ Tous endpoints HTTP 200 (health · P0 · P1 · cache · V7 export)
+  - **🚫 NON TOUCHÉ** : R2/R6 · TERRITOIRE_Ω · MANIFEST CDN · pipelines V20 · code source · branches git · verrous doctrinaux · grilles · registries · backups locks
+
 - ✅ **P22ΩΩ_PHASE2_DEBLOCAGE_OUTAOUAIS_NORD_Ω** (2026-02-20) — **DÉBLOCAGE OUTAOUAIS_NORD_LIMITROPHE** (Verrou Phase III · additif strict · doctrine R2/V20/CDN/NDVI inchangée) :
   - **Action A — Re-priorisation grille** :
     - Backup défensif `canada_h3_grid_r5_seed_qc_limitrophes_pre_reprio_backup.json` (520 KB)

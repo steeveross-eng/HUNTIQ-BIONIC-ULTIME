@@ -2,7 +2,7 @@
   "_doctrine": "P22ΩΩ_AUTOPILOT_4D_SAFE_Ω",
   "armed_at": "2026-05-24T02:45:01.983819+00:00",
   "current_phase": "PHASE_2_QC_LIMITROPHES",
-  "current_3rf_pct": 101.18,
+  "current_3rf_pct": 105.07,
   "phase_history": [
     {
       "from": "PHASE_1_3RF",
@@ -21,8 +21,8 @@
     "MANIFEST_CHECKPOINT_Ω_periodic_last": "2026-05-31T11:40:20.903819+00:00",
     "RAPPORT_AUTOPILOT_MIDPOINT_Ω": "2026-05-28T18:59:24.704340+00:00"
   },
-  "check_count": 29,
-  "last_check_at": "2026-05-31T15:44:18.793353+00:00",
+  "check_count": 30,
+  "last_check_at": "2026-05-31T16:16:00.760602+00:00",
   "last_error": "stability_check: 'stability_actions'",
   "phase_2_grid_full": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_full.json",
   "phase_2_grid_limitrophes": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_limitrophes.json",
@@ -31,18 +31,6 @@
   "block_outside_qc": true,
   "workers_supervisor_action_required": true,
   "stability_actions": [
-    {
-      "kind": "SOFT_RESTART_DECISION",
-      "at": "2026-05-25T18:30:07.618568+00:00",
-      "soft_restarts": [
-        {
-          "action": "DETECTION_ONLY",
-          "kill_enabled": false,
-          "workers_alive": 8,
-          "note": "Définir AUTOPILOT_STABILITY_KILL=1 pour activer SIGTERM · Watchdog respawn massif si workers<4 (MIN_WORKERS)"
-        }
-      ]
-    },
     {
       "kind": "WORKERS_ALIVE_COUNT",
       "at": "2026-05-25T18:32:45.527430+00:00",
@@ -781,6 +769,13 @@
           "note": "Définir AUTOPILOT_STABILITY_KILL=1 pour activer SIGTERM · Watchdog respawn massif si workers<4 (MIN_WORKERS)"
         }
       ]
+    },
+    {
+      "kind": "WORKERS_ALIVE_COUNT",
+      "at": "2026-05-31T16:17:33.844694+00:00",
+      "count": 18,
+      "target": 8,
+      "min_required": 4
     }
   ],
   "alerts": []

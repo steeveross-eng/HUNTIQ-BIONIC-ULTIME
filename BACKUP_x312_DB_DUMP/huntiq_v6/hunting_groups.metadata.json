@@ -1,1 +1,0 @@
-{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"key":{"owner_id":{"$numberInt":"1"}},"name":"owner_id_1"},{"v":{"$numberInt":"2"},"key":{"members.user_id":{"$numberInt":"1"}},"name":"members.user_id_1"}],"uuid":"c826f063ae2f4c51b5d85ee87a29a441","collectionName":"hunting_groups","type":"collection"}
