@@ -1,10 +1,10 @@
 {
   "_doctrine": "P22ΩΩ_AUTOPILOT_4D_SAFE_Ω",
   "_report": "RAPPORT_QC_PROGRESS_Ω",
-  "_generated_at": "2026-05-29T11:14:35.902967+00:00",
+  "_generated_at": "2026-05-31T11:39:04.505003+00:00",
   "_phase": "PHASE_2_QC_LIMITROPHES",
-  "scan_sec": 82.74279713630676,
-  "total_keys_scanned": 130441,
+  "scan_sec": 73.09814143180847,
+  "total_keys_scanned": 130618,
   "targets_r6": {
     "LIMITROPHES_priority_1": 2292,
     "3RF_priority_2": 1754,
@@ -13,13 +13,13 @@
   "tiles_by_priority": {
     "3": 252,
     "2": 47322,
-    "1": 82656,
+    "1": 82833,
     "99": 210
   },
   "tiles_by_label": {
     "QC_SUD_OTHER": 252,
     "OUTAOUAIS_RF_PAPINEAU_VERENDRYE_SUD": 2979,
-    "LANAUDIERE_LIMITROPHE": 32220,
+    "LANAUDIERE_LIMITROPHE": 32397,
     "MAURICIE_RF_MASTIGOUCHE_ST_MAURICE": 11088,
     "MAURICIE_EST_LIMITROPHE": 50436,
     "LAURENTIDES_RF_LAURENTIDES_ROUGE_MATAWIN": 33255,
@@ -37,7 +37,7 @@
   "verrou_phase_iii": true,
   "lecture_seule": true,
   "limitrophes_summary": {
-    "tiles_done": 82656,
+    "tiles_done": 82833,
     "cells_unique_done": 1158,
     "cells_target_total": 2292,
     "pct_cells": 50.52
