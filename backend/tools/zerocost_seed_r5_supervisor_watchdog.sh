@@ -14,7 +14,10 @@ MIN_WORKERS="${MIN_WORKERS:-4}"
 # P22ΩΩ_WORKERS_SCALE_SAFE_Ω · 2026-02-20 · STEEVE-MAX
 # Override forcé doctrinal : 12 workers SAFE LIMIT (priorité sur env supervisor).
 # Précédent : 8 workers · gain attendu +50 % throughput cellulaire QC limitrophes.
-TARGET_WORKERS=12
+# P22ΩΩ_CPU_THROTTLING_MITIGATION_Ω · 2026-06-01 · STEEVE-MAX · ACTION COMBINÉE A+F
+# Réduction défensive : 12 → 6 workers (élimine CPU throttling 99.42 % avec
+# CPU quota pod = 2 vCPUs). Verrou Phase III intact · aucun engine touché.
+TARGET_WORKERS=6
 LOG_PREFIX="[β2-ΣΤ-WATCHDOG]"
 
 echo "$LOG_PREFIX Watchdog démarré · check toutes les ${CHECK_INTERVAL_S}s · MIN_WORKERS=$MIN_WORKERS · TARGET=$TARGET_WORKERS"
