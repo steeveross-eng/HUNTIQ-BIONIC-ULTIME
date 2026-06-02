@@ -1,7 +1,7 @@
 # MANIFEST_CHECKPOINT_Ω (périodique)
 
 - **Doctrine**: P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_Ω · checkpoint 12h
-- **Emitted at**: 2026-06-02T11:22:12.297013+00:00
+- **Emitted at**: 2026-06-02T23:38:37.894480+00:00
 - **Bucket R2**: bionic-zerocost-omega
 
 ## Manifest R2 (snapshot)
@@ -9,14 +9,14 @@
 | Champ | Valeur |
 |---|---|
 | doctrine | `P22ΩΩ_ZEROCOST_CANADA_H3R6_Ω` |
-| generated_at | `2026-06-02T11:16:24.428096+00:00` |
-| drift_seconds | **347.9 s** (cible <900.0s) |
+| generated_at | `2026-06-02T23:37:24.208850+00:00` |
+| drift_seconds | **73.7 s** (cible <900.0s) |
 | drift_ok | ✅ OUI |
 | drift_alert | ✅ NORMAL |
-| n_tiles | 137340 |
+| n_tiles | 137922 |
 | cells_unique | 1994 |
-| total_size_mb | 2360.16 |
-| by_species | `{'chevreuil': 1994, 'coyote': 1880, 'dindon_sauvage': 1896, 'orignal': 1938, 'ours_noir': 1923, 'wapiti': 1909}` |
+| total_size_mb | 2372.08 |
+| by_species | `{'chevreuil': 1994, 'coyote': 1894, 'dindon_sauvage': 1903, 'orignal': 1945, 'ours_noir': 1930, 'wapiti': 1916}` |
 
 ## Verrou Phase III
 

@@ -48,7 +48,7 @@ DONNEES_QC_LIMITES = "https://www.donneesquebec.ca/recherche/api/3/action/packag
 # PRESSION_HUMAINE : WorldPop stats API
 WORLDPOP_API = "https://api.worldpop.org/v1/services/stats"
 
-DEFAULT_TIMEOUT_S = 25.0
+DEFAULT_TIMEOUT_S = 5.0  # OMEGA-10++ 2026-06-02 STEEVE-MAX · H4 · 25s→5s — empêche QC WMS lent (~70s) de bloquer le pipeline. Verrou Phase III partiellement levé strictement pour H4.
 DEFAULT_BBOX_RADIUS_M = 5000.0
 
 # ═════════════════════ REGISTRY ═════════════════════

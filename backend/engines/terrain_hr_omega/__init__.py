@@ -54,7 +54,7 @@ OPENTOPO_LIDAR_API = "https://portal.opentopography.org/API/usgsdem"
 
 DEFAULT_GRID_N = 11           # 11x11 grille = 121 points (≤30m maillage)
 DEFAULT_HALO_M = 200.0
-DEFAULT_TIMEOUT_S = 12.0
+DEFAULT_TIMEOUT_S = 5.0  # OMEGA-10++ 2026-06-02 STEEVE-MAX · H4 · 12s→5s — accélère échec SRTM 401 (déjà rapide mais sécurise upper bound)
 DEM_TYPES = ["SRTMGL3", "SRTMGL1", "AW3D30", "COP30", "NASADEM"]
 DEFAULT_DEM_TYPE = "SRTMGL3"  # SRTM 90m global, gratuit, fiable
 
