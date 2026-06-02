@@ -93,6 +93,46 @@ S3 = boto3.client(
 R2_BUCKET = os.environ["CF_R2_BUCKET"]
 
 
+# P22ΩΩ_STATE_FILE_WORKERS_Ω · 2026-06-02 · STEEVE-MAX · R1 ÉLIMINATION RE-SCAN IDEMPOTENT
+# State file par worker pour reprendre exactement après pod restart.
+# Granularité : R5 complète (1 R5 = 24 SEED computes V20 + 24×7 R6 fan-out).
+# Mutation additive · zéro impact engine · Verrou Phase III intact.
+STATE_DIR = Path("/var/log/bionic-zerocost-seed-r5")
+STATE_FILE = STATE_DIR / f"state_worker_{WORKER_INDEX}.json"
+
+
+def _load_worker_state() -> int:
+    """Retourne r5_idx_done (R5 cells terminées). 0 si fresh/grid changed/erreur."""
+    try:
+        if STATE_FILE.exists():
+            data = json.loads(STATE_FILE.read_text())
+            if data.get("grid_file") != str(GRID_FILE):
+                logger.info("[STATE_FILE_Ω] grid changed · reset r5_idx_done=0")
+                return 0
+            return int(data.get("r5_idx_done", 0))
+    except Exception as e:
+        logger.warning(f"[STATE_FILE_Ω] read fail: {e} · reset r5_idx_done=0")
+    return 0
+
+
+def _save_worker_state(r5_idx_done: int) -> None:
+    """Sauve r5_idx_done atomiquement (write-tmp + rename)."""
+    try:
+        STATE_DIR.mkdir(parents=True, exist_ok=True)
+        tmp = STATE_FILE.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps({
+            "worker_index": WORKER_INDEX,
+            "worker_count": WORKER_COUNT,
+            "grid_file": str(GRID_FILE),
+            "r5_idx_done": r5_idx_done,
+            "updated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        }))
+        tmp.replace(STATE_FILE)
+    except Exception as e:
+        logger.warning(f"[STATE_FILE_Ω] save fail at idx={r5_idx_done}: {e}")
+
+
+
 class _R:
     """Mock FastAPI Response."""
     def __init__(self):
@@ -136,6 +176,14 @@ async def main():
     print(f"  Tuiles SEED à compute   : {len(my_r5) * len(SPECIES) * len(MONTHS) * len(HOURS)}")
     print(f"  Tuiles R6 à fan-out     : ~{sum(c['n_r6_children'] for c in my_r5) * len(SPECIES) * len(MONTHS) * len(HOURS)}")
 
+    # P22ΩΩ_STATE_FILE_WORKERS_Ω · reprise post pod restart (skip R5 déjà terminées)
+    r5_idx_done = _load_worker_state()
+    if r5_idx_done >= len(my_r5):
+        print(f"  [STATE_FILE_Ω] r5_idx_done={r5_idx_done} ≥ len={len(my_r5)} · WORKER COMPLET")
+        return
+    if r5_idx_done > 0:
+        print(f"  [STATE_FILE_Ω] RESUME r5_idx={r5_idx_done}/{len(my_r5)} (skip {r5_idx_done} terminées)")
+
     stats = {
         "seed_ok": 0, "seed_fail": 0,
         "fanout_ok": 0, "fanout_fail": 0,
@@ -143,6 +191,8 @@ async def main():
     }
 
     for r5_idx, r5_cell in enumerate(my_r5):
+        if r5_idx < r5_idx_done:
+            continue  # P22ΩΩ_STATE_FILE_WORKERS_Ω · skip cell déjà terminée
         h3_r5 = r5_cell["h3_r5"]
         r5_lat = r5_cell["lat_r5"]
         r5_lng = r5_cell["lng_r5"]
@@ -188,6 +238,9 @@ async def main():
                         except Exception as e:
                             stats["fanout_fail"] += 1
                             logger.warning(f"FAN-OUT fail R6={r6_id}: {e}")
+
+        # P22ΩΩ_STATE_FILE_WORKERS_Ω · persist progress après R5 complète
+        _save_worker_state(r5_idx + 1)
 
         if (r5_idx + 1) % 5 == 0:
             elapsed = time.time() - stats["start"]
