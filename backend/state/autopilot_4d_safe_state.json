@@ -21,8 +21,8 @@
     "MANIFEST_CHECKPOINT_Ω_periodic_last": "2026-06-02T11:22:12.297357+00:00",
     "RAPPORT_AUTOPILOT_MIDPOINT_Ω": "2026-05-28T18:59:24.704340+00:00"
   },
-  "check_count": 55,
-  "last_check_at": "2026-06-02T12:25:09.312927+00:00",
+  "check_count": 56,
+  "last_check_at": "2026-06-02T12:56:38.188450+00:00",
   "last_error": "stability_check: 'stability_actions'",
   "phase_2_grid_full": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_full.json",
   "phase_2_grid_limitrophes": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_limitrophes.json",
@@ -31,41 +31,6 @@
   "block_outside_qc": true,
   "workers_supervisor_action_required": true,
   "stability_actions": [
-    {
-      "kind": "WORKERS_ALIVE_COUNT",
-      "at": "2026-05-31T22:19:47.524155+00:00",
-      "count": 12,
-      "target": 8,
-      "min_required": 4
-    },
-    {
-      "kind": "STALE_WORKERS_DETECTED",
-      "at": "2026-05-31T22:19:47.524462+00:00",
-      "stale_workers": [
-        {
-          "worker_index": 0,
-          "latency_s": 366.2
-        },
-        {
-          "worker_index": 6,
-          "latency_s": 150.2
-        }
-      ],
-      "count": 2,
-      "kill_enabled": false
-    },
-    {
-      "kind": "SOFT_RESTART_DECISION",
-      "at": "2026-05-31T22:19:47.524467+00:00",
-      "soft_restarts": [
-        {
-          "action": "DETECTION_ONLY",
-          "kill_enabled": false,
-          "workers_alive": 12,
-          "note": "Définir AUTOPILOT_STABILITY_KILL=1 pour activer SIGTERM · Watchdog respawn massif si workers<4 (MIN_WORKERS)"
-        }
-      ]
-    },
     {
       "kind": "WORKERS_ALIVE_COUNT",
       "at": "2026-05-31T22:51:24.003620+00:00",
@@ -696,6 +661,37 @@
     {
       "kind": "SOFT_RESTART_DECISION",
       "at": "2026-06-02T12:26:37.984622+00:00",
+      "soft_restarts": [
+        {
+          "action": "DETECTION_ONLY",
+          "kill_enabled": false,
+          "workers_alive": 6,
+          "note": "Définir AUTOPILOT_STABILITY_KILL=1 pour activer SIGTERM · Watchdog respawn massif si workers<4 (MIN_WORKERS)"
+        }
+      ]
+    },
+    {
+      "kind": "WORKERS_ALIVE_COUNT",
+      "at": "2026-06-02T12:58:03.988536+00:00",
+      "count": 6,
+      "target": 8,
+      "min_required": 4
+    },
+    {
+      "kind": "STALE_WORKERS_DETECTED",
+      "at": "2026-06-02T12:58:03.988904+00:00",
+      "stale_workers": [
+        {
+          "worker_index": 2,
+          "latency_s": 130.5
+        }
+      ],
+      "count": 1,
+      "kill_enabled": false
+    },
+    {
+      "kind": "SOFT_RESTART_DECISION",
+      "at": "2026-06-02T12:58:03.988910+00:00",
       "soft_restarts": [
         {
           "action": "DETECTION_ONLY",
