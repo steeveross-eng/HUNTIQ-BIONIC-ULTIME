@@ -60,7 +60,9 @@ WORKER_COUNT = int(os.environ.get("WORKER_COUNT", "8"))
 MAX_R5_CELLS = int(os.environ.get("MAX_R5_CELLS", "0"))  # 0 = illimité
 GRID_FILE = Path(os.environ.get(
     "GRID_FILE_PATH",
-    str(BACKEND_ROOT / "cache" / "zerocost_v1" / "canada_h3_grid_r5_seed.json"),
+    # OMEGA-X ∑ 2026-06-03 STEEVE-MAX · GRID_LOCK · fallback verrouillé sur grille
+    # limitrophes Phase 2 (vs Phase 1 par défaut). Évite régression si env var perdue.
+    str(BACKEND_ROOT / "cache" / "zerocost_v1" / "canada_h3_grid_r5_seed_qc_limitrophes.json"),
 ))
 
 # P22ΩΩ_3RF_ACCELERATION_P0_Ω · BLOCK_OUTSIDE_3RF strict (additif, défaut ON)
@@ -101,22 +103,24 @@ STATE_DIR = Path("/var/log/bionic-zerocost-seed-r5")
 STATE_FILE = STATE_DIR / f"state_worker_{WORKER_INDEX}.json"
 
 
-def _load_worker_state() -> int:
-    """Retourne r5_idx_done (R5 cells terminées). 0 si fresh/grid changed/erreur."""
+def _load_worker_state():
+    """Retourne (r5_idx_done, species_done_in_current).
+    OMEGA-X ∑ 2026-06-03 H6 · tuple (int, list[str]) granularité species."""
     try:
         if STATE_FILE.exists():
             data = json.loads(STATE_FILE.read_text())
             if data.get("grid_file") != str(GRID_FILE):
                 logger.info("[STATE_FILE_Ω] grid changed · reset r5_idx_done=0")
-                return 0
-            return int(data.get("r5_idx_done", 0))
+                return 0, []
+            return int(data.get("r5_idx_done", 0)), list(data.get("species_done", []))
     except Exception as e:
         logger.warning(f"[STATE_FILE_Ω] read fail: {e} · reset r5_idx_done=0")
-    return 0
+    return 0, []
 
 
-def _save_worker_state(r5_idx_done: int) -> None:
-    """Sauve r5_idx_done atomiquement (write-tmp + rename)."""
+def _save_worker_state(r5_idx_done: int, species_done=None) -> None:
+    """Sauve r5_idx_done + species_done atomiquement.
+    OMEGA-X ∑ 2026-06-03 H6 · granularité species."""
     try:
         STATE_DIR.mkdir(parents=True, exist_ok=True)
         tmp = STATE_FILE.with_suffix(".json.tmp")
@@ -125,6 +129,7 @@ def _save_worker_state(r5_idx_done: int) -> None:
             "worker_count": WORKER_COUNT,
             "grid_file": str(GRID_FILE),
             "r5_idx_done": r5_idx_done,
+            "species_done": list(species_done) if species_done else [],
             "updated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         }))
         tmp.replace(STATE_FILE)
@@ -177,12 +182,14 @@ async def main():
     print(f"  Tuiles R6 à fan-out     : ~{sum(c['n_r6_children'] for c in my_r5) * len(SPECIES) * len(MONTHS) * len(HOURS)}")
 
     # P22ΩΩ_STATE_FILE_WORKERS_Ω · reprise post pod restart (skip R5 déjà terminées)
-    r5_idx_done = _load_worker_state()
+    # P22ΩΩ_STATE_FILE_WORKERS_Ω · reprise post pod restart (skip R5 déjà terminées)
+    # OMEGA-X ∑ 2026-06-03 H6 · ajout species_done granulaire intra-R5
+    r5_idx_done, species_done_current = _load_worker_state()
     if r5_idx_done >= len(my_r5):
         print(f"  [STATE_FILE_Ω] r5_idx_done={r5_idx_done} ≥ len={len(my_r5)} · WORKER COMPLET")
         return
-    if r5_idx_done > 0:
-        print(f"  [STATE_FILE_Ω] RESUME r5_idx={r5_idx_done}/{len(my_r5)} (skip {r5_idx_done} terminées)")
+    if r5_idx_done > 0 or species_done_current:
+        print(f"  [STATE_FILE_Ω] RESUME r5_idx={r5_idx_done}/{len(my_r5)} (skip {r5_idx_done} terminées) · species_done={species_done_current}")
 
     stats = {
         "seed_ok": 0, "seed_fail": 0,
@@ -193,12 +200,16 @@ async def main():
     for r5_idx, r5_cell in enumerate(my_r5):
         if r5_idx < r5_idx_done:
             continue  # P22ΩΩ_STATE_FILE_WORKERS_Ω · skip cell déjà terminée
+        # OMEGA-X ∑ H6 · skip species déjà terminées dans R5 en cours (resume granulaire)
+        skip_species_set = set(species_done_current) if r5_idx == r5_idx_done else set()
         h3_r5 = r5_cell["h3_r5"]
         r5_lat = r5_cell["lat_r5"]
         r5_lng = r5_cell["lng_r5"]
         r6_children = r5_cell["r6_children"]
 
         for species in SPECIES:
+            if species in skip_species_set:
+                continue  # OMEGA-X ∑ H6 · species déjà terminée dans cette R5
             for month in MONTHS:
                 for hour in HOURS:
                     # PHASE 1 : SEED compute V20 au centre R5
@@ -239,8 +250,14 @@ async def main():
                             stats["fanout_fail"] += 1
                             logger.warning(f"FAN-OUT fail R6={r6_id}: {e}")
 
+            # OMEGA-X ∑ H6 · sauve state après chaque species terminée dans R5 en cours
+            skip_species_set.add(species)
+            _save_worker_state(r5_idx, list(skip_species_set))
+
         # P22ΩΩ_STATE_FILE_WORKERS_Ω · persist progress après R5 complète
-        _save_worker_state(r5_idx + 1)
+        # OMEGA-X ∑ H6 · reset species_done car R5 complète, on passe à la suivante
+        _save_worker_state(r5_idx + 1, [])
+        species_done_current = []  # reset pour R5 suivante
 
         if (r5_idx + 1) % 5 == 0:
             elapsed = time.time() - stats["start"]

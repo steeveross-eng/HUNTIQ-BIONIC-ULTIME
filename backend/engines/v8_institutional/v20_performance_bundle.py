@@ -919,7 +919,7 @@ async def _prewarm_engines_omega():
 _MISS_HARDCAP_SEC = 6.0   # P22ΩΩ 2026-05-14 : 10→6s — V10 cap 6s + V5 cap 6s + post ~10s = max ~22s < 25s K8s
 _MISS_SOFT_THRESHOLD_SEC = 5.0  # Aligné sur le nouveau hardcap 6s
 _MISS_WARMUP_HARDCAP_SEC = 12.0  # P22ΩΩ 2026-05-14 : 35→12s pour ne pas saturer single-worker
-_GLOBAL_BUNDLE_DEADLINE_SEC = 300.0  # OMEGA-10++ 2026-06-02 STEEVE-MAX · H1 · 10s→300s — débloque pipeline post-V10/V5 quand QC WMS lent (~70s/appel). Verrou Phase III partiellement levé strictement pour H1.
+_GLOBAL_BUNDLE_DEADLINE_SEC = 900.0  # OMEGA-X ∑ 2026-06-03 STEEVE-MAX · H1+ · 300s→900s — débloque les 5 workers atteignant 345s sur cells lourdes en CPU throttling. Verrou Phase III partiellement levé strictement pour H1+.
 _MISS_STATS: dict = {
     "absorbed_count": 0,        # MISS dépassant hardcap → absorption
     "soft_warning_count": 0,    # MISS dépassant soft threshold

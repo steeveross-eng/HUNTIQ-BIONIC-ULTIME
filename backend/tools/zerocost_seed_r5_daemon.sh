@@ -7,7 +7,7 @@ set -u
 
 ACTION="${1:-status}"
 WORKER_COUNT="${WORKER_COUNT:-8}"
-GRID_FILE_PATH="${GRID_FILE_PATH:-/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed.json}"
+GRID_FILE_PATH="${GRID_FILE_PATH:-/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_limitrophes.json}"  # OMEGA-X ∑ 2026-06-03 STEEVE-MAX · GRID_LOCK · fallback Phase 2 limitrophes (vs Phase 1)
 MAX_R5_CELLS="${MAX_R5_CELLS:-0}"
 LOG_DIR="${LOG_DIR:-/var/log/bionic-zerocost-seed-r5}"
 STATE_FILE="$LOG_DIR/state.json"

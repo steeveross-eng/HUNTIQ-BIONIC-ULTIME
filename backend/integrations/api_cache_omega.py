@@ -75,6 +75,7 @@ ALLOWED_DOMAINS = {
     "rest.isric.org",
     "overpass.osm.ch",
     "www.donneesquebec.ca",  # CKAN package_show · ajouté 2026-02-20
+    "geoegl.msp.gouv.qc.ca",  # OMEGA-X ∑ 2026-06-03 STEEVE-MAX · PRE-CACHE QC WMS · cache GetCapabilities MFFP (latence 657ms→0ms après 1er appel)
 }
 
 # Stats globales runtime (in-memory · sérialisées périodiquement)
