@@ -17,7 +17,11 @@ MIN_WORKERS="${MIN_WORKERS:-4}"
 # P22ΩΩ_CPU_THROTTLING_MITIGATION_Ω · 2026-06-01 · STEEVE-MAX · ACTION COMBINÉE A+F
 # Réduction défensive : 12 → 6 workers (élimine CPU throttling 99.42 % avec
 # CPU quota pod = 2 vCPUs). Verrou Phase III intact · aucun engine touché.
-TARGET_WORKERS=6
+# P22ΩΩ_WORKERS_DOWNSCALE_6_TO_4_Ω · 2026-02-XX · STEEVE-MAX · DIRECTIVE GO STANDARD
+# Throttling persistant constaté = 98.3 % périodes (9180/9339). Réduction
+# additionnelle 6 → 4 workers pour libérer marge CPU à FastAPI (probes <100ms)
+# et stopper cascade pod restart e1_monitor. Verrou Phase III intact.
+TARGET_WORKERS=4
 LOG_PREFIX="[β2-ΣΤ-WATCHDOG]"
 
 echo "$LOG_PREFIX Watchdog démarré · check toutes les ${CHECK_INTERVAL_S}s · MIN_WORKERS=$MIN_WORKERS · TARGET=$TARGET_WORKERS"
