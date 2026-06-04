@@ -1,10 +1,10 @@
 {
   "_doctrine": "P22ΩΩ_AUTOPILOT_4D_SAFE_Ω",
   "_report": "RAPPORT_QC_PROGRESS_Ω",
-  "_generated_at": "2026-06-02T23:37:18.399293+00:00",
+  "_generated_at": "2026-06-03T12:02:36.491100+00:00",
   "_phase": "PHASE_2_QC_LIMITROPHES",
-  "scan_sec": 80.69696092605591,
-  "total_keys_scanned": 137923,
+  "scan_sec": 81.40058994293213,
+  "total_keys_scanned": 138217,
   "targets_r6": {
     "LIMITROPHES_priority_1": 2292,
     "3RF_priority_2": 1754,
@@ -13,7 +13,7 @@
   "tiles_by_priority": {
     "3": 252,
     "2": 47538,
-    "1": 89922,
+    "1": 90216,
     "99": 210
   },
   "tiles_by_label": {
@@ -23,7 +23,7 @@
     "MAURICIE_RF_MASTIGOUCHE_ST_MAURICE": 11088,
     "MAURICIE_EST_LIMITROPHE": 50436,
     "LAURENTIDES_RF_LAURENTIDES_ROUGE_MATAWIN": 33255,
-    "OUTAOUAIS_NORD_LIMITROPHE": 7089,
+    "OUTAOUAIS_NORD_LIMITROPHE": 7383,
     "OUT_OF_QC": 210
   },
   "cells_unique_by_label": {
@@ -39,7 +39,7 @@
   "verrou_phase_iii": true,
   "lecture_seule": true,
   "limitrophes_summary": {
-    "tiles_done": 89922,
+    "tiles_done": 90216,
     "cells_unique_done": 1294,
     "cells_target_total": 2292,
     "pct_cells": 56.46
