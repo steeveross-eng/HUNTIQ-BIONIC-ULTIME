@@ -17,12 +17,12 @@
     "MANIFEST_CHECKPOINT_Ω": "2026-05-24T11:35:33.075166+00:00",
     "AUDIT_DIVERGENCE_BIO_Ω": "2026-05-24T11:35:33.075166+00:00",
     "RAPPORT_QC_PROGRESS_Ω_last": "2026-06-04T11:07:30.156746+00:00",
-    "HABITAT_FUSION_STRUCTURAL_REPORT_Ω_last": "2026-06-03T12:04:02.703780+00:00",
+    "HABITAT_FUSION_STRUCTURAL_REPORT_Ω_last": "2026-06-04T13:43:43.924404+00:00",
     "MANIFEST_CHECKPOINT_Ω_periodic_last": "2026-06-04T11:07:31.320502+00:00",
     "RAPPORT_AUTOPILOT_MIDPOINT_Ω": "2026-05-28T18:59:24.704340+00:00"
   },
-  "check_count": 67,
-  "last_check_at": "2026-06-04T11:37:31.637063+00:00",
+  "check_count": 68,
+  "last_check_at": "2026-06-04T13:42:13.805632+00:00",
   "last_error": "stability_check: 'stability_actions'",
   "phase_2_grid_full": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_full.json",
   "phase_2_grid_limitrophes": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_limitrophes.json",
@@ -31,18 +31,6 @@
   "block_outside_qc": true,
   "workers_supervisor_action_required": true,
   "stability_actions": [
-    {
-      "kind": "SOFT_RESTART_DECISION",
-      "at": "2026-06-01T15:58:15.751768+00:00",
-      "soft_restarts": [
-        {
-          "action": "DETECTION_ONLY",
-          "kill_enabled": false,
-          "workers_alive": 6,
-          "note": "Définir AUTOPILOT_STABILITY_KILL=1 pour activer SIGTERM · Watchdog respawn massif si workers<4 (MIN_WORKERS)"
-        }
-      ]
-    },
     {
       "kind": "WORKERS_ALIVE_COUNT",
       "at": "2026-06-01T16:30:12.160473+00:00",
@@ -591,6 +579,13 @@
           "note": "Définir AUTOPILOT_STABILITY_KILL=1 pour activer SIGTERM · Watchdog respawn massif si workers<4 (MIN_WORKERS)"
         }
       ]
+    },
+    {
+      "kind": "WORKERS_ALIVE_COUNT",
+      "at": "2026-06-04T13:43:44.010304+00:00",
+      "count": 6,
+      "target": 8,
+      "min_required": 4
     }
   ],
   "alerts": []
