@@ -10,7 +10,13 @@
 
 set -u
 CHECK_INTERVAL_S="${CHECK_INTERVAL_S:-45}"
-MIN_WORKERS="${MIN_WORKERS:-4}"
+# P22ΩΩ_WORKERS_DOWNSCALE_4_TO_3_Ω_MINFIX · 2026-06-04 · STEEVE-MAX
+# Aligne MIN_WORKERS sur TARGET_WORKERS=3 pour stopper boucle RELANCE infinie
+# (sinon n=3 < MIN=4 → kill+respawn tous les 45s · workers ne progressent jamais)
+MIN_WORKERS="${MIN_WORKERS:-3}"
+# Conf supervisor injecte historiquement MIN_WORKERS=4 (env override le défaut
+# bash). Override force assignation après TARGET_WORKERS pour garantir
+# cohérence MIN <= TARGET. Verrou Phase III intact.
 # P22ΩΩ_WORKERS_SCALE_SAFE_Ω · 2026-02-20 · STEEVE-MAX
 # Override forcé doctrinal : 12 workers SAFE LIMIT (priorité sur env supervisor).
 # Précédent : 8 workers · gain attendu +50 % throughput cellulaire QC limitrophes.
@@ -21,7 +27,19 @@ MIN_WORKERS="${MIN_WORKERS:-4}"
 # Throttling persistant constaté = 98.3 % périodes (9180/9339). Réduction
 # additionnelle 6 → 4 workers pour libérer marge CPU à FastAPI (probes <100ms)
 # et stopper cascade pod restart e1_monitor. Verrou Phase III intact.
-TARGET_WORKERS=4
+# P22ΩΩ_WORKERS_DOWNSCALE_4_TO_3_Ω · 2026-06-04 · STEEVE-MAX · DIRECTIVE GO STANDARD
+# Throttling persistant 96.4 % avec 4 workers · PSI cpu full 41 % · cycle pod
+# 59 min (régression). Downscale additionnel 4 → 3 workers pour garantir MTBF
+# ≥ plusieurs heures et permettre cohabitation stable FastAPI + MongoDB +
+# e1_monitor sur quota 2 vCPUs. Vitesse R5 réduite ~25 % attendue mais
+# progression continue sans restart pod. Verrou Phase III intact · escalade
+# infra CPU 2→4 vCPUs en parallèle (P1 externe plateforme).
+TARGET_WORKERS=3
+# P22ΩΩ_WORKERS_DOWNSCALE_4_TO_3_Ω_HARDLOCK · 2026-06-04 · STEEVE-MAX
+# HARD-OVERRIDE final de MIN_WORKERS pour neutraliser l'env supervisor
+# (conf historique injecte MIN_WORKERS=4 · provoquait boucle RELANCE
+# infinie après TARGET=3). Le HARD-LOCK garantit MIN==TARGET en runtime.
+MIN_WORKERS=$TARGET_WORKERS
 LOG_PREFIX="[β2-ΣΤ-WATCHDOG]"
 
 echo "$LOG_PREFIX Watchdog démarré · check toutes les ${CHECK_INTERVAL_S}s · MIN_WORKERS=$MIN_WORKERS · TARGET=$TARGET_WORKERS"
