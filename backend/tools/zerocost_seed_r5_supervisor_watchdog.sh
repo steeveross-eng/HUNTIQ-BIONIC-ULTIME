@@ -34,7 +34,33 @@ MIN_WORKERS="${MIN_WORKERS:-3}"
 # e1_monitor sur quota 2 vCPUs. Vitesse R5 réduite ~25 % attendue mais
 # progression continue sans restart pod. Verrou Phase III intact · escalade
 # infra CPU 2→4 vCPUs en parallèle (P1 externe plateforme).
-TARGET_WORKERS=3
+# ─── ANCIEN ASSIGN (préservé doctrinalement) : TARGET_WORKERS=3 ───
+# P22ΩΩ_WORKERS_SCALE_ELITE_PLUS_Ω_AUTODETECT · 2026-06-06 · STEEVE-MAX
+# Bascule automatique 3 (preview 2vCPU) / 8 (Elite 4+vCPU) via cgroup cpu.max.
+# Lecture : /sys/fs/cgroup/cpu.max format "QUOTA PERIOD" en µs (-1 = pas de
+# limite). Seuil discrimination ELITE = quota ≥ 400000 (4.0 vCPUs).
+# Overrides env : TARGET_WORKERS_PREVIEW / TARGET_WORKERS_ELITE.
+# Verrou Phase III intact · changement strictement additif · zéro impact engine.
+TARGET_WORKERS_PREVIEW="${TARGET_WORKERS_PREVIEW:-3}"
+TARGET_WORKERS_ELITE="${TARGET_WORKERS_ELITE:-8}"
+_CPU_QUOTA_RAW=""
+if [ -r /sys/fs/cgroup/cpu.max ]; then
+    _CPU_QUOTA_RAW=$(awk '{print $1}' /sys/fs/cgroup/cpu.max 2>/dev/null)
+fi
+# Logique sélection tier :
+#   - quota numérique ≥ 400000 µs (4 vCPUs)            → ELITE
+#   - quota "max" (illimité, hyperscale futur)          → ELITE
+#   - sinon (2 vCPUs preview standard, ou non lisible)  → PREVIEW (défensif)
+if [[ "$_CPU_QUOTA_RAW" == "max" ]]; then
+    TARGET_WORKERS=$TARGET_WORKERS_ELITE
+    _TIER_DETECTED="ELITE_UNLIMITED (cpu.max=max)"
+elif [[ "$_CPU_QUOTA_RAW" =~ ^[0-9]+$ ]] && (( _CPU_QUOTA_RAW >= 400000 )); then
+    TARGET_WORKERS=$TARGET_WORKERS_ELITE
+    _TIER_DETECTED="ELITE (cpu.max=${_CPU_QUOTA_RAW}µs ≥ 400000)"
+else
+    TARGET_WORKERS=$TARGET_WORKERS_PREVIEW
+    _TIER_DETECTED="PREVIEW (cpu.max=${_CPU_QUOTA_RAW:-unknown}µs · <400000 ou non-lisible)"
+fi
 # P22ΩΩ_WORKERS_DOWNSCALE_4_TO_3_Ω_HARDLOCK · 2026-06-04 · STEEVE-MAX
 # HARD-OVERRIDE final de MIN_WORKERS pour neutraliser l'env supervisor
 # (conf historique injecte MIN_WORKERS=4 · provoquait boucle RELANCE
@@ -42,7 +68,7 @@ TARGET_WORKERS=3
 MIN_WORKERS=$TARGET_WORKERS
 LOG_PREFIX="[β2-ΣΤ-WATCHDOG]"
 
-echo "$LOG_PREFIX Watchdog démarré · check toutes les ${CHECK_INTERVAL_S}s · MIN_WORKERS=$MIN_WORKERS · TARGET=$TARGET_WORKERS"
+echo "$LOG_PREFIX Watchdog démarré · check toutes les ${CHECK_INTERVAL_S}s · MIN_WORKERS=$MIN_WORKERS · TARGET=$TARGET_WORKERS · TIER=$_TIER_DETECTED"
 
 while true; do
     # Compter workers β2-ΣΤ vivants
