@@ -1302,6 +1302,23 @@ try:
 except Exception as e:
     logger.warning(f"API-CACHE-Ω router not loaded: {e}")
 
+# P22ΩΩ_RUNTIME_TIER_STATUS_Ω · 2026-06-06 · STEEVE-MAX
+# Router diagnostic runtime (additif strict · LECTURE SEULE · Verrou Phase III).
+# Expose tier détecté (PREVIEW/ELITE), cpu.max, memory.max, workers ZEROCOST,
+# R2 state lag, pod uptime — utile pour différencier preview vs Elite à distance
+# via curl après deploy sans accès au pod.
+try:
+    from routes.runtime_tier_status_router_omega import (
+        router as runtime_tier_status_router,
+    )
+    app.include_router(runtime_tier_status_router)
+    logger.info(
+        "✓ RUNTIME-TIER-STATUS-Ω registered — /api/v30/runtime/tier-status "
+        "(lecture seule · cgroup + workers + R2 lag)"
+    )
+except Exception as e:
+    logger.warning(f"RUNTIME-TIER-STATUS-Ω router not loaded: {e}")
+
 # P22ΩΩ_NDVI_LIDAR_P1_STRUCTURAL+_Ω · 2026-02-20 · STEEVE-MAX
 # Router institutionnel HABITAT-FUSION_P1_STRUCTURAL+_Ω (additif strict · Verrou Phase III).
 # weight_active reste 0.35 (anti-générique strict) · clients ingestion code-ready inertes.
