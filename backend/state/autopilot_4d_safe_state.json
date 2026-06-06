@@ -21,8 +21,8 @@
     "MANIFEST_CHECKPOINT_Ω_periodic_last": "2026-06-06T19:00:18.901666+00:00",
     "RAPPORT_AUTOPILOT_MIDPOINT_Ω": "2026-05-28T18:59:24.704340+00:00"
   },
-  "check_count": 78,
-  "last_check_at": "2026-06-06T18:56:33.037169+00:00",
+  "check_count": 80,
+  "last_check_at": "2026-06-06T19:18:29.388954+00:00",
   "last_error": "stability_check: 'stability_actions'",
   "phase_2_grid_full": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_full.json",
   "phase_2_grid_limitrophes": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_limitrophes.json",
@@ -31,29 +31,6 @@
   "block_outside_qc": true,
   "workers_supervisor_action_required": true,
   "stability_actions": [
-    {
-      "kind": "WORKERS_ALIVE_COUNT",
-      "at": "2026-06-02T12:26:37.984342+00:00",
-      "count": 6,
-      "target": 8,
-      "min_required": 4
-    },
-    {
-      "kind": "STALE_WORKERS_DETECTED",
-      "at": "2026-06-02T12:26:37.984617+00:00",
-      "stale_workers": [
-        {
-          "worker_index": 2,
-          "latency_s": 148.7
-        },
-        {
-          "worker_index": 5,
-          "latency_s": 131.9
-        }
-      ],
-      "count": 2,
-      "kill_enabled": false
-    },
     {
       "kind": "SOFT_RESTART_DECISION",
       "at": "2026-06-02T12:26:37.984622+00:00",
@@ -563,6 +540,20 @@
     {
       "kind": "WORKERS_ALIVE_COUNT",
       "at": "2026-06-06T19:00:18.910906+00:00",
+      "count": 3,
+      "target": 8,
+      "min_required": 4
+    },
+    {
+      "kind": "WORKERS_ALIVE_COUNT",
+      "at": "2026-06-06T19:14:20.926552+00:00",
+      "count": 3,
+      "target": 8,
+      "min_required": 4
+    },
+    {
+      "kind": "WORKERS_ALIVE_COUNT",
+      "at": "2026-06-06T19:19:53.512879+00:00",
       "count": 3,
       "target": 8,
       "min_required": 4

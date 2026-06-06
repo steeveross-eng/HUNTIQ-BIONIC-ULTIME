@@ -51,6 +51,24 @@ from engines.v8_institutional.v20_performance_bundle import (  # noqa: E402
 )
 from tools.bundle_adapter_r5_to_r6_omega import adapt_bundle_to_r6_child  # noqa: E402
 
+# P22ΩΩ_EXTERNALISATION_STATE_FILES_R2_Ω · 2026-06-06 · STEEVE-MAX · DUAL-WRITE
+# Best-effort dual-write des state files vers Cloudflare R2 + filesystem maintenu.
+# Doctrine STRICT ADDITIF · Verrou Phase III intact · cold-start safe pour
+# migration pod production (filesystem éphémère possible).
+try:
+    from integrations.r2_state_persistence_omega import (  # noqa: E402
+        save_state_to_r2 as _r2_save_state,
+        load_state_from_r2 as _r2_load_state,
+    )
+    _R2_DUAL_WRITE_ENABLED = True
+except Exception as _e_r2:
+    def _r2_save_state(*_a, **_k):  # type: ignore[no-redef]
+        return False
+
+    def _r2_load_state(*_a, **_k):  # type: ignore[no-redef]
+        return None
+    _R2_DUAL_WRITE_ENABLED = False
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger("bionic.zerocost_worker_seed_r5")
 
@@ -105,7 +123,9 @@ STATE_FILE = STATE_DIR / f"state_worker_{WORKER_INDEX}.json"
 
 def _load_worker_state():
     """Retourne (r5_idx_done, species_done_in_current).
-    OMEGA-X ∑ 2026-06-03 H6 · tuple (int, list[str]) granularité species."""
+    OMEGA-X ∑ 2026-06-03 H6 · tuple (int, list[str]) granularité species.
+    P22ΩΩ_R2_DUAL_READ_Ω 2026-06-06 · fallback R2 si filesystem absent (cold-start)."""
+    # 1. Source primaire : filesystem (rapide, source de vérité runtime)
     try:
         if STATE_FILE.exists():
             data = json.loads(STATE_FILE.read_text())
@@ -114,27 +134,53 @@ def _load_worker_state():
                 return 0, []
             return int(data.get("r5_idx_done", 0)), list(data.get("species_done", []))
     except Exception as e:
-        logger.warning(f"[STATE_FILE_Ω] read fail: {e} · reset r5_idx_done=0")
+        logger.warning(f"[STATE_FILE_Ω] read fail: {e} · tentative R2 cold-start")
+
+    # 2. Cold-start : fallback R2 si filesystem absent ou corrompu
+    if _R2_DUAL_WRITE_ENABLED:
+        r2_data = _r2_load_state(WORKER_INDEX)
+        if r2_data is not None:
+            if r2_data.get("grid_file") != str(GRID_FILE):
+                logger.info("[STATE_FILE_Ω] R2 grid mismatch · reset r5_idx_done=0")
+                return 0, []
+            logger.info(
+                f"[STATE_FILE_Ω] COLD-START RESUME depuis R2 · "
+                f"r5_idx_done={r2_data.get('r5_idx_done')} · "
+                f"species_done={r2_data.get('species_done')}"
+            )
+            return int(r2_data.get("r5_idx_done", 0)), list(r2_data.get("species_done", []))
+
     return 0, []
 
 
 def _save_worker_state(r5_idx_done: int, species_done=None) -> None:
     """Sauve r5_idx_done + species_done atomiquement.
-    OMEGA-X ∑ 2026-06-03 H6 · granularité species."""
+    OMEGA-X ∑ 2026-06-03 H6 · granularité species.
+    P22ΩΩ_R2_DUAL_WRITE_Ω 2026-06-06 · best-effort R2 après commit filesystem."""
+    state_dict = {
+        "worker_index": WORKER_INDEX,
+        "worker_count": WORKER_COUNT,
+        "grid_file": str(GRID_FILE),
+        "r5_idx_done": r5_idx_done,
+        "species_done": list(species_done) if species_done else [],
+        "updated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+
+    # 1. Write filesystem (atomic, source de vérité runtime)
     try:
         STATE_DIR.mkdir(parents=True, exist_ok=True)
         tmp = STATE_FILE.with_suffix(".json.tmp")
-        tmp.write_text(json.dumps({
-            "worker_index": WORKER_INDEX,
-            "worker_count": WORKER_COUNT,
-            "grid_file": str(GRID_FILE),
-            "r5_idx_done": r5_idx_done,
-            "species_done": list(species_done) if species_done else [],
-            "updated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        }))
+        tmp.write_text(json.dumps(state_dict))
         tmp.replace(STATE_FILE)
     except Exception as e:
         logger.warning(f"[STATE_FILE_Ω] save fail at idx={r5_idx_done}: {e}")
+
+    # 2. Dual-write R2 best-effort (ne bloque jamais le worker)
+    if _R2_DUAL_WRITE_ENABLED:
+        try:
+            _r2_save_state(WORKER_INDEX, state_dict)
+        except Exception as e:
+            logger.warning(f"[R2_STATE] dual-write fail at idx={r5_idx_done}: {e}")
 
 
 

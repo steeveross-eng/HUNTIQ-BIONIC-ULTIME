@@ -140,8 +140,11 @@ def save_state_to_r2(worker_index: Optional[int], state_dict: dict, timeout: flo
             ContentType="application/json",
             CacheControl="no-cache, no-store, max-age=0",
             Metadata={
-                "doctrine": "P22ΩΩ_EXTERNALISATION_STATE_R2",
-                "saved_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                # P22ΩΩ_R2_METADATA_ASCII_ONLY_Ω · S3 metadata refuse non-ASCII
+                # (Omega Ω et autres glyphes BCE-4X). Conservés UNIQUEMENT dans le
+                # corps JSON. Ici : codes doctrinaux ASCII-safe.
+                "doctrine": "P22-EXTERNALISATION-STATE-R2",
+                "saved-at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             },
         )
         return True
