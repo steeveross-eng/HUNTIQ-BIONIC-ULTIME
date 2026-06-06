@@ -2,7 +2,7 @@
   "_doctrine": "P22ΩΩ_AUTOPILOT_4D_SAFE_Ω",
   "armed_at": "2026-05-24T02:45:01.983819+00:00",
   "current_phase": "PHASE_2_QC_LIMITROPHES",
-  "current_3rf_pct": 112.39,
+  "current_3rf_pct": 113.3,
   "phase_history": [
     {
       "from": "PHASE_1_3RF",
@@ -21,8 +21,8 @@
     "MANIFEST_CHECKPOINT_Ω_periodic_last": "2026-06-06T19:00:18.901666+00:00",
     "RAPPORT_AUTOPILOT_MIDPOINT_Ω": "2026-05-28T18:59:24.704340+00:00"
   },
-  "check_count": 84,
-  "last_check_at": "2026-06-06T21:51:46.456352+00:00",
+  "check_count": 85,
+  "last_check_at": "2026-06-06T22:23:12.327305+00:00",
   "last_error": "stability_check: 'stability_actions'",
   "phase_2_grid_full": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_full.json",
   "phase_2_grid_limitrophes": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_limitrophes.json",
@@ -31,13 +31,6 @@
   "block_outside_qc": true,
   "workers_supervisor_action_required": true,
   "stability_actions": [
-    {
-      "kind": "WORKERS_ALIVE_COUNT",
-      "at": "2026-06-02T15:43:27.341236+00:00",
-      "count": 6,
-      "target": 8,
-      "min_required": 4
-    },
     {
       "kind": "STALE_WORKERS_DETECTED",
       "at": "2026-06-02T15:43:27.341568+00:00",
@@ -539,6 +532,13 @@
     {
       "kind": "WORKERS_ALIVE_COUNT",
       "at": "2026-06-06T21:53:12.220961+00:00",
+      "count": 3,
+      "target": 8,
+      "min_required": 4
+    },
+    {
+      "kind": "WORKERS_ALIVE_COUNT",
+      "at": "2026-06-06T22:24:30.413346+00:00",
       "count": 3,
       "target": 8,
       "min_required": 4
