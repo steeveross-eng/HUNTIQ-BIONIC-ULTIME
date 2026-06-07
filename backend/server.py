@@ -1319,6 +1319,25 @@ try:
 except Exception as e:
     logger.warning(f"RUNTIME-TIER-STATUS-Ω router not loaded: {e}")
 
+# P22ΩΩ_INGEST_TRIGGER_Ω_DRY_RUN_DEFAULT · 2026-06-07 · STEEVE-MAX
+# Router déclencheur P1 ingestion (additif strict · 1 fichier nouveau).
+# POST /api/v30/habitat-fusion/p1/ingest/trigger/{client}?dry_run=true (défaut)
+# Validation OAuth2 / reachability / listing metadata · zéro téléchargement.
+# dry_run=false autorise download_*() réel (peut lever NotImplementedError
+# tant que P1_FULL implementation downstream non livrée).
+try:
+    from routes.habitat_fusion_p1_ingest_router import (
+        router as habitat_fusion_p1_ingest_router,
+    )
+    app.include_router(habitat_fusion_p1_ingest_router)
+    logger.info(
+        "✓ HABITAT-FUSION-P1-INGEST-Ω registered — "
+        "/api/v30/habitat-fusion/p1/ingest/{trigger,clients} "
+        "(dry_run=true par défaut · Verrou Phase III)"
+    )
+except Exception as e:
+    logger.warning(f"HABITAT-FUSION-P1-INGEST-Ω router not loaded: {e}")
+
 # P22ΩΩ_NDVI_LIDAR_P1_STRUCTURAL+_Ω · 2026-02-20 · STEEVE-MAX
 # Router institutionnel HABITAT-FUSION_P1_STRUCTURAL+_Ω (additif strict · Verrou Phase III).
 # weight_active reste 0.35 (anti-générique strict) · clients ingestion code-ready inertes.
