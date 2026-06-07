@@ -1325,6 +1325,21 @@ except Exception as e:
 # Validation OAuth2 / reachability / listing metadata · zéro téléchargement.
 # dry_run=false autorise download_*() réel (peut lever NotImplementedError
 # tant que P1_FULL implementation downstream non livrée).
+# P22ΩΩ_INGESTION_P1_URL_OVERRIDE_Ω · 2026-06-07 · STEEVE-MAX
+# Patch additif URLs P1 (NRCan HRDEM + MFFP) vers endpoints officiels 2026.
+# Application AVANT include_router pour que les imports lazy du router voient
+# les URLs patchées. Verrou Phase III intact.
+try:
+    from integrations.ingestion_p1_url_override_omega import apply_p1_url_overrides
+    _p1_url_report = apply_p1_url_overrides()
+    logger.info(
+        f"✓ P1_URL_OVERRIDE applied · "
+        f"{len(_p1_url_report.get('overrides_applied', []))} overrides · "
+        f"{len(_p1_url_report.get('errors', []))} errors"
+    )
+except Exception as e:
+    logger.warning(f"P1_URL_OVERRIDE skipped: {e}")
+
 try:
     from routes.habitat_fusion_p1_ingest_router import (
         router as habitat_fusion_p1_ingest_router,
