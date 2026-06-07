@@ -71,29 +71,40 @@ def _earthaccess_login() -> bool:
 
 
 def _resolve_granule_urls(scene_ids: list[str]) -> list[dict[str, Any]]:
-    """Résout granule_id → liste URLs .tif via earthaccess.
+    """Résout granule_id (concept_id CMR) → liste URLs .tif via earthaccess.
     Retourne [{granule_id, urls: [url, url], ...}, ...].
+
+    P22ΩΩ_NASA_HLS_RESOLVE_BUGFIX_Ω · 2026-06-07 · STEEVE-MAX
+    Le dry_run NASA expose des `granule_id` au format concept_id CMR (G... -LPCLOUD).
+    L'ancien code utilisait `granule_name` qui attendait le `title` (HLS.L30...).
+    Fix : utiliser `concept_id` qui matche exactement le format retourné par dry_run.
     """
     try:
         import earthaccess
         results = []
         for granule_id in scene_ids:
-            # Recherche par granule_ur (= granule_id) sur HLSL30 + HLSS30
+            # Recherche par concept_id CMR (format G..-LPCLOUD)
             granules = earthaccess.search_data(
-                short_name=["HLSL30", "HLSS30"],
-                granule_name=granule_id,
+                concept_id=granule_id,
                 count=1,
             )
             if not granules:
-                # Fallback : search par concept_id si format Cxxxx ou Gxxxx
+                # Fallback : tenter granule_ur si concept_id échoue
+                try:
+                    granules = earthaccess.search_data(
+                        short_name=["HLSL30", "HLSS30"],
+                        granule_ur=granule_id,
+                        count=1,
+                    )
+                except Exception:
+                    granules = []
+            if not granules:
                 results.append({"granule_id": granule_id, "urls": [], "error": "not_found"})
                 continue
             granule = granules[0]
             urls = []
             try:
-                # earthaccess.results expose .data_links() ou _data_url
                 links = granule.data_links() if hasattr(granule, "data_links") else []
-                # Filter sur .tif (NDVI calculation requires B04/B05 typically)
                 urls = [u for u in links if u.lower().endswith(".tif")]
             except Exception as e:
                 logger.warning(f"[P1_FULL_NASA] links extract fail {granule_id}: {e}")
