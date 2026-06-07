@@ -305,6 +305,15 @@ async def main():
         _save_worker_state(r5_idx + 1, [])
         species_done_current = []  # reset pour R5 suivante
 
+        # P22ΩΩ_ELITE_PACING_OMEGA_Ω · 2026-06-06 · STEEVE-MAX · throttle<5% calibration
+        # Pacing optionnel post-R5 pour relâcher pression CPU cumulée 8 workers sur
+        # quota Elite 4 vCPUs (objectif throttle_ratio_pct < 5%). Lu depuis env
+        # WORKER_PACING_MS (défaut 0 = legacy preview, activé 50ms en TIER=ELITE par
+        # watchdog). Pause non-bloquante asyncio · idle ratio attendu ~20 % sur Elite.
+        _pacing_ms = int(os.environ.get("WORKER_PACING_MS", "0"))
+        if _pacing_ms > 0:
+            await asyncio.sleep(_pacing_ms / 1000.0)
+
         if (r5_idx + 1) % 5 == 0:
             elapsed = time.time() - stats["start"]
             rate = stats["fanout_ok"] / max(elapsed, 1)

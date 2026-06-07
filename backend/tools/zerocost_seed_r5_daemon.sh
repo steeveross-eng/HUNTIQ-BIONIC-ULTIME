@@ -37,18 +37,29 @@ start_daemon() {
     PIDS=()
     PYTHON_BIN="/root/.venv/bin/python3"
     [ -x "$PYTHON_BIN" ] || PYTHON_BIN="$(command -v python3)"
+    # P22ΩΩ_ELITE_SPAWN_STAGGER_Ω · 2026-06-06 · STEEVE-MAX · throttle<5% calibration
+    # Stagger spawn N ms entre workers · évite le spike CPU initial (bootstrap V20
+    # parallèle = pic ~400% CPU pendant ~3-5s qui déclenche probes liveness fail).
+    # Défaut 0 = comportement legacy (preview). Watchdog active 2000ms en TIER=ELITE.
+    SPAWN_STAGGER_MS="${SPAWN_STAGGER_MS:-0}"
+    WORKER_PACING_MS="${WORKER_PACING_MS:-0}"
     for ((i=0; i<WORKER_COUNT; i++)); do
         setsid nohup nice -n 19 env \
             GRID_FILE_PATH="$GRID_FILE_PATH" \
             WORKER_INDEX=$i \
             WORKER_COUNT=$WORKER_COUNT \
             MAX_R5_CELLS=$MAX_R5_CELLS \
+            WORKER_PACING_MS="$WORKER_PACING_MS" \
             PYTHONUNBUFFERED=1 \
             "$PYTHON_BIN" /app/backend/tools/zerocost_worker_seed_r5.py \
             > "$LOG_DIR/worker_${i}.log" 2>&1 < /dev/null &
         PIDS+=($!)
         disown
-        echo "  ✓ β2-ΣΤ Worker $i démarré (PID ${PIDS[$i]} · nice 19 · $PYTHON_BIN)"
+        echo "  ✓ β2-ΣΤ Worker $i démarré (PID ${PIDS[$i]} · nice 19 · $PYTHON_BIN · pacing=${WORKER_PACING_MS}ms)"
+        # Stagger spawn si activé (Elite)
+        if [[ $SPAWN_STAGGER_MS -gt 0 && $i -lt $((WORKER_COUNT - 1)) ]]; then
+            sleep $(awk "BEGIN { print $SPAWN_STAGGER_MS / 1000 }")
+        fi
     done
     echo "{\"started_at\": $START_TS, \"worker_count\": $WORKER_COUNT, \"pids\": [$(IFS=,; echo "${PIDS[*]}")], \"grid_file\": \"$GRID_FILE_PATH\"}" > "$STATE_FILE"
     echo ""

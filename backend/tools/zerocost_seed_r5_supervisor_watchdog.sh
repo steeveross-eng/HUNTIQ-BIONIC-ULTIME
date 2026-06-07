@@ -81,12 +81,28 @@ while true; do
         # Nettoyage state file
         bash /app/backend/tools/zerocost_seed_r5_daemon.sh stop 2>&1 | tail -2 || true
         sleep 2
+        # P22ΩΩ_ELITE_CALIBRATION_THROTTLE_LT_5_PCT_Ω · 2026-06-06 · STEEVE-MAX
+        # Activation conditionnelle stagger spawn + pacing intra-worker en TIER=ELITE.
+        # Calibration mathématique : 8w × 60% vCPU = 4.8 vCPUs vs quota 4 vCPUs →
+        # overshoot 20% sans pacing. WORKER_PACING_MS=50 introduit ~20% idle ratio
+        # post-R5 → consommation effective ~3.8 vCPUs → throttle attendu <5%.
+        # SPAWN_STAGGER_MS=2000 évite le pic de bootstrap V20 parallèle (~3-5s spike).
+        # En PREVIEW : tous les paramètres restent à 0 (legacy intact).
+        if [[ "$_TIER_DETECTED" == ELITE* ]]; then
+            _SPAWN_STAGGER_MS="${SPAWN_STAGGER_MS:-2000}"
+            _WORKER_PACING_MS="${WORKER_PACING_MS:-50}"
+        else
+            _SPAWN_STAGGER_MS="${SPAWN_STAGGER_MS:-0}"
+            _WORKER_PACING_MS="${WORKER_PACING_MS:-0}"
+        fi
         WORKER_COUNT=$TARGET_WORKERS \
         GRID_FILE_PATH=/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_limitrophes.json \
         MAX_R5_CELLS=0 \
         BLOCK_OUTSIDE_3RF=1 \
+        SPAWN_STAGGER_MS="$_SPAWN_STAGGER_MS" \
+        WORKER_PACING_MS="$_WORKER_PACING_MS" \
         bash /app/backend/tools/zerocost_seed_r5_daemon.sh start 2>&1 | tail -3
-        echo "$LOG_PREFIX Relance terminée (TARGET=$TARGET_WORKERS · grille=QC_LIMITROPHES · ALLOWED extended)"
+        echo "$LOG_PREFIX Relance terminée (TARGET=$TARGET_WORKERS · grille=QC_LIMITROPHES · stagger=${_SPAWN_STAGGER_MS}ms · pacing=${_WORKER_PACING_MS}ms)"
     else
         # Log status léger toutes les 5 min
         if (( $(date +%s) % 300 < CHECK_INTERVAL_S )); then
