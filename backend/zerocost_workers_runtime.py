@@ -167,12 +167,47 @@ def _spawn_all_workers(worker_count: int) -> list[int]:
         logger.warning(f"[β2-ΣΤ-INPROCESS] worker script introuvable: {_WORKER_SCRIPT}")
         return []
 
+    # P22ΩΩ_SPAWN_STAGGER_INPROCESS_Ω · 2026-06-07 · STEEVE-MAX · BCE-4X ULTIME ABSOLU
+    # Démarrage étagé des workers (additif strict · Verrou Phase III intact).
+    # Lecture SPAWN_STAGGER_MS depuis l'env : pause time.sleep(stagger_ms/1000)
+    # entre chaque spawn pour lisser le pic CPU initial (bootstrap V20 parallèle
+    # = spike ~400% CPU pendant 3-5s qui peut déclencher probes liveness fail
+    # sur pod CPU-quota strict). Comportement legacy 100% préservé si var absente
+    # ou = 0 : aucun délai inséré, spawn back-to-back comme avant.
+    # ZEROCOST_WORKER_SPAWN_LOGGING=1 active le log détaillé par worker.
+    try:
+        _stagger_ms = int(os.environ.get("SPAWN_STAGGER_MS", "0"))
+    except (TypeError, ValueError):
+        _stagger_ms = 0
+    _verbose_spawn = os.environ.get("ZEROCOST_WORKER_SPAWN_LOGGING", "0").strip() in ("1", "true", "yes")
+
+    if _stagger_ms > 0:
+        logger.info(
+            f"[β2-ΣΤ-INPROCESS] SPAWN_STAGGER actif · {_stagger_ms}ms entre workers · "
+            f"spread total ~{_stagger_ms * (worker_count - 1) / 1000:.1f}s"
+        )
+
+    import time as _time  # local import · zéro impact si stagger_ms == 0
+
     pids: list[int] = []
     for i in range(worker_count):
         pid = _spawn_worker(i, worker_count, grid_file, log_dir, python_bin)
         if pid:
             pids.append(pid)
-            logger.info(f"[β2-ΣΤ-INPROCESS] worker {i} spawned · PID {pid} · nice 19")
+            if _verbose_spawn:
+                logger.info(
+                    f"[β2-ΣΤ-INPROCESS] worker {i} spawned · PID {pid} · nice 19 · "
+                    f"WORKER_PACING_MS={os.environ.get('WORKER_PACING_MS', '0')} · "
+                    f"stagger_remaining_ms={_stagger_ms if i < worker_count - 1 else 0}"
+                )
+            else:
+                logger.info(f"[β2-ΣΤ-INPROCESS] worker {i} spawned · PID {pid} · nice 19")
+        # Stagger entre workers (sauf après le dernier) si activé
+        if _stagger_ms > 0 and i < worker_count - 1:
+            try:
+                _time.sleep(_stagger_ms / 1000.0)
+            except Exception as e:
+                logger.warning(f"[β2-ΣΤ-INPROCESS] stagger sleep interrupted: {e}")
     return pids
 
 
