@@ -21,8 +21,8 @@
     "MANIFEST_CHECKPOINT_Ω_periodic_last": "2026-06-07T12:21:10.631799+00:00",
     "RAPPORT_AUTOPILOT_MIDPOINT_Ω": "2026-05-28T18:59:24.704340+00:00"
   },
-  "check_count": 96,
-  "last_check_at": "2026-06-07T12:38:58.419643+00:00",
+  "check_count": 97,
+  "last_check_at": "2026-06-07T12:54:46.128913+00:00",
   "last_error": "stability_check: 'stability_actions'",
   "phase_2_grid_full": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_full.json",
   "phase_2_grid_limitrophes": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_limitrophes.json",
@@ -31,41 +31,6 @@
   "block_outside_qc": true,
   "workers_supervisor_action_required": true,
   "stability_actions": [
-    {
-      "kind": "SOFT_RESTART_DECISION",
-      "at": "2026-06-02T23:46:41.653142+00:00",
-      "soft_restarts": [
-        {
-          "action": "DETECTION_ONLY",
-          "kill_enabled": false,
-          "workers_alive": 6,
-          "note": "Définir AUTOPILOT_STABILITY_KILL=1 pour activer SIGTERM · Watchdog respawn massif si workers<4 (MIN_WORKERS)"
-        }
-      ]
-    },
-    {
-      "kind": "WORKERS_ALIVE_COUNT",
-      "at": "2026-06-03T00:18:16.703028+00:00",
-      "count": 6,
-      "target": 8,
-      "min_required": 4
-    },
-    {
-      "kind": "STALE_WORKERS_DETECTED",
-      "at": "2026-06-03T00:18:16.703319+00:00",
-      "stale_workers": [
-        {
-          "worker_index": 1,
-          "latency_s": 212.9
-        },
-        {
-          "worker_index": 5,
-          "latency_s": 159.4
-        }
-      ],
-      "count": 2,
-      "kill_enabled": false
-    },
     {
       "kind": "SOFT_RESTART_DECISION",
       "at": "2026-06-03T00:18:16.703324+00:00",
@@ -495,6 +460,37 @@
       "count": 3,
       "target": 8,
       "min_required": 4
+    },
+    {
+      "kind": "WORKERS_ALIVE_COUNT",
+      "at": "2026-06-07T12:56:08.255311+00:00",
+      "count": 3,
+      "target": 8,
+      "min_required": 4
+    },
+    {
+      "kind": "STALE_WORKERS_DETECTED",
+      "at": "2026-06-07T12:56:08.298154+00:00",
+      "stale_workers": [
+        {
+          "worker_index": 2,
+          "latency_s": 163.2
+        }
+      ],
+      "count": 1,
+      "kill_enabled": false
+    },
+    {
+      "kind": "SOFT_RESTART_DECISION",
+      "at": "2026-06-07T12:56:08.298168+00:00",
+      "soft_restarts": [
+        {
+          "action": "DETECTION_ONLY",
+          "kill_enabled": false,
+          "workers_alive": 3,
+          "note": "Définir AUTOPILOT_STABILITY_KILL=1 pour activer SIGTERM · Watchdog respawn massif si workers<4 (MIN_WORKERS)"
+        }
+      ]
     }
   ],
   "alerts": []
