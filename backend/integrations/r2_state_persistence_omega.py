@@ -208,6 +208,114 @@ def list_state_keys_in_r2(prefix: str = "state/") -> list[str]:
         return []
 
 
+# P22ΩΩ_R2_ORPHAN_STATE_PURGE_Ω · 2026-06-06 · STEEVE-MAX · STALE_R2 cleanup
+# Purge des clés R2 state_worker_*.json dont l'index est supérieur ou égal
+# à active_worker_count (vestiges des cycles workers antérieurs : 6w → 3w → 8w).
+# Strictement idempotent · pas d'effet sur les clés actives · best-effort.
+import re as _re
+
+
+def prune_orphan_state_keys(active_worker_count: int, max_check: int = 32,
+                            expected_grid_file: Optional[str] = None,
+                            dry_run: bool = False) -> dict:
+    """Purge les clés R2 state/state_worker_{N..max_check-1}.json où N=active_worker_count.
+
+    P22ΩΩ_R2_ORPHAN_PURGE_CROSS_POD_SAFE_Ω · 2026-06-06 · STEEVE-MAX
+    Enrichissement cross-pod-safe : si expected_grid_file fourni, seules les clés
+    matchant cette grille seront purgées (préserve les pods cohabitant qui écrivent
+    sur d'autres grilles, ex Phase 1 résiduelle). Évite la corruption d'autres
+    pipelines partageant le même bucket R2.
+
+    Args:
+        active_worker_count: Nombre de workers actifs (ex 3 en preview, 8 en Elite).
+        max_check: Borne supérieure de scan (sécurité, défaut 32).
+        expected_grid_file: Si fourni, ne purge que les clés dont grid_file matche.
+        dry_run: Si True, log uniquement, ne purge pas.
+
+    Returns:
+        dict: {checked, purged, kept_active, kept_other_pod, errors, dry_run}
+    """
+    client = _get_r2_client()
+    if client is None:
+        return {"checked": 0, "purged": [], "kept_active": [],
+                "kept_other_pod": [], "errors": ["r2_client_unavailable"],
+                "dry_run": dry_run}
+
+    result: dict = {
+        "checked": 0,
+        "purged": [],
+        "kept_active": [],
+        "kept_other_pod": [],
+        "errors": [],
+        "dry_run": dry_run,
+    }
+    bucket = _r2_bucket()
+    pattern = _re.compile(r"^state/state_worker_(\d+)\.json$")
+
+    try:
+        existing_keys = list_state_keys_in_r2("state/")
+    except Exception as e:
+        result["errors"].append(f"list_keys_fail: {e}")
+        return result
+
+    for key in existing_keys:
+        m = pattern.match(key)
+        if not m:
+            continue
+        worker_idx = int(m.group(1))
+        result["checked"] += 1
+
+        # Workers actifs : toujours conservés
+        if worker_idx < active_worker_count:
+            result["kept_active"].append(key)
+            continue
+
+        if worker_idx >= max_check:
+            continue
+
+        # Cross-pod safety check : si expected_grid_file fourni, skip si mismatch
+        if expected_grid_file:
+            try:
+                data = load_state_from_r2(worker_idx)
+                if data is not None:
+                    key_grid = data.get("grid_file", "")
+                    if key_grid and key_grid != expected_grid_file:
+                        result["kept_other_pod"].append({
+                            "key": key,
+                            "worker_index": worker_idx,
+                            "grid_file": key_grid,
+                            "worker_count": data.get("worker_count"),
+                            "reason": "grid_file_mismatch_cross_pod_safety",
+                        })
+                        logger.info(
+                            f"[R2_ORPHAN_PURGE] KEEP cross-pod key={key} "
+                            f"(grid={key_grid} != expected={expected_grid_file})"
+                        )
+                        continue
+            except Exception as e:
+                result["errors"].append(f"read_{key}_fail: {e}")
+                # En cas d'erreur lecture, on garde par sécurité
+                result["kept_other_pod"].append({"key": key, "reason": "read_error"})
+                continue
+
+        # Orpheline locale confirmée → purger
+        if dry_run:
+            result["purged"].append(key + "[DRY_RUN]")
+            logger.info(f"[R2_ORPHAN_PURGE] DRY_RUN would purge key={key}")
+        else:
+            try:
+                client.delete_object(Bucket=bucket, Key=key)
+                result["purged"].append(key)
+                logger.info(
+                    f"[R2_ORPHAN_PURGE] removed orphan key={key} "
+                    f"(worker_idx={worker_idx} >= active_count={active_worker_count})"
+                )
+            except Exception as e:
+                result["errors"].append(f"delete_{key}_fail: {e}")
+
+    return result
+
+
 # ─── SELF-TEST CLI (zéro impact runtime si non invoqué) ─────────────────────
 if __name__ == "__main__":
     import argparse

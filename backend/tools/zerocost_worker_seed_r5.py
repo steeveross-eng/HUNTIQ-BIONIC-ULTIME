@@ -237,6 +237,21 @@ async def main():
     if r5_idx_done > 0 or species_done_current:
         print(f"  [STATE_FILE_Ω] RESUME r5_idx={r5_idx_done}/{len(my_r5)} (skip {r5_idx_done} terminées) · species_done={species_done_current}")
 
+    # P22ΩΩ_R2_BOOT_FORCE_SYNC_Ω · 2026-06-06 · STEEVE-MAX · STALE_R2 fix
+    # P22ΩΩ_R2_BOOT_UNIFIED_TS_Ω · 2026-06-07 · STEEVE-MAX · ALIGN_FS_R2_TS
+    # Force-sync FS+R2 au boot worker via _save_worker_state pour garantir
+    # timestamp UNIFIÉ (sinon FS conserve ancien ts du worker précédent et R2
+    # reçoit un fresh ts → lag artificiel >300s alors que r5_idx_done match).
+    # Verrou Phase III intact · idempotent · ne bloque jamais le worker.
+    try:
+        _save_worker_state(r5_idx_done, species_done_current)
+        logger.info(
+            f"[STATE_FILE_Ω] BOOT UNIFIED-SYNC FS+R2 OK · worker_idx={WORKER_INDEX} · "
+            f"r5={r5_idx_done} · species={len(species_done_current)}"
+        )
+    except Exception as e:
+        logger.warning(f"[STATE_FILE_Ω] boot unified-sync fail: {e}")
+
     stats = {
         "seed_ok": 0, "seed_fail": 0,
         "fanout_ok": 0, "fanout_fail": 0,

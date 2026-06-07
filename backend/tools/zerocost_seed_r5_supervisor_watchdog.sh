@@ -103,6 +103,33 @@ while true; do
         WORKER_PACING_MS="$_WORKER_PACING_MS" \
         bash /app/backend/tools/zerocost_seed_r5_daemon.sh start 2>&1 | tail -3
         echo "$LOG_PREFIX Relance terminée (TARGET=$TARGET_WORKERS · grille=QC_LIMITROPHES · stagger=${_SPAWN_STAGGER_MS}ms · pacing=${_WORKER_PACING_MS}ms)"
+        # P22ΩΩ_R2_ORPHAN_STATE_PURGE_AT_BOOT_Ω · 2026-06-06 · STEEVE-MAX
+        # Purge automatique des clés R2 state_worker_*.json orphelines (worker_index
+        # >= TARGET_WORKERS), vestiges des cycles antérieurs (6w → 3w → 8w).
+        # CROSS-POD-SAFE : ne purge que les clés matchant la grille active locale
+        # (préserve pods cohabitant qui écrivent sur d'autres grilles ex Phase 1).
+        # Garantit lag_max_s < 60s et sync_status OK/MATCH dans /api/v30/runtime/tier-status.
+        # Best-effort · zéro impact si R2 indisponible · idempotent.
+        _LOCAL_GRID="/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_limitrophes.json"
+        python3 -c "
+import sys
+sys.path.insert(0, '/app/backend')
+try:
+    from integrations.r2_state_persistence_omega import prune_orphan_state_keys
+    r = prune_orphan_state_keys(
+        active_worker_count=$TARGET_WORKERS,
+        expected_grid_file='$_LOCAL_GRID',
+    )
+    print(f'[R2_ORPHAN_PURGE] checked={r[\"checked\"]} · purged={len(r[\"purged\"])} · kept_active={len(r[\"kept_active\"])} · kept_other_pod={len(r[\"kept_other_pod\"])} · errors={len(r[\"errors\"])}')
+    if r['purged']:
+        for k in r['purged']: print(f'  PURGED      : {k}')
+    if r['kept_other_pod']:
+        for item in r['kept_other_pod']: print(f'  KEEP OTHER  : {item}')
+    if r['errors']:
+        for e in r['errors']: print(f'  ERROR       : {e}')
+except Exception as e:
+    print(f'[R2_ORPHAN_PURGE] skip: {e}')
+" 2>&1 | head -20
     else
         # Log status léger toutes les 5 min
         if (( $(date +%s) % 300 < CHECK_INTERVAL_S )); then
