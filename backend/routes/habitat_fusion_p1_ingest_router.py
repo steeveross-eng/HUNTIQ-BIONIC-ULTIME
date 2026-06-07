@@ -39,7 +39,8 @@ import time
 from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
-from fastapi import APIRouter, HTTPException, Query
+import httpx
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Query
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger("bionic.habitat_fusion_p1_ingest")
@@ -245,15 +246,19 @@ def list_ingest_clients() -> dict[str, Any]:
 @router.post("/trigger/{client}")
 def trigger_ingest(
     client: str,
+    background_tasks: BackgroundTasks,
     body: Optional[IngestTriggerBody] = None,
     dry_run: bool = Query(True, description="Default=True · validation seulement"),
 ) -> dict[str, Any]:
     """Déclencheur P1 ingestion · dry_run=true par défaut.
 
     Modes :
-      - dry_run=true  : search/list metadata, aucun téléchargement disque
-      - dry_run=false : appelle download_*() réel (peut lever NotImplementedError
-                        tant que P1_FULL implementation downstream non livrée)
+      - dry_run=true  : search/list metadata, aucun téléchargement disque (sync)
+      - dry_run=false :
+          * client P1_FULL Phase A (nasa_hls, esa_sentinel2_l2a) → async via
+            BackgroundTasks, retourne 202 + job_id
+          * client Phase B (nrcan_hrdem, mffp_foret_ouverte) → NotImplementedError
+            propre (refonte STAC AWS / CKAN attendue)
 
     Sécurité :
       - Refuse si client inconnu
@@ -311,6 +316,10 @@ def trigger_ingest(
     status_code = "OK"
     error_info: Optional[dict[str, Any]] = None
 
+    # P22ΩΩ_P1_FULL_PHASE_A_DISPATCH_Ω · async via BackgroundTasks pour clients Phase A
+    if not dry_run and client in ("nasa_hls", "esa_sentinel2_l2a"):
+        return _dispatch_p1_full_async(client, body, background_tasks, t0, is_cred, is_armed, spec, mod)
+
     try:
         if dry_run:
             result = _run_dry_run(client, body)
@@ -357,3 +366,217 @@ def trigger_ingest(
         "checked_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
     return response
+
+
+# ─── P22ΩΩ_P1_FULL_PHASE_A_DISPATCH_Ω · 2026-06-07 · STEEVE-MAX ──────────────
+# Dispatch async via BackgroundTasks pour clients P1_FULL Phase A.
+# Création job + add_task + retour 202 + job_id pour polling.
+
+def _dispatch_p1_full_async(
+    client: str,
+    body: "IngestTriggerBody",
+    background_tasks: BackgroundTasks,
+    t0: float,
+    is_cred: bool,
+    is_armed: bool,
+    spec: dict,
+    mod: Any,
+) -> dict[str, Any]:
+    """Création job P1_FULL + add_task BackgroundTasks · retourne 202 + job_id."""
+    try:
+        from integrations.p1_full import (
+            get_job_store,
+            download_hls_tiles,
+            download_s2_tiles,
+        )
+    except Exception as e:
+        return {
+            "served_by": "HABITAT-FUSION-P1-INGEST-Ω-ROUTER",
+            "client": client,
+            "status": "ERROR",
+            "error": {"error_type": "ImportError", "error_message": f"p1_full module not loaded: {e}"},
+            "elapsed_ms": int((time.time() - t0) * 1000),
+        }
+
+    # Validation params requis
+    if not body.scene_ids:
+        raise HTTPException(400, "scene_ids requis pour P1_FULL · obtenir via dry_run=true puis re-trigger avec scene_ids")
+
+    # Création job
+    store = get_job_store()
+    job = store.create(
+        client=client,
+        params={
+            "scene_ids": body.scene_ids,
+            "bands_filter": body.bands,
+            "destination_dir": body.destination_dir,
+        },
+        tiles_total=len(body.scene_ids),
+    )
+
+    # Dispatch BackgroundTasks
+    if client == "nasa_hls":
+        background_tasks.add_task(
+            download_hls_tiles,
+            scene_ids=body.scene_ids,
+            destination_dir=body.destination_dir,
+            sync_r2=True,
+            job_id=job.job_id,
+            bands_filter=body.bands,
+            max_tiles=body.max_tiles,
+        )
+    elif client == "esa_sentinel2_l2a":
+        background_tasks.add_task(
+            download_s2_tiles,
+            scene_ids=body.scene_ids,
+            destination_dir=body.destination_dir,
+            sync_r2=True,
+            job_id=job.job_id,
+            bands_filter=body.bands,
+            max_tiles=body.max_tiles,
+        )
+
+    logger.info(f"[P1_FULL_DISPATCH] client={client} job_id={job.job_id} tiles={len(body.scene_ids)}")
+    return {
+        "served_by": "HABITAT-FUSION-P1-INGEST-Ω-ROUTER",
+        "doctrine": "P22ΩΩ_P1_FULL_PHASE_A_DISPATCH_Ω · BCE-4X · Verrou Phase III",
+        "client": client,
+        "client_name": getattr(mod, "CLIENT_NAME", client),
+        "data_type": spec["data_type"],
+        "dry_run": False,
+        "credential_ready": is_cred,
+        "armed": is_armed,
+        "status": "ACCEPTED_ASYNC",
+        "job_id": job.job_id,
+        "job_status_url": f"/api/v30/habitat-fusion/p1/ingest/job/{job.job_id}/status",
+        "tiles_queued": len(body.scene_ids),
+        "elapsed_ms": int((time.time() - t0) * 1000),
+        "checked_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+
+
+# ─── P22ΩΩ_P1_JOB_STATUS_Ω · 2026-06-07 · STEEVE-MAX ─────────────────────────
+# Polling endpoint pour suivre l'état d'un job P1_FULL en cours/terminé.
+
+@router.get("/job/{job_id}/status")
+def get_job_status(job_id: str) -> dict[str, Any]:
+    """État d'un job P1_FULL · polling pour clients async."""
+    try:
+        from integrations.p1_full import get_job_store
+    except Exception as e:
+        raise HTTPException(500, f"p1_full module not loaded: {e}")
+    store = get_job_store()
+    job = store.get(job_id)
+    if not job:
+        raise HTTPException(404, f"Job non trouvé: {job_id}")
+    return {
+        "served_by": "HABITAT-FUSION-P1-INGEST-Ω-ROUTER",
+        "doctrine": "P22ΩΩ_P1_JOB_STATUS_Ω · BCE-4X · Verrou Phase III",
+        "job": job.to_dict(),
+        "checked_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+
+
+@router.get("/jobs")
+def list_jobs(limit: int = Query(20, ge=1, le=100)) -> dict[str, Any]:
+    """Liste des derniers jobs P1_FULL (récents en premier)."""
+    try:
+        from integrations.p1_full import get_job_store
+    except Exception as e:
+        raise HTTPException(500, f"p1_full module not loaded: {e}")
+    store = get_job_store()
+    return {
+        "served_by": "HABITAT-FUSION-P1-INGEST-Ω-ROUTER",
+        "doctrine": "P22ΩΩ_P1_JOB_LIST_Ω · BCE-4X · Verrou Phase III",
+        "jobs": store.list_all(max_count=limit),
+        "checked_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+
+
+# ─── P22ΩΩ_P1_URL_PROBE_Ω · 2026-06-07 · STEEVE-MAX ──────────────────────────
+# URL Probe endpoint · teste plusieurs URLs candidats en parallèle (HEAD)
+# pour calibrer les overrides NRCan/MFFP sans modifier le code.
+
+_URL_PROBE_CANDIDATES: dict[str, list[str]] = {
+    "nrcan_hrdem": [
+        "https://download-telecharger.services.geo.ca/pub/elevation/dem_mne/highresolution_hauteresolution/",
+        "https://ftp.maps.canada.ca/pub/elevation/dem_mne/highresolution_hauteresolution/",
+        "https://canelevation-dem.s3.amazonaws.com/",
+        "https://natural-resources.canada.ca/sites/nrcan/files/elevation/HRDEM/Tiles.json",
+        "https://maps.canada.ca/arcgis/rest/services/Elevation/HRDEM/MapServer",
+    ],
+    "mffp_foret_ouverte": [
+        "https://servicesvectoriels.atlas.gouv.qc.ca/IDS_INVENTAIRE_ECOFOR_WMS/service.svc/get?service=WMS&request=GetCapabilities",
+        "https://servicesvectoriels.atlas.gouv.qc.ca/IDS_INVENTAIRE_ECOFOR_WFS/service.svc/get?service=WFS&request=GetCapabilities",
+        "https://www.donneesquebec.ca/recherche/api/3/action/package_show?id=produits-derives-de-base-du-lidar",
+        "https://www.foretouverte.gouv.qc.ca/wms?service=WMS&request=GetCapabilities",
+        "https://geoegl.msp.gouv.qc.ca/apis/wmts/1.0.0/WMTSCapabilities.xml",
+    ],
+    "nasa_hls": [
+        "https://cmr.earthdata.nasa.gov/search/collections.json?short_name=HLSL30",
+        "https://urs.earthdata.nasa.gov/api/users/user",
+        "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/",
+    ],
+    "esa_sentinel2_l2a": [
+        "https://catalogue.dataspace.copernicus.eu/stac",
+        "https://catalogue.dataspace.copernicus.eu/odata/v1/Products",
+        "https://identity.dataspace.copernicus.eu/auth/realms/CDSE/.well-known/openid-configuration",
+    ],
+}
+
+
+@router.get("/url-probe")
+def url_probe(client: str = Query(..., description="Client key (nasa_hls, esa_sentinel2_l2a, nrcan_hrdem, mffp_foret_ouverte)")) -> dict[str, Any]:
+    """Teste plusieurs URLs candidates en parallèle (HEAD/GET court) pour
+    calibrer les overrides URL · lecture seule stricte."""
+    if client not in _URL_PROBE_CANDIDATES:
+        raise HTTPException(404, f"Client inconnu pour probe: {client}. Choix: {list(_URL_PROBE_CANDIDATES.keys())}")
+
+    results: list[dict[str, Any]] = []
+    for url in _URL_PROBE_CANDIDATES[client]:
+        t0 = time.time()
+        try:
+            with httpx.Client(timeout=8, follow_redirects=True) as c:
+                # HEAD d'abord, GET court si HEAD non supporté
+                resp = c.head(url)
+                if resp.status_code in (404, 405, 501):
+                    resp = c.get(url, headers={"Range": "bytes=0-1023"})
+            results.append({
+                "url": url,
+                "status_code": resp.status_code,
+                "elapsed_ms": int((time.time() - t0) * 1000),
+                "reachable": 200 <= resp.status_code < 400,
+                "content_type": resp.headers.get("content-type", ""),
+            })
+        except httpx.RequestError as e:
+            results.append({
+                "url": url,
+                "status_code": None,
+                "elapsed_ms": int((time.time() - t0) * 1000),
+                "reachable": False,
+                "error": f"{type(e).__name__}: {str(e)[:100]}",
+            })
+        except Exception as e:
+            results.append({
+                "url": url,
+                "status_code": None,
+                "elapsed_ms": int((time.time() - t0) * 1000),
+                "reachable": False,
+                "error": f"{type(e).__name__}: {str(e)[:100]}",
+            })
+
+    reachable = [r for r in results if r.get("reachable")]
+    return {
+        "served_by": "HABITAT-FUSION-P1-INGEST-Ω-ROUTER",
+        "doctrine": "P22ΩΩ_P1_URL_PROBE_Ω · BCE-4X · Verrou Phase III",
+        "client": client,
+        "tested_count": len(results),
+        "reachable_count": len(reachable),
+        "results": results,
+        "recommended_override_env": (
+            "HRDEM_FTP_BASE_OVERRIDE" if client == "nrcan_hrdem"
+            else "MFFP_WMS_BASE_OVERRIDE / MFFP_WFS_BASE_OVERRIDE" if client == "mffp_foret_ouverte"
+            else "n/a"
+        ),
+        "checked_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
