@@ -1,33 +1,33 @@
 # RAPPORT_QC_PROGRESS_Ω
 
 - **Doctrine**: P22ΩΩ_AUTOPILOT_4D_SAFE_Ω · Phase 2 limitrophes
-- **Emitted at**: 2026-06-07T12:21:10.101739+00:00
+- **Emitted at**: 2026-06-08T00:28:35.569859+00:00
 
 ---
 
 ```
 ══════════════════════════════════════════════════════════════════════════════
-  RAPPORT_QC_PROGRESS_Ω · 2026-06-07T12:21:10.020135+00:00
+  RAPPORT_QC_PROGRESS_Ω · 2026-06-08T00:28:35.465499+00:00
   Phase     : PHASE_2_QC_LIMITROPHES
 ══════════════════════════════════════════════════════════════════════════════
 
 § A · LIMITROPHES (priority=1) — CIBLE PHASE 2 ACTIVE
-  Tuiles uploadées R2  : 111082
-  Cells uniques        : 1563 / 2292
-  Couverture cells     : 68.19%
+  Tuiles uploadées R2  : 134193
+  Cells uniques        : 1879 / 2292
+  Couverture cells     : 81.98%
 
 § B · DÉTAIL PAR LABEL
   LANAUDIERE_LIMITROPHE                     :   32397 tuiles ·   452 cells
   LAURENTIDES_RF_LAURENTIDES_ROUGE_MATAWIN  :   33255 tuiles ·   460 cells
   MAURICIE_EST_LIMITROPHE                   :   50436 tuiles ·   706 cells
   MAURICIE_RF_MASTIGOUCHE_ST_MAURICE        :   11088 tuiles ·   154 cells
-  OUTAOUAIS_NORD_LIMITROPHE                 :   28249 tuiles ·   405 cells
+  OUTAOUAIS_NORD_LIMITROPHE                 :   51360 tuiles ·   721 cells
   OUTAOUAIS_RF_PAPINEAU_VERENDRYE_SUD       :    3483 tuiles ·    49 cells
   OUT_OF_QC                                 :     210 tuiles ·    20 cells
   QC_SUD_OTHER                              :     252 tuiles ·    21 cells
 
 § C · DISTRIBUTION PAR PRIORITÉ
-  priority=1:  111082 tuiles
+  priority=1:  134193 tuiles
   priority=2:   47826 tuiles
   priority=3:     252 tuiles
   priority=99:     210 tuiles
@@ -35,8 +35,8 @@
 § D · VERROU PHASE III
   verrou_phase_iii         : True
   lecture_seule            : True
-  total_keys_scanned       : 159371
-  scan_sec                 : 69.3s
+  total_keys_scanned       : 182482
+  scan_sec                 : 94.9s
 ══════════════════════════════════════════════════════════════════════════════
 
 ```
