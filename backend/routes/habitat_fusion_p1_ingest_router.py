@@ -67,10 +67,10 @@ _VALID_CLIENTS = {
         "category": "ndvi",
     },
     "esa_sentinel2_l2a": {
-        "module": "integrations.ingestion_p1.esa_sentinel2_client",
+        "module": "integrations.p1_full.esa_sentinel2_p1_full",
         "search_fn": "search_scenes",
         "search_kind": "stac_temporal",
-        "download_fn": "download_scenes",
+        "download_fn": "download_s2_tiles",
         "download_kind": "by_ids_bands",
         "data_type": "NDVI_10m_L2A",
         "category": "ndvi",

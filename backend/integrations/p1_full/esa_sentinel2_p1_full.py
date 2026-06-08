@@ -14,6 +14,14 @@ DOCTRINE :
   - Download URL : odata/v1/Products(GUID)/$value (avec auth Bearer)
   - download_with_retry() depuis le streamer commun
   - sync_to_r2() différé
+
+P22ΩΩ_ESA_S2_ODATA_SEARCH_BUGFIX_Ω · 2026-06-08 · STEEVE-MAX
+═══════════════════════════════════════════════════════════════════════════════
+Fix Phase A.2 : Le legacy `esa_sentinel2_client.py` utilise pystac_client sur
+`/stac` qui n'expose PAS Sentinel-2 (10 collections CLMS/CCM uniquement, vérifié
+2026-06-07). Bascule vers CDSE OData officiel (source canonique Sentinel-2).
+Ajouts : is_credential_ready(), is_armed(), search_scenes() utilisant OData.
+Le router est repointé vers ce module pour ESA (search + download cohérents).
 """
 from __future__ import annotations
 
@@ -21,6 +29,7 @@ import logging
 import os
 import threading
 import time
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional
 
@@ -46,10 +55,111 @@ DATA_TYPE = "NDVI_10m_L2A"
 
 CDSE_TOKEN_URL = "https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/token"
 CDSE_DOWNLOAD_BASE = "https://catalogue.dataspace.copernicus.eu/odata/v1/Products"
+CDSE_ODATA_BASE = "https://catalogue.dataspace.copernicus.eu/odata/v1/Products"
 
 # Cache token in-memory (TTL ~9min, CDSE token vit 10min)
 _TOKEN_CACHE: dict[str, Any] = {"token": None, "expires_at": 0}
 _TOKEN_LOCK = threading.Lock()
+
+
+# ─── P22ΩΩ_ESA_S2_ODATA_SEARCH_BUGFIX_Ω · 2026-06-08 · STEEVE-MAX ─────────────
+# Additif strict : pré-requis router pour bascule depuis legacy esa_sentinel2_client.
+
+def is_credential_ready() -> bool:
+    """COPERNICUS_USERNAME + COPERNICUS_PASSWORD requis pour download.
+    Search OData fonctionne sans auth, mais on garde la sémantique legacy.
+    """
+    return bool(
+        os.environ.get("COPERNICUS_USERNAME") and os.environ.get("COPERNICUS_PASSWORD")
+    )
+
+
+def is_armed() -> bool:
+    """Armement ingestion via env (INGESTION_P1_ARMED=1)."""
+    return os.environ.get("INGESTION_P1_ARMED", "0") == "1"
+
+
+def search_scenes(
+    bbox: tuple[float, float, float, float],
+    datetime_range: tuple[datetime, datetime],
+    cloud_cover_max: int = 20,
+    limit: int = 50,
+) -> list[dict[str, Any]]:
+    """READ-ONLY · interroge CDSE OData pour lister Sentinel-2 L2A.
+
+    bbox = (lng_min, lat_min, lng_max, lat_max)
+    Ne télécharge PAS · retourne métadonnées uniquement.
+
+    P22ΩΩ_ESA_S2_ODATA_SEARCH_BUGFIX_Ω · 2026-06-08
+    Bascule pystac_client (broken — /stac n'expose pas Sentinel-2) → OData
+    officiel CDSE. Filtre Collection=SENTINEL-2 + Name~MSIL2A + bbox + dates.
+    Le filtre cloud_cover_max est appliqué côté client (Attributes/cloudCover).
+    """
+    lng_min, lat_min, lng_max, lat_max = bbox
+    dt0 = datetime_range[0].strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    dt1 = datetime_range[1].strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    poly = (
+        f"POLYGON(({lng_min} {lat_min},{lng_max} {lat_min},"
+        f"{lng_max} {lat_max},{lng_min} {lat_max},{lng_min} {lat_min}))"
+    )
+    filter_str = (
+        f"Collection/Name eq 'SENTINEL-2' and "
+        f"contains(Name,'MSIL2A') and "
+        f"OData.CSC.Intersects(area=geography'SRID=4326;{poly}') and "
+        f"ContentDate/Start gt {dt0} and ContentDate/Start lt {dt1}"
+    )
+    # On élargit la requête (limit*4) puis on filtre cloud_cover côté client.
+    fetch_top = min(max(limit * 4, 20), 200)
+    params = {
+        "$filter": filter_str,
+        "$top": str(fetch_top),
+        "$orderby": "ContentDate/Start desc",
+        "$expand": "Attributes",
+    }
+    try:
+        with httpx.Client(timeout=30) as cli:
+            resp = cli.get(CDSE_ODATA_BASE, params=params)
+            if resp.status_code != 200:
+                logger.warning(
+                    f"[P1_FULL_ESA_SEARCH] OData HTTP {resp.status_code}: {resp.text[:200]}"
+                )
+                return []
+            items = resp.json().get("value", [])
+    except Exception as e:
+        logger.warning(f"[P1_FULL_ESA_SEARCH] OData query fail: {e}")
+        return []
+
+    out: list[dict[str, Any]] = []
+    for it in items:
+        attrs = {a.get("Name"): a.get("Value") for a in it.get("Attributes", []) if isinstance(a, dict)}
+        cloud = attrs.get("cloudCover")
+        try:
+            cloud_val = float(cloud) if cloud is not None else None
+        except (TypeError, ValueError):
+            cloud_val = None
+        if cloud_val is not None and cloud_val > cloud_cover_max:
+            continue
+        name = it.get("Name", "")
+        scene_id = name.replace(".SAFE", "")
+        # Extraction tile code (T18TWQ pattern) depuis le SAFE name.
+        tile_id = None
+        for part in name.split("_"):
+            if len(part) == 6 and part.startswith("T") and part[1:].isalnum():
+                tile_id = part
+                break
+        out.append({
+            "scene_id": scene_id,
+            "product_id": it.get("Id"),
+            "datetime": (it.get("ContentDate") or {}).get("Start"),
+            "cloud_cover": cloud_val,
+            "tile_id": tile_id,
+            "bbox": list(bbox),
+            "size_mb": round((it.get("ContentLength") or 0) / 1e6, 1),
+            "name_safe": name,
+        })
+        if len(out) >= limit:
+            break
+    return out
 
 
 def get_p1_full_status() -> dict[str, Any]:
@@ -216,4 +326,8 @@ def download_s2_tiles(
     }
 
 
-__all__ = ["download_s2_tiles", "get_p1_full_status", "CLIENT_KEY", "CLIENT_NAME", "CLIENT_VERSION"]
+__all__ = [
+    "download_s2_tiles", "get_p1_full_status", "search_scenes",
+    "is_credential_ready", "is_armed",
+    "CLIENT_KEY", "CLIENT_NAME", "CLIENT_VERSION",
+]
