@@ -580,3 +580,107 @@ def url_probe(client: str = Query(..., description="Client key (nasa_hls, esa_se
         ),
         "checked_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
+
+
+
+# ─── P22ΩΩ_CDSE_AUTH_PROBE_Ω · 2026-06-08 · STEEVE-MAX ───────────────────────
+# Endpoint additif diagnostic CDSE OAuth2.
+# Lecture seule · ne télécharge rien · ne stocke pas le token · ne JAMAIS exposer
+# credentials. Retourne uniquement status HTTP + presence flags + masked username.
+# Utile pour vérifier que les credentials CDSE Elite sont valides après deploy.
+
+@router.get("/cdse-auth-probe")
+def cdse_auth_probe() -> dict[str, Any]:
+    """Probe OAuth2 CDSE · valide les credentials sans exposer aucun secret.
+
+    Retourne :
+      - credentials_present : booléens username/password présents en env
+      - token_status        : "ok" | "401_invalid_grant" | "endpoint_unreachable" | "other_error"
+      - http_status         : code HTTP de la réponse token (None si exception)
+      - token_expires_in_s  : durée de vie token (None si pas obtenu)
+      - username_masked     : 3 premiers + 3 derniers caractères (auditabilité)
+      - hint                : action recommandée si erreur
+    """
+    t0 = time.time()
+    user = os.environ.get("COPERNICUS_USERNAME") or ""
+    pwd = os.environ.get("COPERNICUS_PASSWORD") or ""
+    has_user = bool(user)
+    has_pwd = bool(pwd)
+    user_masked = (user[:3] + "..." + user[-3:]) if len(user) >= 6 else ("***" if user else "")
+
+    token_status = "skipped_no_credentials"
+    http_status: Optional[int] = None
+    expires_in: Optional[int] = None
+    error_desc: Optional[str] = None
+    hint = "n/a"
+
+    if has_user and has_pwd:
+        try:
+            with httpx.Client(timeout=15) as c:
+                resp = c.post(
+                    "https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/token",
+                    data={
+                        "grant_type": "password",
+                        "username": user,
+                        "password": pwd,
+                        "client_id": "cdse-public",
+                    },
+                )
+                http_status = resp.status_code
+                if resp.status_code == 200:
+                    try:
+                        d = resp.json()
+                        # Ne JAMAIS exposer access_token ni refresh_token
+                        if "access_token" in d:
+                            token_status = "ok"
+                            expires_in = int(d.get("expires_in", 0))
+                            hint = "credentials valides · download CDSE possible"
+                        else:
+                            token_status = "200_no_token"
+                            hint = "réponse 200 sans access_token · anomalie CDSE"
+                    except Exception:
+                        token_status = "200_parse_error"
+                        hint = "200 mais JSON parse failed"
+                elif resp.status_code == 401:
+                    try:
+                        d = resp.json()
+                        error_desc = (d.get("error_description") or "")[:120]
+                    except Exception:
+                        error_desc = "(unparsable)"
+                    token_status = "401_invalid_grant"
+                    hint = "credentials rejetés · rotation password CDSE ou compte verrouillé"
+                else:
+                    try:
+                        d = resp.json()
+                        error_desc = (d.get("error_description") or d.get("error") or "")[:120]
+                    except Exception:
+                        error_desc = f"HTTP {resp.status_code}"
+                    token_status = f"http_{resp.status_code}"
+                    hint = "anomalie réponse CDSE · vérifier endpoint identity.dataspace.copernicus.eu"
+        except httpx.RequestError as e:
+            token_status = "endpoint_unreachable"
+            error_desc = f"{type(e).__name__}: {str(e)[:100]}"
+            hint = "CDSE identity endpoint injoignable · vérifier connectivité réseau pod"
+        except Exception as e:
+            token_status = "other_error"
+            error_desc = f"{type(e).__name__}: {str(e)[:100]}"
+            hint = "erreur inattendue · voir error_desc"
+    else:
+        hint = "définir COPERNICUS_USERNAME + COPERNICUS_PASSWORD dans .env du pod"
+
+    return {
+        "served_by": "HABITAT-FUSION-P1-INGEST-Ω-ROUTER",
+        "doctrine": "P22ΩΩ_CDSE_AUTH_PROBE_Ω · BCE-4X · Verrou Phase III · read-only · no secret leak",
+        "credentials_present": {
+            "copernicus_username": has_user,
+            "copernicus_password": has_pwd,
+        },
+        "username_masked": user_masked,
+        "token_status": token_status,
+        "http_status": http_status,
+        "token_expires_in_s": expires_in,
+        "error_description": error_desc,
+        "hint": hint,
+        "elapsed_ms": int((time.time() - t0) * 1000),
+        "checked_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }

@@ -11,9 +11,9 @@
 | Fichier | Type | Diff résumé |
 |---|---|---|
 | `backend/integrations/p1_full/esa_sentinel2_p1_full.py` | Additif (fichier déjà additif) | +96 lignes : `is_credential_ready()`, `is_armed()`, `search_scenes()` via CDSE OData |
-| `backend/routes/habitat_fusion_p1_ingest_router.py` | Mutation minimale (2 lignes · entrée map) | `_VALID_CLIENTS["esa_sentinel2_l2a"]["module"]` → `integrations.p1_full.esa_sentinel2_p1_full`, `download_fn` → `download_s2_tiles` |
+| `backend/routes/habitat_fusion_p1_ingest_router.py` | Mutation minimale (map) + additif endpoint | (a) `_VALID_CLIENTS["esa_sentinel2_l2a"]["module"]` → `integrations.p1_full.esa_sentinel2_p1_full`, `download_fn` → `download_s2_tiles` (2 lignes) ; (b) +104 lignes endpoint `GET /api/v30/habitat-fusion/p1/ingest/cdse-auth-probe` (read-only, masked) |
 
-**Note doctrinale** : Le legacy `integrations/ingestion_p1/esa_sentinel2_client.py` n'est PAS modifié (Verrou Phase III). Le router pointe désormais ESA vers le module P1_FULL pour cohérence search/download.
+**Note doctrinale** : Le legacy `integrations/ingestion_p1/esa_sentinel2_client.py` n'est PAS modifié (Verrou Phase III). Le router pointe désormais ESA vers le module P1_FULL pour cohérence search/download. L'endpoint `cdse-auth-probe` est strictement read-only et n'expose AUCUN secret (username masqué `xxx...xxx`, password jamais retourné).
 
 ---
 
@@ -66,7 +66,8 @@
 3. **AGENT** : `POST /api/v30/habitat-fusion/p1/ingest/trigger/nasa_hls?dry_run=true` (récupération concept_ids)
 4. **AGENT** : `POST /api/v30/habitat-fusion/p1/ingest/trigger/nasa_hls?dry_run=false` avec `max_tiles=1, bands=["B04","B05"]` → attendu : status=`completed`, ~25-50 MB R2-synced
 5. **AGENT** : `POST /api/v30/habitat-fusion/p1/ingest/trigger/esa_sentinel2_l2a?dry_run=true` → attendu : 3+ produits L2A
-6. **AGENT** : (optionnel · sur ordre explicite) `POST .../trigger/esa_sentinel2_l2a?dry_run=false` avec `scene_ids=[<low_cc_product>], max_tiles=1` → attendu : ~270MB-1GB R2-synced
+6. **AGENT** : `GET /api/v30/habitat-fusion/p1/ingest/cdse-auth-probe` → valide credentials CDSE Elite (token_status=ok vs 401_invalid_grant)
+7. **AGENT** : (optionnel · sur ordre explicite si probe = ok) `POST .../trigger/esa_sentinel2_l2a?dry_run=false` avec `scene_ids=[<low_cc_product>], max_tiles=1` → attendu : ~270MB-1GB R2-synced
 
 ---
 
