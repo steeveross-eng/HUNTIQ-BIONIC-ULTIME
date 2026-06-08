@@ -54,8 +54,14 @@ CLIENT_VERSION = "V1.0-P1-FULL-PHASE-A"
 DATA_TYPE = "NDVI_10m_L2A"
 
 CDSE_TOKEN_URL = "https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/token"
-CDSE_DOWNLOAD_BASE = "https://catalogue.dataspace.copernicus.eu/odata/v1/Products"
+CDSE_DOWNLOAD_BASE = "https://download.dataspace.copernicus.eu/odata/v1/Products"
 CDSE_ODATA_BASE = "https://catalogue.dataspace.copernicus.eu/odata/v1/Products"
+
+# P22ΩΩ_ESA_DOWNLOAD_DIRECT_BASE_FIX_Ω · 2026-06-08 · STEEVE-MAX
+# Le redirect 301 catalogue→download fait perdre le Bearer (httpx strip
+# Authorization sur cross-domain redirect par sécurité). Solution :
+# CDSE_DOWNLOAD_BASE pointe directement sur download.dataspace... bypass redirect.
+# OData search/metadata reste sur catalogue (CDSE_ODATA_BASE).
 
 # Cache token in-memory (TTL ~9min, CDSE token vit 10min)
 _TOKEN_CACHE: dict[str, Any] = {"token": None, "expires_at": 0}
@@ -220,14 +226,18 @@ def _get_cdse_token(force_refresh: bool = False) -> Optional[str]:
 
 
 def _resolve_scene_product_id(scene_id: str, token: str) -> Optional[str]:
-    """Résout scene_id (ex S2B_MSIL2A_...) → product GUID via STAC search."""
+    """Résout scene_id (ex S2B_MSIL2A_...) → product GUID via STAC search.
+
+    P22ΩΩ_ESA_RESOLVE_TIMEOUT_EXTEND_Ω · 2026-06-08 · STEEVE-MAX
+    Timeout porté de 20s → 60s (CDSE OData lent en charge / cross-region latency).
+    """
     try:
         # CDSE OData filter by Name contains scene_id
         url = (
             f"https://catalogue.dataspace.copernicus.eu/odata/v1/Products"
             f"?$filter=contains(Name,'{scene_id}')&$top=1"
         )
-        resp = httpx.get(url, headers={"Authorization": f"Bearer {token}"}, timeout=20)
+        resp = httpx.get(url, headers={"Authorization": f"Bearer {token}"}, timeout=60)
         if resp.status_code != 200:
             logger.warning(f"[P1_FULL_ESA] product lookup HTTP {resp.status_code}")
             return None

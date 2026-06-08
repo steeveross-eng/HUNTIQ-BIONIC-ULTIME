@@ -119,9 +119,60 @@ stop_daemon() {
     echo "✅ Daemon β2-ΣΤ arrêté"
 }
 
+# ═══════════════════════════════════════════════════════════════════════════
+# P22ΩΩ_P2_WORKER_PARTIAL_RECOVERY_DAEMON_Ω · 2026-06-08 · STEEVE-MAX
+# BCE-4X ULTIME ABSOLU · Verrou Phase III · STRICT ADDITIF
+# Spawn UN seul worker à index donné · utilisé par le watchdog pour partial
+# respawn ciblé sans tuer les workers vivants. Append le nouveau PID au
+# state.json (lecture/écriture atomique via python3).
+# ═══════════════════════════════════════════════════════════════════════════
+spawn_one_index() {
+    local IDX="$1"
+    if [[ -z "$IDX" ]] || ! [[ "$IDX" =~ ^[0-9]+$ ]]; then
+        echo "Usage: $0 spawn_index <idx>" >&2
+        return 2
+    fi
+    if [[ ! -f "$GRID_FILE_PATH" ]]; then
+        echo "❌ Grid file introuvable: $GRID_FILE_PATH" >&2
+        return 3
+    fi
+    PYTHON_BIN="/root/.venv/bin/python3"
+    [ -x "$PYTHON_BIN" ] || PYTHON_BIN="$(command -v python3)"
+    _SPAWN_PACING_MS="${WORKER_PACING_MS:-0}"
+    mkdir -p "$LOG_DIR"
+    setsid nohup nice -n 19 env \
+        GRID_FILE_PATH="$GRID_FILE_PATH" \
+        WORKER_INDEX="$IDX" \
+        WORKER_COUNT="$WORKER_COUNT" \
+        MAX_R5_CELLS="$MAX_R5_CELLS" \
+        WORKER_PACING_MS="$_SPAWN_PACING_MS" \
+        PYTHONUNBUFFERED=1 \
+        "$PYTHON_BIN" /app/backend/tools/zerocost_worker_seed_r5.py \
+        > "$LOG_DIR/worker_${IDX}.log" 2>&1 < /dev/null &
+    NEW_PID=$!
+    disown
+    echo "  ✓ β2-ΣΤ Worker $IDX respawned (PID $NEW_PID · partial recovery · pacing=${_SPAWN_PACING_MS}ms)"
+    # Append PID au state.json si présent (best-effort idempotent)
+    if [[ -f "$STATE_FILE" ]]; then
+        python3 -c "
+import json
+try:
+    with open('$STATE_FILE') as f: s = json.load(f)
+    s.setdefault('pids', [])
+    if $NEW_PID not in s['pids']:
+        s['pids'].append($NEW_PID)
+    with open('$STATE_FILE','w') as f: json.dump(s, f)
+except Exception as e:
+    print(f'  ⚠ state.json append fail: {e}')
+"
+    fi
+    echo "$NEW_PID"
+}
+
 case "$ACTION" in
     start) start_daemon ;;
     status) status_daemon ;;
     stop) stop_daemon ;;
-    *) echo "Usage: $0 {start|status|stop}"; exit 1 ;;
+    spawn_index) spawn_one_index "${2:-}" ;;
+    *) echo "Usage: $0 {start|status|stop|spawn_index <idx>}"; exit 1 ;;
 esac

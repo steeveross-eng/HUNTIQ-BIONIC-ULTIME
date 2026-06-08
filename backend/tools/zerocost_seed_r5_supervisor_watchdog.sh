@@ -68,33 +68,106 @@ fi
 MIN_WORKERS=$TARGET_WORKERS
 LOG_PREFIX="[β2-ΣΤ-WATCHDOG]"
 
-echo "$LOG_PREFIX Watchdog démarré · check toutes les ${CHECK_INTERVAL_S}s · MIN_WORKERS=$MIN_WORKERS · TARGET=$TARGET_WORKERS · TIER=$_TIER_DETECTED"
+# ═══════════════════════════════════════════════════════════════════════════
+# P22ΩΩ_P2_WORKER_PARTIAL_RECOVERY_WATCHDOG_Ω · 2026-06-08 · STEEVE-MAX
+# BCE-4X ULTIME ABSOLU · Verrou Phase III · STRICT ADDITIF
+# Helpers pour partial respawn ciblé des indices manquants.
+# Configuration via env :
+#   PARTIAL_RESPAWN_COOLDOWN_S=300  · anti-thrash (5 min)
+#   MIN_PARTIAL_THRESHOLD=3         · seuil min n_alive pour activer partial
+# Le full respawn legacy reste préservé en fallback si n < min OU cooldown actif.
+# ═══════════════════════════════════════════════════════════════════════════
+PARTIAL_RESPAWN_COOLDOWN_S="${PARTIAL_RESPAWN_COOLDOWN_S:-300}"
+MIN_PARTIAL_THRESHOLD="${MIN_PARTIAL_THRESHOLD:-3}"
+LAST_PARTIAL_RESPAWN_FILE="${LAST_PARTIAL_RESPAWN_FILE:-/tmp/zerocost_last_partial_respawn.ts}"
+
+# Détection indices présents · lit /proc/{PID}/environ pour extraire WORKER_INDEX
+# Output : liste numérique triée (1 idx par ligne)
+get_present_worker_indices() {
+    local PIDS=$(ps -ef 2>/dev/null | grep zerocost_worker_seed_r5 | grep -v grep | awk '{print $2}')
+    for pid in $PIDS; do
+        if [[ -r "/proc/$pid/environ" ]]; then
+            tr '\0' '\n' < "/proc/$pid/environ" 2>/dev/null \
+                | grep -E '^WORKER_INDEX=' | cut -d= -f2
+        fi
+    done | sort -nu
+}
+
+# Compute missing indices = expected (0..target-1) ∖ present
+get_missing_worker_indices() {
+    local TARGET=$1
+    local PRESENT=$(get_present_worker_indices | tr '\n' ' ')
+    local MISSING=""
+    for ((idx=0; idx<TARGET; idx++)); do
+        if ! echo " $PRESENT " | grep -qE " $idx "; then
+            MISSING="$MISSING $idx"
+        fi
+    done
+    echo "$MISSING" | xargs  # trim
+}
+
+# Vérification cooldown anti-thrash
+partial_respawn_cooldown_ok() {
+    local LAST=0
+    [[ -f "$LAST_PARTIAL_RESPAWN_FILE" ]] && LAST=$(cat "$LAST_PARTIAL_RESPAWN_FILE" 2>/dev/null || echo 0)
+    local NOW=$(date +%s)
+    local ELAPSED=$((NOW - LAST))
+    [[ $ELAPSED -ge $PARTIAL_RESPAWN_COOLDOWN_S ]]
+}
+
+echo "$LOG_PREFIX Watchdog démarré · check toutes les ${CHECK_INTERVAL_S}s · MIN_WORKERS=$MIN_WORKERS · TARGET=$TARGET_WORKERS · TIER=$_TIER_DETECTED · PARTIAL_COOLDOWN=${PARTIAL_RESPAWN_COOLDOWN_S}s"
 
 while true; do
     # Compter workers β2-ΣΤ vivants
     n=$(ps -ef 2>/dev/null | grep zerocost_worker_seed_r5 | grep -v grep | wc -l)
 
-    # P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_Ω · respawn si n < TARGET (8) pour stabilité maximale
-    # P22ΩΩ_PHASE2_WORKERS_ACTIVATE_Ω · 2026-02-20 · grille bascule limitrophes
-    if [[ $n -lt $MIN_WORKERS ]]; then
-        echo "$LOG_PREFIX $(date -u +%Y-%m-%dT%H:%M:%SZ) · workers vivants=$n < MIN=$MIN_WORKERS · RELANCE"
+    # Configuration env stagger/pacing (TIER-aware, identique à full respawn)
+    if [[ "$_TIER_DETECTED" == ELITE* ]]; then
+        _SPAWN_STAGGER_MS="${SPAWN_STAGGER_MS:-2000}"
+        _WORKER_PACING_MS="${WORKER_PACING_MS:-50}"
+    else
+        _SPAWN_STAGGER_MS="${SPAWN_STAGGER_MS:-0}"
+        _WORKER_PACING_MS="${WORKER_PACING_MS:-0}"
+    fi
+
+    # P22ΩΩ_P2_WORKER_PARTIAL_RECOVERY_Ω · 2026-06-08 · STEEVE-MAX
+    # Logique watchdog en 3 branches :
+    #   1) n == TARGET → état stable · heartbeat 5min
+    #   2) n entre MIN_PARTIAL_THRESHOLD et TARGET ET cooldown OK ET MISSING détectés
+    #      → ★ PARTIAL RESPAWN ciblé des indices manquants (additif Phase III)
+    #   3) n < MIN_WORKERS OU cooldown actif → FULL RESPAWN legacy (preserved)
+    if [[ $n -eq $TARGET_WORKERS ]]; then
+        # ── Branche 1 · État stable · heartbeat ─────────────────────────────
+        if (( $(date +%s) % 300 < CHECK_INTERVAL_S )); then
+            echo "$LOG_PREFIX $(date -u +%H:%M:%SZ) · workers=$n/$TARGET_WORKERS OK · load=$(uptime | awk -F'load average:' '{print $2}' | awk '{print $1}' | tr -d ',')"
+        fi
+    elif [[ $n -ge $MIN_PARTIAL_THRESHOLD ]] && partial_respawn_cooldown_ok; then
+        # ── Branche 2 · PARTIAL RESPAWN ciblé ──────────────────────────────
+        MISSING_INDICES=$(get_missing_worker_indices "$TARGET_WORKERS")
+        if [[ -n "$MISSING_INDICES" ]]; then
+            echo "$LOG_PREFIX $(date -u +%Y-%m-%dT%H:%M:%SZ) · PARTIAL RESPAWN · n=$n/$TARGET_WORKERS · missing=[$MISSING_INDICES] · stagger=${_SPAWN_STAGGER_MS}ms"
+            for idx in $MISSING_INDICES; do
+                WORKER_COUNT=$TARGET_WORKERS \
+                GRID_FILE_PATH=/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_limitrophes.json \
+                MAX_R5_CELLS=0 \
+                BLOCK_OUTSIDE_3RF=1 \
+                SPAWN_STAGGER_MS="$_SPAWN_STAGGER_MS" \
+                WORKER_PACING_MS="$_WORKER_PACING_MS" \
+                bash /app/backend/tools/zerocost_seed_r5_daemon.sh spawn_index "$idx" 2>&1 | tail -2
+                # Stagger entre respawns pour éviter pic CPU
+                if [[ $_SPAWN_STAGGER_MS -gt 0 ]]; then
+                    sleep $(awk "BEGIN { print $_SPAWN_STAGGER_MS / 1000 }")
+                fi
+            done
+            date +%s > "$LAST_PARTIAL_RESPAWN_FILE"
+            echo "$LOG_PREFIX Partial respawn complet · cooldown ${PARTIAL_RESPAWN_COOLDOWN_S}s actif"
+        fi
+    elif [[ $n -lt $MIN_WORKERS ]]; then
+        # ── Branche 3 · FULL RESPAWN legacy (Verrou Phase III preserved) ───
+        echo "$LOG_PREFIX $(date -u +%Y-%m-%dT%H:%M:%SZ) · workers vivants=$n < MIN=$MIN_WORKERS · RELANCE FULL"
         # Nettoyage state file
         bash /app/backend/tools/zerocost_seed_r5_daemon.sh stop 2>&1 | tail -2 || true
         sleep 2
-        # P22ΩΩ_ELITE_CALIBRATION_THROTTLE_LT_5_PCT_Ω · 2026-06-06 · STEEVE-MAX
-        # Activation conditionnelle stagger spawn + pacing intra-worker en TIER=ELITE.
-        # Calibration mathématique : 8w × 60% vCPU = 4.8 vCPUs vs quota 4 vCPUs →
-        # overshoot 20% sans pacing. WORKER_PACING_MS=50 introduit ~20% idle ratio
-        # post-R5 → consommation effective ~3.8 vCPUs → throttle attendu <5%.
-        # SPAWN_STAGGER_MS=2000 évite le pic de bootstrap V20 parallèle (~3-5s spike).
-        # En PREVIEW : tous les paramètres restent à 0 (legacy intact).
-        if [[ "$_TIER_DETECTED" == ELITE* ]]; then
-            _SPAWN_STAGGER_MS="${SPAWN_STAGGER_MS:-2000}"
-            _WORKER_PACING_MS="${WORKER_PACING_MS:-50}"
-        else
-            _SPAWN_STAGGER_MS="${SPAWN_STAGGER_MS:-0}"
-            _WORKER_PACING_MS="${WORKER_PACING_MS:-0}"
-        fi
         WORKER_COUNT=$TARGET_WORKERS \
         GRID_FILE_PATH=/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_limitrophes.json \
         MAX_R5_CELLS=0 \
@@ -131,9 +204,12 @@ except Exception as e:
     print(f'[R2_ORPHAN_PURGE] skip: {e}')
 " 2>&1 | head -20
     else
-        # Log status léger toutes les 5 min
+        # n entre min et target MAIS cooldown actif (partial bloqué) · log warning
         if (( $(date +%s) % 300 < CHECK_INTERVAL_S )); then
-            echo "$LOG_PREFIX $(date -u +%H:%M:%SZ) · workers=$n OK · load=$(uptime | awk -F'load average:' '{print $2}' | awk '{print $1}' | tr -d ',')"
+            LAST=0
+            [[ -f "$LAST_PARTIAL_RESPAWN_FILE" ]] && LAST=$(cat "$LAST_PARTIAL_RESPAWN_FILE" 2>/dev/null || echo 0)
+            COOLDOWN_LEFT=$((PARTIAL_RESPAWN_COOLDOWN_S - ($(date +%s) - LAST)))
+            echo "$LOG_PREFIX $(date -u +%H:%M:%SZ) · workers=$n/$TARGET_WORKERS · cooldown partial actif (${COOLDOWN_LEFT}s restant)"
         fi
     fi
 
