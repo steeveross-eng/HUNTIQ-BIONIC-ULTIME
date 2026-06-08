@@ -87,3 +87,7 @@ credentials.json
 *.key
 .credentials
 bionic/.git/objects/pack/pack-d52e1f73062718e4d5673df576875602a4e08791.pack
+
+# Diagnostic clone — ne PAS pousser dans HUNTIQ-BIONIC-ULTIME
+bionic/
+
