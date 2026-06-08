@@ -1,22 +1,22 @@
 {
   "_doctrine": "P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_Ω",
-  "_emitted_at": "2026-06-08T00:28:36.272851+00:00",
+  "_emitted_at": "2026-06-08T13:00:38.089721+00:00",
   "manifest": {
     "doctrine": "P22ΩΩ_ZEROCOST_CANADA_H3R6_Ω",
-    "generated_at": "2026-06-08T00:28:14.838238+00:00",
-    "drift_seconds": 21.43459,
+    "generated_at": "2026-06-08T12:55:24.467521+00:00",
+    "drift_seconds": 313.622173,
     "drift_ok": true,
     "drift_alert": false,
-    "n_tiles": 182463,
-    "cells_unique": 2583,
-    "total_size_mb": 3147.88,
+    "n_tiles": 193899,
+    "cells_unique": 2741,
+    "total_size_mb": 3360.75,
     "by_species": {
-      "chevreuil": 2583,
-      "coyote": 2522,
-      "dindon_sauvage": 2537,
-      "orignal": 2550,
-      "ours_noir": 2542,
-      "wapiti": 2542
+      "chevreuil": 2741,
+      "coyote": 2687,
+      "dindon_sauvage": 2696,
+      "orignal": 2711,
+      "ours_noir": 2696,
+      "wapiti": 2696
     }
   }
 }
