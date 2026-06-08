@@ -201,7 +201,22 @@ def _run_real(
     if spec["download_kind"] == "by_names":
         if not body.tile_names:
             raise HTTPException(400, "tile_names requis pour ce client en dry_run=false")
-        paths = download_fn(body.tile_names[: body.max_tiles or _DEFAULT_MAX_TILES], destination_dir)
+        # P22ΩΩ_BY_NAMES_BANDS_FILTER_FORWARD_Ω · 2026-06-08 · STEEVE-MAX
+        # Forward bands_filter au download function si fournie (MFFP/NRCan P1_FULL).
+        # Si la signature du download_fn n'accepte pas bands_filter (legacy), on
+        # fallback en appel sans (compat).
+        import inspect
+        sig_params = set(inspect.signature(download_fn).parameters.keys())
+        kwargs: dict[str, Any] = {"destination_dir": destination_dir}
+        if body.bands and "bands_filter" in sig_params:
+            kwargs["bands_filter"] = list(body.bands)
+        if "max_tiles" in sig_params and body.max_tiles is not None:
+            kwargs["max_tiles"] = body.max_tiles
+        try:
+            paths = download_fn(body.tile_names[: body.max_tiles or _DEFAULT_MAX_TILES], **kwargs)
+        except TypeError:
+            # Legacy fallback : signature ne supporte pas kwargs additionnels
+            paths = download_fn(body.tile_names[: body.max_tiles or _DEFAULT_MAX_TILES], destination_dir)
         return {"download_kind": "by_names", "files_count": len(paths), "files": paths}
 
     raise HTTPException(500, f"download_kind inconnu: {spec['download_kind']}")

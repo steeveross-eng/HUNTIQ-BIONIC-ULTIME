@@ -21,8 +21,8 @@
     "MANIFEST_CHECKPOINT_Ω_periodic_last": "2026-06-08T00:28:36.273213+00:00",
     "RAPPORT_AUTOPILOT_MIDPOINT_Ω": "2026-05-28T18:59:24.704340+00:00"
   },
-  "check_count": 117,
-  "last_check_at": "2026-06-08T02:36:23.233532+00:00",
+  "check_count": 118,
+  "last_check_at": "2026-06-08T11:26:45.340072+00:00",
   "last_error": "stability_check: 'stability_actions'",
   "phase_2_grid_full": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_full.json",
   "phase_2_grid_limitrophes": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_limitrophes.json",
@@ -31,13 +31,6 @@
   "block_outside_qc": true,
   "workers_supervisor_action_required": true,
   "stability_actions": [
-    {
-      "kind": "WORKERS_ALIVE_COUNT",
-      "at": "2026-06-05T03:57:25.751059+00:00",
-      "count": 3,
-      "target": 8,
-      "min_required": 4
-    },
     {
       "kind": "WORKERS_ALIVE_COUNT",
       "at": "2026-06-05T11:28:37.402970+00:00",
@@ -420,6 +413,13 @@
           "note": "Définir AUTOPILOT_STABILITY_KILL=1 pour activer SIGTERM · Watchdog respawn massif si workers<4 (MIN_WORKERS)"
         }
       ]
+    },
+    {
+      "kind": "WORKERS_ALIVE_COUNT",
+      "at": "2026-06-08T11:28:16.056488+00:00",
+      "count": 3,
+      "target": 8,
+      "min_required": 4
     }
   ],
   "alerts": []
