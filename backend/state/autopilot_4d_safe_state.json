@@ -21,8 +21,8 @@
     "MANIFEST_CHECKPOINT_Ω_periodic_last": "2026-06-08T00:28:36.273213+00:00",
     "RAPPORT_AUTOPILOT_MIDPOINT_Ω": "2026-05-28T18:59:24.704340+00:00"
   },
-  "check_count": 114,
-  "last_check_at": "2026-06-08T01:13:28.270049+00:00",
+  "check_count": 115,
+  "last_check_at": "2026-06-08T01:45:05.980745+00:00",
   "last_error": "stability_check: 'stability_actions'",
   "phase_2_grid_full": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_full.json",
   "phase_2_grid_limitrophes": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_limitrophes.json",
@@ -31,13 +31,6 @@
   "block_outside_qc": true,
   "workers_supervisor_action_required": true,
   "stability_actions": [
-    {
-      "kind": "WORKERS_ALIVE_COUNT",
-      "at": "2026-06-04T21:09:07.194117+00:00",
-      "count": 4,
-      "target": 8,
-      "min_required": 4
-    },
     {
       "kind": "STALE_WORKERS_DETECTED",
       "at": "2026-06-04T21:09:07.194387+00:00",
@@ -421,6 +414,13 @@
     {
       "kind": "WORKERS_ALIVE_COUNT",
       "at": "2026-06-08T01:15:05.823586+00:00",
+      "count": 3,
+      "target": 8,
+      "min_required": 4
+    },
+    {
+      "kind": "WORKERS_ALIVE_COUNT",
+      "at": "2026-06-08T01:46:47.358414+00:00",
       "count": 3,
       "target": 8,
       "min_required": 4
