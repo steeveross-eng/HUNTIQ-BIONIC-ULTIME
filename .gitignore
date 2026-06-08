@@ -80,3 +80,10 @@ memory/test_credentials.md
 
 # Mobile development
 android-sdk/bionic/.git/objects/pack/pack-d52e1f73062718e4d5673df576875602a4e08791.pack
+.env
+.env.*
+*.env
+credentials.json
+*.key
+.credentials
+bionic/.git/objects/pack/pack-d52e1f73062718e4d5673df576875602a4e08791.pack
