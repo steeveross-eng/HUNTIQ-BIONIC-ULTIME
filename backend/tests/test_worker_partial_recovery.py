@@ -34,12 +34,21 @@ import zerocost_workers_runtime as wr  # noqa: E402
 # Fixtures
 # ─────────────────────────────────────────────────────────────────────────────
 @pytest.fixture(autouse=True)
-def _reset_module_state():
-    """Reset module-level state between tests."""
+def _reset_module_state(tmp_path, monkeypatch):
+    """Reset module-level state between tests.
+
+    P22ΩΩ_R4_TEST_ISOLATION_Ω · 2026-06-08 · STEEVE-MAX
+    Isole _COMPLETED_FLAG_DIR vers tmp_path pour éviter qu'un sentinel R4
+    résiduel sur le filesystem réel (/var/log/bionic-zerocost-seed-r5/)
+    ne fasse skip à tort un respawn dans les tests R3 (faux négatif :
+    "watchdog ne respawn pas → 2 timestamps identiques entre cycles").
+    """
     wr._pids = {}
     wr._watchdog_task = None
     wr._stop_event = None
     wr._last_partial_respawn_at = 0.0
+    # R4 isolation : sentinel dir → tmp_path (vide par défaut)
+    monkeypatch.setattr(wr, "_COMPLETED_FLAG_DIR", tmp_path)
     yield
     wr._pids = {}
     wr._watchdog_task = None

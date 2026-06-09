@@ -119,6 +119,34 @@ R2_BUCKET = os.environ["CF_R2_BUCKET"]
 # Mutation additive · zéro impact engine · Verrou Phase III intact.
 STATE_DIR = Path("/var/log/bionic-zerocost-seed-r5")
 STATE_FILE = STATE_DIR / f"state_worker_{WORKER_INDEX}.json"
+# P22ΩΩ_R4_WORKER_COMPLETED_SENTINEL_Ω · 2026-06-08 · STEEVE-MAX · BCE-4X ULTIME
+# Sentinel "completion" pour permettre au watchdog R4 de distinguer
+# exit normal (workload terminé) vs crash. Strict additif · Verrou Phase III.
+COMPLETED_FLAG = STATE_DIR / f"completed_worker_{WORKER_INDEX}.flag"
+
+
+def _write_completed_flag(reason: str, my_share: int) -> None:
+    """Marque ce worker comme COMPLÉTÉ pour que le watchdog ne respawn pas en boucle.
+    Le grid_file est inclus pour invalidation automatique si la grille change."""
+    try:
+        STATE_DIR.mkdir(parents=True, exist_ok=True)
+        payload = {
+            "worker_index": WORKER_INDEX,
+            "worker_count": WORKER_COUNT,
+            "grid_file": str(GRID_FILE),
+            "my_share": my_share,
+            "completed_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "reason": reason,
+        }
+        tmp = COMPLETED_FLAG.with_suffix(".flag.tmp")
+        tmp.write_text(json.dumps(payload))
+        tmp.replace(COMPLETED_FLAG)
+        logger.info(
+            f"[R4_COMPLETED_SENTINEL] worker {WORKER_INDEX} marqué COMPLETED · "
+            f"reason={reason} · my_share={my_share} · grid={GRID_FILE.name}"
+        )
+    except Exception as e:
+        logger.warning(f"[R4_COMPLETED_SENTINEL] write fail: {e}")
 
 
 def _load_worker_state():
@@ -233,6 +261,9 @@ async def main():
     r5_idx_done, species_done_current = _load_worker_state()
     if r5_idx_done >= len(my_r5):
         print(f"  [STATE_FILE_Ω] r5_idx_done={r5_idx_done} ≥ len={len(my_r5)} · WORKER COMPLET")
+        # P22ΩΩ_R4_WORKER_COMPLETED_SENTINEL_Ω · 2026-06-08 · STEEVE-MAX
+        # Marque sentinel COMPLETED pour stopper la boucle respawn watchdog R3.
+        _write_completed_flag(reason="state_already_complete_on_boot", my_share=len(my_r5))
         return
     if r5_idx_done > 0 or species_done_current:
         print(f"  [STATE_FILE_Ω] RESUME r5_idx={r5_idx_done}/{len(my_r5)} (skip {r5_idx_done} terminées) · species_done={species_done_current}")
@@ -348,6 +379,12 @@ async def main():
         f"\n  Volume R2  : {stats['size_bytes']/1024/1024:.1f} MB"
     )
     print(f"  WeatherCache : {weather_cache_stats()}")
+    # P22ΩΩ_R4_WORKER_COMPLETED_SENTINEL_Ω · 2026-06-08 · STEEVE-MAX
+    # Marque sentinel COMPLETED en fin de main pour stopper la boucle respawn.
+    _write_completed_flag(
+        reason=f"workload_done_seed_ok={stats['seed_ok']}_fanout_ok={stats['fanout_ok']}",
+        my_share=len(my_r5),
+    )
 
 
 if __name__ == "__main__":

@@ -77,6 +77,43 @@ _watchdog_task: Optional[asyncio.Task] = None
 _stop_event: Optional[asyncio.Event] = None
 _last_partial_respawn_at: float = 0.0  # monotonic timestamp · anti-thrash
 
+# P22ΩΩ_R4_WORKER_COMPLETED_SENTINEL_Ω · 2026-06-08 · STEEVE-MAX · BCE-4X ULTIME
+# Répertoire des sentinels COMPLETED (alignés sur tools/zerocost_worker_seed_r5.py)
+_COMPLETED_FLAG_DIR = Path("/var/log/bionic-zerocost-seed-r5")
+
+
+def _read_completed_flag(worker_index: int) -> Optional[dict]:
+    """Retourne le payload du sentinel COMPLETED si présent, sinon None.
+    Le sentinel est écrit par le worker lui-même quand il termine son workload."""
+    flag_path = _COMPLETED_FLAG_DIR / f"completed_worker_{worker_index}.flag"
+    if not flag_path.is_file():
+        return None
+    try:
+        import json as _json
+        return _json.loads(flag_path.read_text())
+    except Exception as e:
+        logger.warning(f"[R4_COMPLETED_SENTINEL] read fail idx={worker_index}: {e}")
+        return None
+
+
+def _is_worker_completed(worker_index: int, current_grid_file: Optional[str] = None) -> bool:
+    """True si le worker a terminé proprement son workload pour la grille courante.
+
+    Le sentinel est invalidé automatiquement si la grille change (re-priorisation),
+    permettant un respawn légitime sur nouveau scope de travail."""
+    payload = _read_completed_flag(worker_index)
+    if payload is None:
+        return False
+    if current_grid_file is not None:
+        flag_grid = payload.get("grid_file")
+        if flag_grid and flag_grid != current_grid_file:
+            logger.info(
+                f"[R4_COMPLETED_SENTINEL] idx={worker_index} sentinel INVALIDÉ · "
+                f"grid change ({flag_grid} → {current_grid_file})"
+            )
+            return False
+    return True
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Helpers
@@ -369,7 +406,35 @@ async def _watchdog_loop(worker_count: int) -> None:
             iter_count += 1
             missing_indices: list[int] = sorted(set(range(worker_count)) - alive.keys())
 
-            if n_alive < min_workers:
+            # ─── R4 · COMPLETED SENTINEL FILTER ──────────────────────────────
+            # P22ΩΩ_R4_WORKER_COMPLETED_SENTINEL_Ω · 2026-06-08 · STEEVE-MAX
+            # Si un worker a écrit son sentinel "completed_worker_{idx}.flag",
+            # c'est qu'il a terminé proprement son workload (return clean, exit 0)
+            # et NON crashé. Le watchdog ne doit donc PAS le respawn en boucle.
+            # Sinon : exit clean → respawn → relit state file → ré-exit clean →
+            # respawn → ... boucle infinie (= bug observé missing=[3,4,5,6,7]).
+            current_grid = str(_resolve_grid_file())
+            completed_indices = [
+                idx for idx in missing_indices
+                if _is_worker_completed(idx, current_grid_file=current_grid)
+            ]
+            if completed_indices:
+                # Retire les indices completed de missing avant toute action respawn
+                missing_indices = [i for i in missing_indices if i not in completed_indices]
+                if iter_count % heartbeat_every_n == 0 or completed_indices != getattr(_watchdog_loop, "_last_completed_log", None):
+                    logger.info(
+                        f"[β2-ΣΤ-INPROCESS-WATCHDOG-R4] completed={completed_indices} "
+                        f"(workload terminé · skip respawn) · alive={n_alive}/{worker_count} · "
+                        f"crash_missing={missing_indices}"
+                    )
+                    _watchdog_loop._last_completed_log = list(completed_indices)  # type: ignore[attr-defined]
+
+            # Recompute "effective" target : only indices that are NEITHER alive NOR completed
+            # require respawn. n_alive_effective = alive + completed (les deux comptent
+            # comme "OK" pour le scaling, mais seuls les missing réels déclenchent action).
+            n_effective_ok = n_alive + len(completed_indices)
+
+            if n_alive < min_workers and n_effective_ok < min_workers:
                 # Legacy full respawn (preserved · Verrou Phase III)
                 logger.warning(
                     f"[β2-ΣΤ-INPROCESS-WATCHDOG] workers vivants={n_alive} < MIN={min_workers} · RELANCE FULL"
@@ -386,7 +451,17 @@ async def _watchdog_loop(worker_count: int) -> None:
                 # récemment et les workers retombent, on ne re-respawn pas en
                 # boucle (signe d'un problème upstream genre OOMkill).
                 now = _time.monotonic()
-                cooldown_remaining = partial_cooldown_s - (now - _last_partial_respawn_at)
+                # P22ΩΩ_R4_COOLDOWN_FIRST_RUN_FIX_Ω · 2026-06-08 · STEEVE-MAX
+                # Sentinel "jamais respawné" : _last_partial_respawn_at <= 0.0
+                # signifie qu'aucun respawn précédent n'a eu lieu (pod boot frais
+                # ou état initial). Dans ce cas, le cooldown ne s'applique PAS.
+                # Sans ce sentinel, un pod fraîchement démarré (time.monotonic()
+                # ~petites secondes) refuserait son premier respawn pendant les
+                # premiers `cooldown_s` secondes car `now - 0.0 < cooldown_s`.
+                if _last_partial_respawn_at <= 0.0:
+                    cooldown_remaining = -1.0  # jamais respawné · cooldown non applicable
+                else:
+                    cooldown_remaining = partial_cooldown_s - (now - _last_partial_respawn_at)
                 if cooldown_remaining > 0:
                     if iter_count % heartbeat_every_n == 0:
                         logger.info(
@@ -408,8 +483,12 @@ async def _watchdog_loop(worker_count: int) -> None:
                             f"{missing_indices} (n_alive={n_alive} >= min={min_workers}) · "
                             f"RESPAWN CIBLÉ"
                         )
-                        # Synchronise _pids avec alive (purge index orphelin)
-                        _pids = dict(alive)
+                        # P22ΩΩ_R4_WORKER_COMPLETED_SENTINEL_Ω · 2026-06-08 · STEEVE-MAX
+                        # Synchronise _pids avec alive + preserve completed (R4)
+                        # NB : sans préservation, dict(alive) écraserait les PIDs des
+                        # completed (idx ∉ alive ∧ ∉ missing post-R4-filter), ce qui
+                        # provoquerait KeyError downstream et perdrait le tracking.
+                        _pids = {**alive, **{i: _pids[i] for i in completed_indices if i in _pids}}
                         respawned = 0
                         for idx in missing_indices:
                             pid = _spawn_worker(idx, worker_count, grid_file, log_dir, python_bin)
@@ -432,16 +511,23 @@ async def _watchdog_loop(worker_count: int) -> None:
                             f"now {len(_pids)}/{worker_count} actifs"
                         )
             else:
-                # État stable : tous les workers vivants
+                # État stable : tous les workers vivants OU complétés (R4)
                 if iter_count % heartbeat_every_n == 0:
                     try:
                         load_avg = os.getloadavg()[0]
                     except Exception:
                         load_avg = -1.0
-                    logger.info(
-                        f"[β2-ΣΤ-INPROCESS-WATCHDOG] workers={n_alive}/{worker_count} OK · "
-                        f"load={load_avg:.2f}"
-                    )
+                    if completed_indices:
+                        logger.info(
+                            f"[β2-ΣΤ-INPROCESS-WATCHDOG-R4] workers={n_alive}/{worker_count} alive · "
+                            f"completed={len(completed_indices)} · effective={n_effective_ok}/{worker_count} · "
+                            f"load={load_avg:.2f}"
+                        )
+                    else:
+                        logger.info(
+                            f"[β2-ΣΤ-INPROCESS-WATCHDOG] workers={n_alive}/{worker_count} OK · "
+                            f"load={load_avg:.2f}"
+                        )
     except asyncio.CancelledError:
         logger.info("[β2-ΣΤ-INPROCESS-WATCHDOG] cancelled")
     except Exception as e:
