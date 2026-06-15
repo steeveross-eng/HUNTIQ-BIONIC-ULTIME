@@ -15,7 +15,7 @@
 ## 1. CAPTURES DE REFERENCE SUPRA
 
 ### 1.1 Etat de l'application
-- **URL:** https://huntiq-restore.preview.emergentagent.com
+- **URL:** https://bionic-ultime-1.preview.emergentagent.com
 - **Branche:** BIONIC_REWRITE_P0
 - **Commit de reference:** 85e139f
 - **Screenshot principale:** `/app/memory/baseline_app_state.png`

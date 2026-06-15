@@ -4,7 +4,7 @@
   "commandant": "STEEVE-MAX",
   "directive": "AUDIT RACINE TERRITOIRE_Ω (Articles 1-4) suite à HTTP 403 visible dans HUD Ultime",
   "executed_at_utc": "2026-04-28T17:21:43.340483+00:00",
-  "url_audit": "https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic",
+  "url_audit": "https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic",
   "audit_racine": {
     "1_service_worker": {
       "version_actuelle": "v9.2-audit-racine-territoire-omega",
@@ -39,11 +39,11 @@
       "api_403_urls": [],
       "api_401_count_in_session": 17,
       "api_401_urls_sample": [
-        "https://huntiq-restore.preview.emergentagent.com/api/v8/national/score?lat=46.8139&lon=-71.208&species=cerf&month=4&hour",
-        "https://huntiq-restore.preview.emergentagent.com/api/v8/national/score?lat=48.206657&lon=-68.382422&species=cerf&month=4",
-        "https://huntiq-restore.preview.emergentagent.com/api/v7/spatial/scoring?lat=48.206657&lon=-68.382422&species=cerf&month=",
-        "https://huntiq-restore.preview.emergentagent.com/api/v7/spatial/scoring?lat=48.206657&lon=-68.382422&species=cerf&month=",
-        "https://huntiq-restore.preview.emergentagent.com/api/v7/spatial/scoring?lat=48.206657&lon=-68.382422&species=cerf&month="
+        "https://bionic-ultime-1.preview.emergentagent.com/api/v8/national/score?lat=46.8139&lon=-71.208&species=cerf&month=4&hour",
+        "https://bionic-ultime-1.preview.emergentagent.com/api/v8/national/score?lat=48.206657&lon=-68.382422&species=cerf&month=4",
+        "https://bionic-ultime-1.preview.emergentagent.com/api/v7/spatial/scoring?lat=48.206657&lon=-68.382422&species=cerf&month=",
+        "https://bionic-ultime-1.preview.emergentagent.com/api/v7/spatial/scoring?lat=48.206657&lon=-68.382422&species=cerf&month=",
+        "https://bionic-ultime-1.preview.emergentagent.com/api/v7/spatial/scoring?lat=48.206657&lon=-68.382422&species=cerf&month="
       ],
       "diagnostic": "Aucune erreur 403 dans la session live actuelle. Les 401 observés sont sur /api/v8/national/score et /api/v7/spatial/scoring (endpoints auth-protected), uniquement quand l'utilisateur est NON-CONNECTÉ. Le HTTP 403 vu par le Commandant provenait d'une réponse cachée par l'ancien Service Worker v9.1 sur /api/v30/territoire/ultime-score. Bypass total ajouté pour /api/v30/territoire/* dans sw.js v9.2 + cache-busting query param ajouté côté HudTerritoireUltime."
     },
@@ -88,7 +88,7 @@
     "size_bytes": 1782740
   },
   "directives_au_commandant": [
-    "Effectuer un Ctrl+Shift+R sur https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic pour permettre au SW v9.2 de se substituer au v9.1.",
+    "Effectuer un Ctrl+Shift+R sur https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic pour permettre au SW v9.2 de se substituer au v9.1.",
     "Optionnel : DevTools (F12) → Application → Service Workers → Unregister, puis Storage → Clear site data, puis recharger.",
     "Le SW v9.2 purgera automatiquement v9.0 et v9.1 dès la prochaine visite (mécanisme self-healing)."
   ],

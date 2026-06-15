@@ -297,7 +297,7 @@ les 3 espèces préférées au waypoint favori.
 ### CONTEXTE
 Le Commandant STEEVE-MAX a rejeté la validation P22Ω_VISUAL_DIVERGENCE car la carte
 TERRITOIRE Ω sur l'URL EXACTE
-`https://huntiq-restore.preview.emergentagent.com/territoire` n'affichait
+`https://bionic-ultime-1.preview.emergentagent.com/territoire` n'affichait
 aucune couche (zones / corridors / affûts / salines / hotspots absents)
 et "Rafraîchir → HTTP 502".
 
@@ -362,7 +362,7 @@ pour les 5 espèces cibles × waypoint BSL × params actuels frontend
 
 ### PREUVE VISUELLE SUR URL EXACTE
 
-Screenshot Playwright à T+35s sur `https://huntiq-restore.preview.emergentagent.com/territoire` :
+Screenshot Playwright à T+35s sur `https://bionic-ultime-1.preview.emergentagent.com/territoire` :
 - **polylines = 93** (corridors V5 NATIFS + zones + affûts + salines + hotspots)
 - **markers = 10**
 - **SCORE 62.11 · NEUTRE** affiché dans HUD

@@ -3,7 +3,7 @@
 **Date UTC** : 2026-05-13
 **Commandant** : STEEVE-MAX
 **Scope** : Élimination doctrinale des HTTP 502 sur TERRITOIRE Ω
-**Préview URL** : `https://huntiq-restore.preview.emergentagent.com`
+**Préview URL** : `https://bionic-ultime-1.preview.emergentagent.com`
 
 ---
 

@@ -2,7 +2,7 @@
 
 ## CONTEXTE
 Le Commandant a rejeté `P22Ω_VISUAL_DIVERGENCE_VALIDATION` car la carte TERRITOIRE Ω
-sur l'URL publique `https://huntiq-restore.preview.emergentagent.com/territoire`
+sur l'URL publique `https://bionic-ultime-1.preview.emergentagent.com/territoire`
 n'affichait AUCUNE couche : zones, corridors, affûts, salines, hotspots absents,
 HUD vide, "Rafraîchir → HTTP 502".
 

@@ -149,7 +149,7 @@
     "global_inversion_rate_pct": 47.92
   },
   "api_status": {
-    "endpoint": "https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=orignal&month=10&hour=16",
+    "endpoint": "https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=orignal&month=10&hour=16",
     "http_status": 200,
     "payload_size_bytes": 85090,
     "latency_ms": 1876.1,
@@ -158,11 +158,11 @@
     "error_message": null
   },
   "captures": {
-    "chevreuil": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xix_p1/CAPTURE_XIX_P1_chevreuil.jpeg",
-    "orignal": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xix_p1/CAPTURE_XIX_P1_orignal.jpeg",
-    "wapiti": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xix_p1/CAPTURE_XIX_P1_wapiti.jpeg",
-    "ours_noir": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xix_p1/CAPTURE_XIX_P1_ours_noir.jpeg",
-    "dindon_sauvage": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xix_p1/CAPTURE_XIX_P1_dindon_sauvage.jpeg"
+    "chevreuil": "https://bionic-ultime-1.preview.emergentagent.com/reports/captures_xix_p1/CAPTURE_XIX_P1_chevreuil.jpeg",
+    "orignal": "https://bionic-ultime-1.preview.emergentagent.com/reports/captures_xix_p1/CAPTURE_XIX_P1_orignal.jpeg",
+    "wapiti": "https://bionic-ultime-1.preview.emergentagent.com/reports/captures_xix_p1/CAPTURE_XIX_P1_wapiti.jpeg",
+    "ours_noir": "https://bionic-ultime-1.preview.emergentagent.com/reports/captures_xix_p1/CAPTURE_XIX_P1_ours_noir.jpeg",
+    "dindon_sauvage": "https://bionic-ultime-1.preview.emergentagent.com/reports/captures_xix_p1/CAPTURE_XIX_P1_dindon_sauvage.jpeg"
   },
   "visual_validation": {
     "method": "pixel_analysis_PIL_RGB_dual_threshold",
@@ -216,7 +216,7 @@
     },
     "interpretation": "5 captures analysées : aucun corridor orange #FF8F00 détecté avec le seuil corridor >800 px. Les 274-306 pixels orange détectés en mode loose correspondent aux artefacts UI (chips de score, badges de statut, frontière waypoint dashed) — confirmé par orange_strict ≈ 0. match=True pour les 5 espèces car expected=0 (pipeline VITAUX_Ω strict aval) et visible=False. Conformité institutionnelle TOTALE avec le constat XIX-P1B : XIX-P1 valide 2 corridors (orignal+wapiti), mais CORRIDORS_VITAUX_Ω §6 (rayon 150 m, ≥1 zone MAJEURE + attracteur fort) les filtre tous → 0 corridors visibles sur la carte TERRITOIRE."
   },
-  "report_html_url": "https://huntiq-restore.preview.emergentagent.com/reports/RAPPORT_XIX_P1_DIAGNOSTIC.html",
-  "diagnostic_json_url": "https://huntiq-restore.preview.emergentagent.com/reports/DIAGNOSTIC_XIX_P1.json",
-  "validation_visuelle_json_url": "https://huntiq-restore.preview.emergentagent.com/reports/VALIDATION_VISUELLE_XIX_P1.json"
+  "report_html_url": "https://bionic-ultime-1.preview.emergentagent.com/reports/RAPPORT_XIX_P1_DIAGNOSTIC.html",
+  "diagnostic_json_url": "https://bionic-ultime-1.preview.emergentagent.com/reports/DIAGNOSTIC_XIX_P1.json",
+  "validation_visuelle_json_url": "https://bionic-ultime-1.preview.emergentagent.com/reports/VALIDATION_VISUELLE_XIX_P1.json"
 }

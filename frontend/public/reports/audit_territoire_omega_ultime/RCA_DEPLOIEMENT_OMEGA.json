@@ -4,7 +4,7 @@
   "commandant": "STEEVE-MAX",
   "directive": "VÉRIFICATION DE DÉPLOIEMENT Ω + RCA — PREVIEW STALE CACHE",
   "executed_at_utc": "2026-04-28T16:28:39.613381+00:00",
-  "url_audit": "https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic",
+  "url_audit": "https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic",
   "rca": {
     "cause_racine": "Service Worker /sw.js avec CACHE_NAME='bionic-hunt-cache-v9.0-enforcement-p0' inchangé après application du RENDU-Ω INTÉGRAL côté code source. La purge automatique des OBSOLETE_CACHES côté client n'était jamais déclenchée (le SW hot-reload ne re-bumpe pas automatiquement le nom de cache). Résultat : le navigateur du Commandant servait les anciens bundles JS/CSS depuis CacheStorage.",
     "preuve": "Code source frontend conforme (PARTICLE_COUNT=600, MAX_OPACITY=0.42, RenduOmegaIntegralCertifier.jsx présent et monté MonTerritoireBionicPage.jsx:1687) — mais manifest CacheStorage côté client retournait toujours les bundles cachés sous v9.0."
@@ -36,7 +36,7 @@
     "caches_present": [
       "bionic-hunt-cache-v9.1-rendu-omega-integral"
     ],
-    "url": "https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic",
+    "url": "https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic",
     "timestamp_utc": "2026-04-28T16:28:38.879Z"
   },
   "screenshot": {

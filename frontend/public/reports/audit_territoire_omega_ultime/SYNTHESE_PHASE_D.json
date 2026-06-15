@@ -98,53 +98,53 @@
     "regression_global_post_phase_d": "94 PASSED · 3 SKIPPED · 0 FAILED"
   },
   "deliverables": {
-    "html_demo_palette": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_d/PALETTE_DEMO.html",
-    "html_report_12_sections": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/RAPPORT_PHASE_D.html",
-    "json_synthese": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/SYNTHESE_PHASE_D.json",
-    "captures_dir": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_d/captures/"
+    "html_demo_palette": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_d/PALETTE_DEMO.html",
+    "html_report_12_sections": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/RAPPORT_PHASE_D.html",
+    "json_synthese": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/SYNTHESE_PHASE_D.json",
+    "captures_dir": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_d/captures/"
   },
   "captures": [
     {
       "file": "D_01_orignal_PRESENT.jpeg",
       "size_b": 119319,
       "sha256": "b922dad43ee3316079ecfa9496775a7fc1b4c1a1d9dbd438dca33d6b14385d7a",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_d/captures/D_01_orignal_PRESENT.jpeg"
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_d/captures/D_01_orignal_PRESENT.jpeg"
     },
     {
       "file": "D_02_chevreuil_PRESENT.jpeg",
       "size_b": 118947,
       "sha256": "b307ac1f08659e584d16721817804f301c3921a7fa2ead9c1360e30ff23d2526",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_d/captures/D_02_chevreuil_PRESENT.jpeg"
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_d/captures/D_02_chevreuil_PRESENT.jpeg"
     },
     {
       "file": "D_03_ours_noir_PRESENT.jpeg",
       "size_b": 119142,
       "sha256": "3457f94dbbf98648aff8d0b56ea6584ebec5af0540a6ee5f0173bd921aaf9f8e",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_d/captures/D_03_ours_noir_PRESENT.jpeg"
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_d/captures/D_03_ours_noir_PRESENT.jpeg"
     },
     {
       "file": "D_04_dindon_sauvage_ABSENT.jpeg",
       "size_b": 117629,
       "sha256": "571acf52a4a4c53659f212ca96be4704c573e6f1fee9da9c28e238be2ddbf82b",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_d/captures/D_04_dindon_sauvage_ABSENT.jpeg"
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_d/captures/D_04_dindon_sauvage_ABSENT.jpeg"
     },
     {
       "file": "D_05_wapiti_ABSENT.jpeg",
       "size_b": 117608,
       "sha256": "c1766184ffa8780fe90a60bd7dd30e21d86cb541a8d648a356b0372c740bc84a",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_d/captures/D_05_wapiti_ABSENT.jpeg"
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_d/captures/D_05_wapiti_ABSENT.jpeg"
     },
     {
       "file": "D_mon_territoire_bionic.jpeg",
       "size_b": 120777,
       "sha256": "14f228d05800e33df20f5ba3981e543e3bb619adccc0c206c3f0e3d3cfaaa641",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_d/captures/D_mon_territoire_bionic.jpeg"
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_d/captures/D_mon_territoire_bionic.jpeg"
     },
     {
       "file": "D_mon_territoire_bionic_center.jpeg",
       "size_b": 26955,
       "sha256": "9df8e6454f8a0fbc2478d75de4c8d1b76aae9879a8230fbf77ff88fdfc9c4b04",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_d/captures/D_mon_territoire_bionic_center.jpeg"
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_d/captures/D_mon_territoire_bionic_center.jpeg"
     }
   ]
 }

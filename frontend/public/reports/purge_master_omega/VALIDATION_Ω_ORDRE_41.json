@@ -13,49 +13,49 @@
   "livrables_https": [
     {
       "filename": "DASHBOARD_PILOTAGE_BCE_4X_Ω.json",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/DASHBOARD_PILOTAGE_BCE_4X_%CE%A9.json",
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/DASHBOARD_PILOTAGE_BCE_4X_%CE%A9.json",
       "http_code": 200,
       "size_bytes": 12498
     },
     {
       "filename": "DASHBOARD_PILOTAGE_BCE_4X_Ω.html",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/DASHBOARD_PILOTAGE_BCE_4X_%CE%A9.html",
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/DASHBOARD_PILOTAGE_BCE_4X_%CE%A9.html",
       "http_code": 200,
       "size_bytes": 16640
     },
     {
       "filename": "GIS_OPERATIONAL_Ω.json",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/GIS_OPERATIONAL_%CE%A9.json",
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/GIS_OPERATIONAL_%CE%A9.json",
       "http_code": 200,
       "size_bytes": 9276
     },
     {
       "filename": "GIS_OPERATIONAL_Ω.html",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/GIS_OPERATIONAL_%CE%A9.html",
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/GIS_OPERATIONAL_%CE%A9.html",
       "http_code": 200,
       "size_bytes": 9818
     },
     {
       "filename": "GPS_LOADED_CORRIDORS_Ω.json",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/GPS_LOADED_CORRIDORS_%CE%A9.json",
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/GPS_LOADED_CORRIDORS_%CE%A9.json",
       "http_code": 200,
       "size_bytes": 2707
     },
     {
       "filename": "GPS_LOADED_CORRIDORS_Ω.html",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/GPS_LOADED_CORRIDORS_%CE%A9.html",
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/GPS_LOADED_CORRIDORS_%CE%A9.html",
       "http_code": 200,
       "size_bytes": 6759
     },
     {
       "filename": "PRÉPARATION_SCEAU_X5_FINAL_Ω.html",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/institution/PR%C3%89PARATION_SCEAU_X5_FINAL_%CE%A9.html",
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/institution/PR%C3%89PARATION_SCEAU_X5_FINAL_%CE%A9.html",
       "http_code": 200,
       "size_bytes": 7490
     },
     {
       "filename": "PRÉPARATION_SCEAU_X5_FINAL_Ω.pdf",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/institution/PR%C3%89PARATION_SCEAU_X5_FINAL_%CE%A9.pdf",
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/institution/PR%C3%89PARATION_SCEAU_X5_FINAL_%CE%A9.pdf",
       "http_code": 200,
       "size_bytes": 4071
     }

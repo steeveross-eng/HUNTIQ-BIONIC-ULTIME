@@ -29,10 +29,10 @@
 
 | Fichier | URL HTTPS | HTTP |
 |---------|-----------|------|
-| Backup complet | https://huntiq-restore.preview.emergentagent.com/BIONIC_OS_BACKUP_COMPLET_v5201.zip | 200 |
-| 7 Blocs | https://huntiq-restore.preview.emergentagent.com/BIONIC_OS_7BLOCS_v5201.zip | 200 |
-| MongoDB dump | https://huntiq-restore.preview.emergentagent.com/BIONIC_OS_MONGODB_DUMP_v5201.zip | 200 |
-| Snapshot | https://huntiq-restore.preview.emergentagent.com/BIONIC_OS_SNAPSHOT_v5201.json | 200 |
+| Backup complet | https://bionic-ultime-1.preview.emergentagent.com/BIONIC_OS_BACKUP_COMPLET_v5201.zip | 200 |
+| 7 Blocs | https://bionic-ultime-1.preview.emergentagent.com/BIONIC_OS_7BLOCS_v5201.zip | 200 |
+| MongoDB dump | https://bionic-ultime-1.preview.emergentagent.com/BIONIC_OS_MONGODB_DUMP_v5201.zip | 200 |
+| Snapshot | https://bionic-ultime-1.preview.emergentagent.com/BIONIC_OS_SNAPSHOT_v5201.json | 200 |
 
 ### Duree de vie des liens
 Les liens HTTPS sont actifs tant que l'environnement de preview Emergent est actif.
@@ -49,10 +49,10 @@ Pour une permanence au-dela de la session, il est recommande de :
 
 | Fichier | URL HTTPS | HTTP |
 |---------|-----------|------|
-| Backup complet | https://huntiq-restore.preview.emergentagent.com/api/archive/v5201/BIONIC_OS_BACKUP_COMPLET_v5201.zip | 200 |
-| 7 Blocs | https://huntiq-restore.preview.emergentagent.com/api/archive/v5201/BIONIC_OS_7BLOCS_v5201.zip | 200 |
-| MongoDB dump | https://huntiq-restore.preview.emergentagent.com/api/archive/v5201/BIONIC_OS_MONGODB_DUMP_v5201.zip | 200 |
-| Snapshot | https://huntiq-restore.preview.emergentagent.com/api/archive/v5201/BIONIC_OS_SNAPSHOT_v5201.json | 200 |
+| Backup complet | https://bionic-ultime-1.preview.emergentagent.com/api/archive/v5201/BIONIC_OS_BACKUP_COMPLET_v5201.zip | 200 |
+| 7 Blocs | https://bionic-ultime-1.preview.emergentagent.com/api/archive/v5201/BIONIC_OS_7BLOCS_v5201.zip | 200 |
+| MongoDB dump | https://bionic-ultime-1.preview.emergentagent.com/api/archive/v5201/BIONIC_OS_MONGODB_DUMP_v5201.zip | 200 |
+| Snapshot | https://bionic-ultime-1.preview.emergentagent.com/api/archive/v5201/BIONIC_OS_SNAPSHOT_v5201.json | 200 |
 
 ### API de listing
 ```

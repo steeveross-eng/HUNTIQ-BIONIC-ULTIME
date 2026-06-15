@@ -74,7 +74,7 @@ géolocalisation" pour offrir une expérience 0-cold-start aux utilisateurs Prem
 
 ## VALIDATION VISUELLE (PLAYWRIGHT SUR URL EXACTE)
 
-URL : `https://huntiq-restore.preview.emergentagent.com/territoire`
+URL : `https://bionic-ultime-1.preview.emergentagent.com/territoire`
 Utilisateur : `admin@huntiq.com` (auto-login admin → Premium détecté)
 
 **T+8s** (préchargement en cours) :

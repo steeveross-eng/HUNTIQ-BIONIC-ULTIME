@@ -104,7 +104,7 @@ Détail X199 individuel :
 ## 5. SECTION 4 — VALIDATION FRONTEND TERRITOIRE
 
 ### 5.1 Chargement de la carte
-- URL : `https://huntiq-restore.preview.emergentagent.com/` →
+- URL : `https://bionic-ultime-1.preview.emergentagent.com/` →
   redirection TERRITOIRE (route par défaut Steeve-MAX Auto).
 - Carte LEAFLET sattelite rendue correctement, tuiles Esri/Maxar chargées.
 - Connexion automatique `Steeve-MAX (admin@huntiq.com)` confirmée

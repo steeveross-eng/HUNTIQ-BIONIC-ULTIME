@@ -41,7 +41,7 @@
       "affuts_rejected_count": null,
       "rectangles_tested": 1,
       "screenshot_filename": "territoire_orignal.jpeg",
-      "screenshot_url_https": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xviii_presence_mask/territoire_orignal.jpeg",
+      "screenshot_url_https": "https://bionic-ultime-1.preview.emergentagent.com/reports/captures_xviii_presence_mask/territoire_orignal.jpeg",
       "screenshot_sha256": "685179fe3bfadeb24fa3d9644e4e4b45db30900a5c178a89101602c617523a39",
       "screenshot_size_bytes": 87160,
       "conformity": "PASS"
@@ -63,7 +63,7 @@
       "affuts_rejected_count": null,
       "rectangles_tested": 1,
       "screenshot_filename": "territoire_chevreuil.jpeg",
-      "screenshot_url_https": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xviii_presence_mask/territoire_chevreuil.jpeg",
+      "screenshot_url_https": "https://bionic-ultime-1.preview.emergentagent.com/reports/captures_xviii_presence_mask/territoire_chevreuil.jpeg",
       "screenshot_sha256": "4c0726a0b1c24e9a59b060c6e13819475eb71e502b99844a01863f7c8b1907e8",
       "screenshot_size_bytes": 86875,
       "conformity": "PASS"
@@ -85,7 +85,7 @@
       "affuts_rejected_count": null,
       "rectangles_tested": 1,
       "screenshot_filename": "territoire_ours_noir.jpeg",
-      "screenshot_url_https": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xviii_presence_mask/territoire_ours_noir.jpeg",
+      "screenshot_url_https": "https://bionic-ultime-1.preview.emergentagent.com/reports/captures_xviii_presence_mask/territoire_ours_noir.jpeg",
       "screenshot_sha256": "474122437a4936502b237940144f2a80e76f51a46e5d3a3a6b1a727f225ff934",
       "screenshot_size_bytes": 87064,
       "conformity": "PASS"
@@ -107,7 +107,7 @@
       "affuts_rejected_count": 6,
       "rectangles_tested": 3,
       "screenshot_filename": "territoire_wapiti_absent.jpeg",
-      "screenshot_url_https": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xviii_presence_mask/territoire_wapiti_absent.jpeg",
+      "screenshot_url_https": "https://bionic-ultime-1.preview.emergentagent.com/reports/captures_xviii_presence_mask/territoire_wapiti_absent.jpeg",
       "screenshot_sha256": "ed1cf903e464f0190f267ec05bd368aa43f101b30a917c20fdb994adc2d121dd",
       "screenshot_size_bytes": 108092,
       "conformity": "PASS"
@@ -129,7 +129,7 @@
       "affuts_rejected_count": 6,
       "rectangles_tested": 1,
       "screenshot_filename": "territoire_dindon_absent.jpeg",
-      "screenshot_url_https": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xviii_presence_mask/territoire_dindon_absent.jpeg",
+      "screenshot_url_https": "https://bionic-ultime-1.preview.emergentagent.com/reports/captures_xviii_presence_mask/territoire_dindon_absent.jpeg",
       "screenshot_sha256": "532a17a53749c6608d0fb93c7171e07b4bbe6fdda5a1e17b5d734ee17d6db36a",
       "screenshot_size_bytes": 86448,
       "conformity": "PASS"
@@ -208,6 +208,6 @@
     "json": "/app/frontend/public/reports/SYNTHESE_XVIII_BIO_PRESENCE_MASK.json",
     "html_report": "/app/frontend/public/reports/RAPPORT_XVIII_BIO_PRESENCE_MASK.html",
     "screenshots_dir": "/app/frontend/public/reports/captures_xviii_presence_mask/",
-    "public_https_base": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xviii_presence_mask"
+    "public_https_base": "https://bionic-ultime-1.preview.emergentagent.com/reports/captures_xviii_presence_mask"
   }
 }

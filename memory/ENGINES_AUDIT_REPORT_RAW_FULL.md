@@ -54314,7 +54314,7 @@ logger = logging.getLogger(__name__)
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL", "onboarding@resend.dev")
 APP_NAME = "BIONIC HUNT/Chasse"
-APP_URL = os.environ.get("APP_URL", "https://huntiq-restore.preview.emergentagent.com")
+APP_URL = os.environ.get("APP_URL", "https://bionic-ultime-1.preview.emergentagent.com")
 
 
 class EmailService:
@@ -221127,7 +221127,7 @@ import os
 
 BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', '').rstrip('/')
 if not BASE_URL:
-    BASE_URL = "https://huntiq-restore.preview.emergentagent.com"
+    BASE_URL = "https://bionic-ultime-1.preview.emergentagent.com"
 
 # Test bounds (Quebec region)
 TEST_BOUNDS = {
@@ -221513,7 +221513,7 @@ import os
 
 BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', '').rstrip('/')
 if not BASE_URL:
-    BASE_URL = "https://huntiq-restore.preview.emergentagent.com"
+    BASE_URL = "https://bionic-ultime-1.preview.emergentagent.com"
 
 
 class TestBionicV3EngineStatus:
@@ -222295,7 +222295,7 @@ import os
 import uuid
 
 # Get BASE_URL from environment
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://huntiq-restore.preview.emergentagent.com')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://bionic-ultime-1.preview.emergentagent.com')
 
 class TestWaypointEngineAPI:
     """Tests for /api/v1/waypoints endpoints"""

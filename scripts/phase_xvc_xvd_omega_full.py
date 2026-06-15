@@ -34,7 +34,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 OUT_DIR = Path("/app/frontend/public/reports/purge_master_omega")
-INGRESS = "https://huntiq-restore.preview.emergentagent.com"
+INGRESS = "https://bionic-ultime-1.preview.emergentagent.com"
 UTC_NOW = datetime.now(timezone.utc).isoformat(timespec="seconds")
 QUARANTINE = Path("/app/_QUARANTINE_XVb_OMEGA")
 ENGINES_ROOT = Path("/app/backend/engines")

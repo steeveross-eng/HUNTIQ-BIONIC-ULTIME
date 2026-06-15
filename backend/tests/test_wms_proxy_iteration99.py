@@ -14,7 +14,7 @@ import os
 import time
 
 # Get backend URL from environment
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://huntiq-restore.preview.emergentagent.com').rstrip('/')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://bionic-ultime-1.preview.emergentagent.com').rstrip('/')
 
 class TestWMSProxyNFISQC:
     """Test suite for WMS Proxy with NFIS-QC (not SDA_WMS)"""

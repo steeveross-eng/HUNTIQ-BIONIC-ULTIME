@@ -7,7 +7,7 @@
 **DATE DE CERTIFICATION:** 2026-04-09 18:04 UTC
 **METHODE:** Execution API LIVE (curl) + Inspection code source (grep + sed)
 **BRANCHE:** SUPRA_RECONSTRUCTION
-**ENVIRONNEMENT:** https://huntiq-restore.preview.emergentagent.com
+**ENVIRONNEMENT:** https://bionic-ultime-1.preview.emergentagent.com
 **ENDPOINT TESTE:** POST /api/v2/alimentation/analyze
 
 ---
@@ -86,7 +86,7 @@ Requete externe -> [Pydantic Field(le=2)] -> HTTP 422 si > 2
 
 **Requete:**
 ```
-POST https://huntiq-restore.preview.emergentagent.com/api/v2/alimentation/analyze
+POST https://bionic-ultime-1.preview.emergentagent.com/api/v2/alimentation/analyze
 Content-Type: application/json
 Body: {"center_lat":47.3,"center_lng":-72.5,"species":"CERF","month":10,"max_salines":2}
 ```

@@ -3,7 +3,7 @@ set -euo pipefail
 
 EXPECTED_SHA="4b017248db110204ae80551d557ec324d48237dccff282f9254d85bae21d0ad3"
 
-PATCH_URL="https://worker-crash-debug.preview.emergentagent.com/api/r4-patch"
+PATCH_URL="https://bionic-ultime-1.preview.emergentagent.com/api/r4-patch"
 PATCH_FILE="/tmp/r4_completed_sentinel.patch"
 
 echo "▸ 1/6  Download du patch ..."

@@ -3,7 +3,7 @@
 import json, time, subprocess
 from pathlib import Path
 
-API = "https://huntiq-restore.preview.emergentagent.com"
+API = "https://bionic-ultime-1.preview.emergentagent.com"
 LAT, LNG = 48.206657, -68.382422
 MONTH, HOUR = 10, 7
 OUT = Path("/app/frontend/public/reports/audit_territoire_omega_ultime/phase_b/api_payloads")

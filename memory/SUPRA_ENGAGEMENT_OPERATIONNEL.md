@@ -29,7 +29,7 @@
 | Branche reconstruction | `SUPRA_RECONSTRUCTION` (a creer depuis BIONIC_REWRITE_P0) | Phase R0 |
 | Backend FastAPI | Port 8001 (supervisor) | Hot reload actif |
 | Frontend React | Port 3000 (supervisor) | Hot reload actif |
-| Preview URL | https://huntiq-restore.preview.emergentagent.com | Permanente |
+| Preview URL | https://bionic-ultime-1.preview.emergentagent.com | Permanente |
 | Tests API | curl + screenshot tool | Permanente |
 | Linter Frontend | ESLint | Disponible |
 | Linter Backend | ruff | Disponible |

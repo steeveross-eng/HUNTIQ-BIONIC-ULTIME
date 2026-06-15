@@ -11,7 +11,7 @@ from pathlib import Path
 
 OUT_DIR = Path("/app/frontend/public/reports/audit_territoire_omega_ultime/phase_a")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
-URL = "https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic"
+URL = "https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic"
 
 JS_PROBE = r"""
 (() => {

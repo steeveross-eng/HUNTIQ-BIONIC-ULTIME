@@ -216,7 +216,7 @@ Le pipeline `generate_organic_corridors` exécute **séquentiellement** 3 passes
 
 ### 7.1 Endpoint anomaly-map (POST)
 ```bash
-curl -X POST https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/corridors-organic/anomaly-map \
+curl -X POST https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/corridors-organic/anomaly-map \
   -H "Content-Type: application/json" \
   -d '{"lat":48.206657,"lon":-68.382422,"species":"orignal","anchor_mode":"SALINE_CENTERED"}'
 ```
@@ -239,7 +239,7 @@ curl -X POST https://huntiq-restore.preview.emergentagent.com/api/v20/territoire
 
 ### 7.2 URL frontend
 ```
-https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic?corridorsDebug=on
+https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic?corridorsDebug=on
 ```
 (rosace 360° saline-centrée déployée depuis P22H)
 

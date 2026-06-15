@@ -3,7 +3,7 @@
 **Date UTC** : 2026-05-13
 **Commandant** : STEEVE-MAX
 **Scope** : Activation divergence biologique STRICTE par espèce sur TOUTES les couches TERRITOIRE Ω
-**Préview URL** : `https://huntiq-restore.preview.emergentagent.com`
+**Préview URL** : `https://bionic-ultime-1.preview.emergentagent.com`
 
 ---
 
@@ -204,8 +204,8 @@ $ curl /api/v20/territoire/bundle?species=ours_noir&...
 
 ## 7 · LIENS HTTPS TÉLÉCHARGEABLES
 
-- https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/audit/files/p22omega_species_layer_divergence_v2.md
-- https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/audit/files/p22omega_corridors_divergence_inter_especes.md
+- https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/audit/files/p22omega_species_layer_divergence_v2.md
+- https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/audit/files/p22omega_corridors_divergence_inter_especes.md
 
 ---
 

@@ -38,56 +38,56 @@
     "B_corridors_disparition_404": {
       "title": "Disparition apparente des corridors / désynchronisation panneau↔carte",
       "actual_404_endpoints_unique": [
-        "https://huntiq-restore.preview.emergentagent.com/api/groups/admin@huntiq.com/my-groups",
-        "https://huntiq-restore.preview.emergentagent.com/api/groups/anonymous/my-groups",
-        "https://huntiq-restore.preview.emergentagent.com/api/seo/meta/mon-territoire-bionic",
-        "https://huntiq-restore.preview.emergentagent.com/api/sharing/notifications/admin@huntiq.com",
-        "https://huntiq-restore.preview.emergentagent.com/api/sharing/notifications/anonymous",
-        "https://huntiq-restore.preview.emergentagent.com/api/sharing/received/admin@huntiq.com",
-        "https://huntiq-restore.preview.emergentagent.com/api/sharing/received/anonymous",
-        "https://huntiq-restore.preview.emergentagent.com/api/sharing/sent/admin@huntiq.com",
-        "https://huntiq-restore.preview.emergentagent.com/api/sharing/sent/anonymous",
-        "https://huntiq-restore.preview.emergentagent.com/api/v1/notification/legal-time/status",
-        "https://huntiq-restore.preview.emergentagent.com/api/zones/alerts",
-        "https://huntiq-restore.preview.emergentagent.com/api/zones/favorites"
+        "https://bionic-ultime-1.preview.emergentagent.com/api/groups/admin@huntiq.com/my-groups",
+        "https://bionic-ultime-1.preview.emergentagent.com/api/groups/anonymous/my-groups",
+        "https://bionic-ultime-1.preview.emergentagent.com/api/seo/meta/mon-territoire-bionic",
+        "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/notifications/admin@huntiq.com",
+        "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/notifications/anonymous",
+        "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/received/admin@huntiq.com",
+        "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/received/anonymous",
+        "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/sent/admin@huntiq.com",
+        "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/sent/anonymous",
+        "https://bionic-ultime-1.preview.emergentagent.com/api/v1/notification/legal-time/status",
+        "https://bionic-ultime-1.preview.emergentagent.com/api/zones/alerts",
+        "https://bionic-ultime-1.preview.emergentagent.com/api/zones/favorites"
       ],
       "v30_corridors_endpoint_health": [
         {
-          "url": "https://huntiq-restore.preview.emergentagent.com/api/v30/corridors/status?lat=48.206657&lon=-68.382422&_t=1777326511813",
+          "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v30/corridors/status?lat=48.206657&lon=-68.382422&_t=1777326511813",
           "status": 200
         },
         {
-          "url": "https://huntiq-restore.preview.emergentagent.com/api/v30/corridors/layer-diagnostic?lat=48.206657&lon=-68.382422&species=orignal&_t=1777326545012",
+          "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v30/corridors/layer-diagnostic?lat=48.206657&lon=-68.382422&species=orignal&_t=1777326545012",
           "status": 200
         }
       ],
       "v20_bundle_endpoint_health": [
         {
-          "url": "https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/rendu-omega/rules",
+          "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/rendu-omega/rules",
           "status": 200
         },
         {
-          "url": "https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/rendu-omega/rules",
+          "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/rendu-omega/rules",
           "status": 200
         },
         {
-          "url": "https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=cerf&month=4&hour=21&wind_deg=225",
+          "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=cerf&month=4&hour=21&wind_deg=225",
           "status": 200
         },
         {
-          "url": "https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=cerf&month=4&hour=21&wind_deg=225",
+          "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=cerf&month=4&hour=21&wind_deg=225",
           "status": 200
         },
         {
-          "url": "https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=cerf&month=4&hour=21&wind_deg=225",
+          "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=cerf&month=4&hour=21&wind_deg=225",
           "status": 200
         },
         {
-          "url": "https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/corridors-organic/generate",
+          "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/corridors-organic/generate",
           "status": 200
         },
         {
-          "url": "https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/corridors-organic/generate",
+          "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/corridors-organic/generate",
           "status": 200
         }
       ],
@@ -96,15 +96,15 @@
         "v30_refresh_calls_ok": true,
         "errors_during_disparition_period": [
           {
-            "url": "https://huntiq-restore.preview.emergentagent.com/api/v1/notification/legal-time/status?lat=46.8139&lng=-71.208",
+            "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v1/notification/legal-time/status?lat=46.8139&lng=-71.208",
             "status": 404
           },
           {
-            "url": "https://huntiq-restore.preview.emergentagent.com/api/sharing/notifications/admin@huntiq.com",
+            "url": "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/notifications/admin@huntiq.com",
             "status": 404
           },
           {
-            "url": "https://huntiq-restore.preview.emergentagent.com/api/sharing/notifications/admin@huntiq.com",
+            "url": "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/notifications/admin@huntiq.com",
             "status": 404
           }
         ]
@@ -214,55 +214,55 @@
       "filename": "A1_after_15s.jpeg",
       "size_bytes": 93859,
       "sha256": "e781ea5121e3608243bb9adae2ce473ac5801e9348bc54b3380c1fb5b9f0e921",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A1_after_15s.jpeg"
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A1_after_15s.jpeg"
     },
     {
       "filename": "A1_full_loaded.jpeg",
       "size_bytes": 111857,
       "sha256": "4135528c800351fc1b25204bec0f2b9ec58d2ad5287c3eee9f894bde0314b52f",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A1_full_loaded.jpeg"
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A1_full_loaded.jpeg"
     },
     {
       "filename": "A1_right_panels.jpeg",
       "size_bytes": 26097,
       "sha256": "9821168349687f49d7365c114e51a099f4a4dfe539609e784697c30dffabaf38",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A1_right_panels.jpeg"
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A1_right_panels.jpeg"
     },
     {
       "filename": "A_disparition_t0.jpeg",
       "size_bytes": 123445,
       "sha256": "cf0db04a728b4db57fe5f38a9218fff5e08692b45787d7c6c22a40786e1c78f8",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_disparition_t0.jpeg"
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_disparition_t0.jpeg"
     },
     {
       "filename": "A_disparition_t70.jpeg",
       "size_bytes": 123424,
       "sha256": "2feb40cf529bcd25d3ff1efbdc27e70c7d1c289ac0574badf3a4ed540ce0f24a",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_disparition_t70.jpeg"
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_disparition_t70.jpeg"
     },
     {
       "filename": "A_overlap_1280x600.jpeg",
       "size_bytes": 55963,
       "sha256": "d47d52ae83a07895c3b33b0e29d0ae10acf5c3fb9c1525c678d3e4d72c95e61c",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_overlap_1280x600.jpeg"
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_overlap_1280x600.jpeg"
     },
     {
       "filename": "A_overlap_1366x768.jpeg",
       "size_bytes": 71899,
       "sha256": "e12eb2896fc481d3c8bf2022acd603fa35670e2eaf62d231658bccf15d5a01d1",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_overlap_1366x768.jpeg"
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_overlap_1366x768.jpeg"
     },
     {
       "filename": "A_overlap_1440x720.jpeg",
       "size_bytes": 70904,
       "sha256": "6af9be990b304272a928ffd9da62cc2fda4af2de179921fbb6d28506269e1cf3",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_overlap_1440x720.jpeg"
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_overlap_1440x720.jpeg"
     },
     {
       "filename": "A_overlap_1920x1080.jpeg",
       "size_bytes": 123469,
       "sha256": "9bd50f612f726335bf6e79872d9fb00a8f5f36e76ba62a26704e470213f0a1b0",
-      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_overlap_1920x1080.jpeg"
+      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_overlap_1920x1080.jpeg"
     }
   ],
   "raw_network_log": {
@@ -270,228 +270,228 @@
       "width": 1920,
       "height": 1080
     },
-    "url": "https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic",
+    "url": "https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic",
     "api_requests_total": 387,
     "api_responses_total": 191,
     "api_errors_404_count": 34,
     "api_errors_4xx_5xx_total_count": 41,
     "404_endpoints_unique": [
-      "https://huntiq-restore.preview.emergentagent.com/api/groups/admin@huntiq.com/my-groups",
-      "https://huntiq-restore.preview.emergentagent.com/api/groups/anonymous/my-groups",
-      "https://huntiq-restore.preview.emergentagent.com/api/seo/meta/mon-territoire-bionic",
-      "https://huntiq-restore.preview.emergentagent.com/api/sharing/notifications/admin@huntiq.com",
-      "https://huntiq-restore.preview.emergentagent.com/api/sharing/notifications/anonymous",
-      "https://huntiq-restore.preview.emergentagent.com/api/sharing/received/admin@huntiq.com",
-      "https://huntiq-restore.preview.emergentagent.com/api/sharing/received/anonymous",
-      "https://huntiq-restore.preview.emergentagent.com/api/sharing/sent/admin@huntiq.com",
-      "https://huntiq-restore.preview.emergentagent.com/api/sharing/sent/anonymous",
-      "https://huntiq-restore.preview.emergentagent.com/api/v1/notification/legal-time/status",
-      "https://huntiq-restore.preview.emergentagent.com/api/zones/alerts",
-      "https://huntiq-restore.preview.emergentagent.com/api/zones/favorites"
+      "https://bionic-ultime-1.preview.emergentagent.com/api/groups/admin@huntiq.com/my-groups",
+      "https://bionic-ultime-1.preview.emergentagent.com/api/groups/anonymous/my-groups",
+      "https://bionic-ultime-1.preview.emergentagent.com/api/seo/meta/mon-territoire-bionic",
+      "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/notifications/admin@huntiq.com",
+      "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/notifications/anonymous",
+      "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/received/admin@huntiq.com",
+      "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/received/anonymous",
+      "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/sent/admin@huntiq.com",
+      "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/sent/anonymous",
+      "https://bionic-ultime-1.preview.emergentagent.com/api/v1/notification/legal-time/status",
+      "https://bionic-ultime-1.preview.emergentagent.com/api/zones/alerts",
+      "https://bionic-ultime-1.preview.emergentagent.com/api/zones/favorites"
     ],
     "all_4xx_5xx_full": [
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/seo/meta/mon-territoire-bionic",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/seo/meta/mon-territoire-bionic",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v1/notification/legal-time/status?lat=46.8139&lng=-71.208",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v1/notification/legal-time/status?lat=46.8139&lng=-71.208",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/groups/anonymous/my-groups",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/groups/anonymous/my-groups",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/sharing/sent/anonymous",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/sent/anonymous",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/sharing/received/anonymous",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/received/anonymous",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/sharing/notifications/anonymous",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/notifications/anonymous",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/zones/favorites?user_id=anonymous",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/zones/favorites?user_id=anonymous",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/zones/alerts?user_id=anonymous",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/zones/alerts?user_id=anonymous",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v1/bionic/habitat-score/realtime",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v1/bionic/habitat-score/realtime",
         "status": 400
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v1/bionic/habitat-score/realtime",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v1/bionic/habitat-score/realtime",
         "status": 400
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v8/national/score?lat=46.8139&lon=-71.208&species=cerf&month=4&hour=21",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v8/national/score?lat=46.8139&lon=-71.208&species=cerf&month=4&hour=21",
         "status": 401
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/sharing/notifications/anonymous",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/notifications/anonymous",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/seo/meta/mon-territoire-bionic",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/seo/meta/mon-territoire-bionic",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v1/notification/legal-time/status?lat=46.8139&lng=-71.208",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v1/notification/legal-time/status?lat=46.8139&lng=-71.208",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/zones/alerts?user_id=anonymous",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/zones/alerts?user_id=anonymous",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/groups/anonymous/my-groups",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/groups/anonymous/my-groups",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/sharing/sent/anonymous",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/sent/anonymous",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/sharing/received/anonymous",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/received/anonymous",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/zones/favorites?user_id=anonymous",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/zones/favorites?user_id=anonymous",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v1/notification/legal-time/status?lat=46.8139&lng=-71.208",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v1/notification/legal-time/status?lat=46.8139&lng=-71.208",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/groups/anonymous/my-groups",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/groups/anonymous/my-groups",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v1/notification/legal-time/status?lat=46.8139&lng=-71.208",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v1/notification/legal-time/status?lat=46.8139&lng=-71.208",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/groups/anonymous/my-groups",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/groups/anonymous/my-groups",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v1/notification/legal-time/status?lat=46.8139&lng=-71.208",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v1/notification/legal-time/status?lat=46.8139&lng=-71.208",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/groups/anonymous/my-groups",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/groups/anonymous/my-groups",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v1/notification/legal-time/status?lat=46.8139&lng=-71.208",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v1/notification/legal-time/status?lat=46.8139&lng=-71.208",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/groups/anonymous/my-groups",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/groups/anonymous/my-groups",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v1/notification/legal-time/status?lat=46.8139&lng=-71.208",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v1/notification/legal-time/status?lat=46.8139&lng=-71.208",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/sharing/sent/admin@huntiq.com",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/sent/admin@huntiq.com",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/sharing/received/admin@huntiq.com",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/received/admin@huntiq.com",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/groups/admin@huntiq.com/my-groups",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/groups/admin@huntiq.com/my-groups",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/zones/favorites?user_id=admin@huntiq.com",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/zones/favorites?user_id=admin@huntiq.com",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/zones/alerts?user_id=admin@huntiq.com",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/zones/alerts?user_id=admin@huntiq.com",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/sharing/notifications/admin@huntiq.com",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/notifications/admin@huntiq.com",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/groups/admin@huntiq.com/my-groups",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/groups/admin@huntiq.com/my-groups",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v1/bionic/habitat-score/realtime",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v1/bionic/habitat-score/realtime",
         "status": 400
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v1/bionic/habitat-score/realtime",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v1/bionic/habitat-score/realtime",
         "status": 400
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v1/bionic/habitat-score/realtime",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v1/bionic/habitat-score/realtime",
         "status": 400
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v1/bionic/habitat-score/realtime",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v1/bionic/habitat-score/realtime",
         "status": 400
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/groups/admin@huntiq.com/my-groups",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/groups/admin@huntiq.com/my-groups",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/sharing/notifications/admin@huntiq.com",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/notifications/admin@huntiq.com",
         "status": 404
       }
     ],
     "v30_corridors_endpoint_responses": [
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v30/corridors/status?lat=48.206657&lon=-68.382422&_t=1777326511813",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v30/corridors/status?lat=48.206657&lon=-68.382422&_t=1777326511813",
         "status": 200
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v30/corridors/layer-diagnostic?lat=48.206657&lon=-68.382422&species=orignal&_t=1777326545012",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v30/corridors/layer-diagnostic?lat=48.206657&lon=-68.382422&species=orignal&_t=1777326545012",
         "status": 200
       }
     ],
     "v20_bundle_endpoint_responses": [
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/rendu-omega/rules",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/rendu-omega/rules",
         "status": 200
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/rendu-omega/rules",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/rendu-omega/rules",
         "status": 200
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=cerf&month=4&hour=21&wind_deg=225",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=cerf&month=4&hour=21&wind_deg=225",
         "status": 200
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=cerf&month=4&hour=21&wind_deg=225",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=cerf&month=4&hour=21&wind_deg=225",
         "status": 200
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=cerf&month=4&hour=21&wind_deg=225",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=cerf&month=4&hour=21&wind_deg=225",
         "status": 200
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/corridors-organic/generate",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/corridors-organic/generate",
         "status": 200
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/corridors-organic/generate",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/corridors-organic/generate",
         "status": 200
       }
     ]
@@ -580,25 +580,25 @@
     "duration_s": 70,
     "errors_during_disparition": [
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v1/notification/legal-time/status?lat=46.8139&lng=-71.208",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v1/notification/legal-time/status?lat=46.8139&lng=-71.208",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/sharing/notifications/admin@huntiq.com",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/notifications/admin@huntiq.com",
         "status": 404
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/sharing/notifications/admin@huntiq.com",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/sharing/notifications/admin@huntiq.com",
         "status": 404
       }
     ],
     "v30_refresh_calls": [
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v30/corridors/status?lat=48.206657&lon=-68.382422&_t=1777326821416",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v30/corridors/status?lat=48.206657&lon=-68.382422&_t=1777326821416",
         "status": 200
       },
       {
-        "url": "https://huntiq-restore.preview.emergentagent.com/api/v30/corridors/layer-diagnostic?lat=48.206657&lon=-68.382422&species=orignal&_t=1777326839230",
+        "url": "https://bionic-ultime-1.preview.emergentagent.com/api/v30/corridors/layer-diagnostic?lat=48.206657&lon=-68.382422&species=orignal&_t=1777326839230",
         "status": 200
       }
     ]

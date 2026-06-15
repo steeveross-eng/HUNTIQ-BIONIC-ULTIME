@@ -67,7 +67,7 @@ Le modal de login que vous voyez sur votre écran est un **artefact frontend** :
 ### Option B — Forcer une connexion fraîche avec compte spécifique
 Si Option A ne fonctionne pas :
 1. **Ouvrir une fenêtre de navigation privée** (Cmd+Shift+N / Ctrl+Shift+N)
-2. Aller à `https://huntiq-restore.preview.emergentagent.com/`
+2. Aller à `https://bionic-ultime-1.preview.emergentagent.com/`
 3. Cliquer sur **PERMIS** (ou tout autre menu nécessitant auth) → modal login s'ouvre
 4. Saisir **MANUELLEMENT** `admin@huntiq.com` / `Commandant2026` (sans copier-coller)
 5. Décocher **"Se souvenir de cet appareil"** (pour éviter l'auto-login confus)

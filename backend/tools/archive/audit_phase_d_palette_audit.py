@@ -9,7 +9,7 @@ from pathlib import Path
 
 OUT = Path("/app/frontend/public/reports/audit_territoire_omega_ultime/phase_d/captures")
 OUT.mkdir(parents=True, exist_ok=True)
-URL_BASE = "https://huntiq-restore.preview.emergentagent.com/territoire-capture-mode"
+URL_BASE = "https://bionic-ultime-1.preview.emergentagent.com/territoire-capture-mode"
 LAT, LON = 48.206657, -68.382422
 
 SPECIES = [

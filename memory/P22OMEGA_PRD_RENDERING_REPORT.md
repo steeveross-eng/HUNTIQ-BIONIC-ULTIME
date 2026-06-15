@@ -179,7 +179,7 @@ preserve_ecological: deep_water, urban_dense, non_faunique, altitude_extreme, in
 | Environnement | URL | Statut |
 |---|---|---|
 | **PRODUCTION** ⭐ | `https://huntiq-restore.emergent.host` | 🟢 LIVE 24/7 |
-| Preview (dev) | `https://huntiq-restore.preview.emergentagent.com` | 🟡 Dev only |
+| Preview (dev) | `https://bionic-ultime-1.preview.emergentagent.com` | 🟡 Dev only |
 | Mon Territoire PRD | `https://huntiq-restore.emergent.host/mon-territoire-bionic` | 🟢 Active |
 | Debug PRD | `https://huntiq-restore.emergent.host/mon-territoire-bionic?corridorsDebug=on&lensDebug=on` | 🟢 Active |
 | Admin Premium PRD | `https://huntiq-restore.emergent.host/admin/bce-4x-premium/territoire` | 🟢 Active (auth gate) |

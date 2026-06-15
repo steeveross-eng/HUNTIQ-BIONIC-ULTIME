@@ -3,7 +3,7 @@
 **Date UTC** : 2026-05-13
 **Commandant** : STEEVE-MAX
 **Waypoint** : BSL (48.206657, -68.382422) · MOIS=10 · HEURE=7 · WIND=225°/15
-**Préview URL** : `https://huntiq-restore.preview.emergentagent.com`
+**Préview URL** : `https://bionic-ultime-1.preview.emergentagent.com`
 
 ---
 

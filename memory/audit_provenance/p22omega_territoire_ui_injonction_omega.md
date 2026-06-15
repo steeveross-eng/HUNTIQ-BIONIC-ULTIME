@@ -3,7 +3,7 @@
 **Date UTC** : 2026-05-13
 **Commandant** : STEEVE-MAX
 **Injonction** : ×200 — Élimination tout HTTP-404 sur UI TERRITOIRE
-**Préview URL** : `https://huntiq-restore.preview.emergentagent.com`
+**Préview URL** : `https://bionic-ultime-1.preview.emergentagent.com`
 
 ---
 
@@ -72,7 +72,7 @@ Le HTTP 409 V30 MUTATION DÉTECTÉE sur `/api/v30/territoire/ultime-score` a dé
 ### 4.1 · Test backend bundle BSL chevreuil (HIT cache Redis L1)
 
 ```bash
-$ curl https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/bundle?\
+$ curl https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/bundle?\
   lat=48.206657&lon=-68.382422&species=chevreuil&month=10&hour=14&wind_deg=225&wind_speed=15
 
 {
@@ -166,8 +166,8 @@ Le fichier `/app/memory/audit_provenance/p22omega_bundle_redis_extract.log` (té
 ## 7 · LIEN HTTPS TÉLÉCHARGEABLE DU RAPPORT
 
 ```
-https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/audit/files/p22omega_territoire_ui_404_audit.md
-https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/audit/files/p22omega_territoire_ui_injonction_omega.md
+https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/audit/files/p22omega_territoire_ui_404_audit.md
+https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/audit/files/p22omega_territoire_ui_injonction_omega.md
 ```
 
 ## 8 · CONFORMITÉ DOCTRINALE FINALE

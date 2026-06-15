@@ -12,7 +12,7 @@ async def main():
         browser = await p.chromium.launch(headless=True, args=["--no-sandbox"])
         ctx = await browser.new_context(viewport={"width": 1920, "height": 1400}, ignore_https_errors=True)
         page = await ctx.new_page()
-        await page.goto("https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic", wait_until="domcontentloaded", timeout=60000)
+        await page.goto("https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic", wait_until="domcontentloaded", timeout=60000)
         await page.wait_for_timeout(2500)
         try:
             await page.get_by_text("Tout accepter").click(timeout=5000)

@@ -130,7 +130,7 @@ VERDICT:    PASS
 |---|---|---|
 | Branche active | BIONIC_REWRITE_P0 | PASS |
 | MONGO_URL | mongodb://localhost:27017/... | PASS |
-| REACT_APP_BACKEND_URL | https://huntiq-restore.preview.emergentagent.com | PASS |
+| REACT_APP_BACKEND_URL | https://bionic-ultime-1.preview.emergentagent.com | PASS |
 | CORS_ORIGINS | * | PASS |
 | DB_NAME | huntiq_v6 | PASS |
 

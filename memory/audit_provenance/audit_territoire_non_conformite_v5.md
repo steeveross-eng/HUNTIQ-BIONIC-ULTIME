@@ -187,7 +187,7 @@ Les daemons `_periodic_refresh_daemon`, `run_prechauffage_omega` et `_v5_complia
 
 ### Pour démontrer V5_BUNDLE_REWIRE actif :
 
-1. **Se connecter** : https://huntiq-restore.preview.emergentagent.com/login
+1. **Se connecter** : https://bionic-ultime-1.preview.emergentagent.com/login
    - Email : `commandant@bionichunt.com`
    - Password : `BCE4X-OMEGA-2026!`
 
@@ -208,7 +208,7 @@ Les daemons `_periodic_refresh_daemon`, `run_prechauffage_omega` et `_v5_complia
    - Chaque corridor a `fusion_doctrine="P22Σ_V5_CAP_GLOBAL_TERRITOIRE"`
 
 7. **Audit live** :
-   - `https://huntiq-restore.preview.emergentagent.com/admin/bce-4x-premium/v5-compliance`
+   - `https://bionic-ultime-1.preview.emergentagent.com/admin/bce-4x-premium/v5-compliance`
    - Token : `Saturn5858*`
 
 ### Pour valider que DINDON est correctement purgé (doctrine V90) :

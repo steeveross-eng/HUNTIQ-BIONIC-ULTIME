@@ -4,7 +4,7 @@
   "commandant": "STEEVE-MAX",
   "directive": "RÉACTIVATION TOTALE PROTECTIONS + PHASE 2 STABILISATION (Articles 1-6)",
   "executed_at_utc": "2026-04-28T21:01:18.312538+00:00",
-  "url_audit": "https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic",
+  "url_audit": "https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic",
   "article_1_protections_actives": {
     "endpoint_health": "/api/v30/territoire/health",
     "module_python": "/app/backend/engines/v8_institutional/protections_omega.py",

@@ -34,7 +34,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 OUT_DIR = Path("/app/frontend/public/reports/purge_master_omega")
-INGRESS = "https://huntiq-restore.preview.emergentagent.com"
+INGRESS = "https://bionic-ultime-1.preview.emergentagent.com"
 UTC_NOW = datetime.now(timezone.utc).isoformat(timespec="seconds")
 HTTP_UA = "Mozilla/5.0 BCE-4X-OMEGA-PROTOCOLES"
 ESPECES = ["CHEVREUIL", "ORIGNAL", "OURS_NOIR", "WAPITI", "DINDON_SAUVAGE"]

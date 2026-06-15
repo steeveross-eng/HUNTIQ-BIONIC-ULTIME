@@ -212,7 +212,7 @@ export default {
         return resp;
       }
       // 3. Fallback to backend
-      return await fetch(`https://huntiq-restore.preview.emergentagent.com${url.pathname}${url.search}`);
+      return await fetch(`https://bionic-ultime-1.preview.emergentagent.com${url.pathname}${url.search}`);
     }
     return fetch(request);
   },

@@ -11,7 +11,7 @@ Aucune modification : V30, XIX, VITAUX intouchés.
 import json, time, urllib.request, urllib.parse
 from pathlib import Path
 
-API = "https://huntiq-restore.preview.emergentagent.com"
+API = "https://bionic-ultime-1.preview.emergentagent.com"
 LAT, LNG = 48.206657, -68.382422
 MONTH, HOUR = 10, 7
 WIND_DEG, WIND_SPEED = 225.0, 15.0

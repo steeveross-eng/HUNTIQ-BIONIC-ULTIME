@@ -6,9 +6,9 @@ from pathlib import Path
 ROOT = Path("/app/frontend/public/reports/audit_territoire_omega_ultime")
 PHASE_C = ROOT / "phase_c"
 PHASE_C.mkdir(parents=True, exist_ok=True)
-PUBLIC_BASE = "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime"
+PUBLIC_BASE = "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime"
 
-API = "https://huntiq-restore.preview.emergentagent.com"
+API = "https://bionic-ultime-1.preview.emergentagent.com"
 LAT, LNG = 48.206657, -68.382422
 
 

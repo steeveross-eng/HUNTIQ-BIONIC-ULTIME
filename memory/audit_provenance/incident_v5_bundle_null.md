@@ -119,7 +119,7 @@ Limite la durée du blocage worker en cas de mauvaise réponse Open-Meteo.
 
 ### 6.1 · Validation API directe (curl) — PREVIEW
 ```bash
-curl -s "https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=chevreuil&month=10&hour=7&wind_deg=225&wind_speed=15"
+curl -s "https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=chevreuil&month=10&hour=7&wind_deg=225&wind_speed=15"
 ```
 
 **Résultat attendu** (validé 2026-05-12T19:15Z) :
@@ -150,13 +150,13 @@ curl -s "https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/bun
 
 ### 6.3 · Audit conformité V5 LIVE
 ```bash
-curl https://huntiq-restore.preview.emergentagent.com/api/v20/audit/v5-compliance-live?lat=48.206657&lon=-68.382422&species=chevreuil
+curl https://bionic-ultime-1.preview.emergentagent.com/api/v20/audit/v5-compliance-live?lat=48.206657&lon=-68.382422&species=chevreuil
 ```
 **Attendu** : `status=PASS, violations=0, n_corridors=7, n_backbones=2, n_subnets=5`
 
 ### 6.4 · Audit circuit breaker
 ```bash
-curl https://huntiq-restore.preview.emergentagent.com/api/v20/audit/v5-monitor-stats
+curl https://bionic-ultime-1.preview.emergentagent.com/api/v20/audit/v5-monitor-stats
 ```
 **Attendu** : `open_meteo_circuit_breaker.is_open: false` (sauf si Open-Meteo a renvoyé 5× 429 dans la dernière minute)
 
