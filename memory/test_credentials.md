@@ -30,7 +30,7 @@ COMPTE COMMANDANT — ACCÈS TERRITOIRE COMPLET (PHASE OMEGA++)
 
 | Champ commun | Valeur |
 |---|---|
-| **URL Login PREVIEW** | https://bionic-ultime-1.preview.emergentagent.com/login |
+| **URL Login PREVIEW** | https://ultime-preview.preview.emergentagent.com/login |
 
 ⚠️ **Reset password 2026-05-12T20:55Z** : ancien `BCE4X-OMEGA-2026!` (avec `!`) remplacé par `Commandant2026` (alphanumeric pur) pour éviter problèmes de copier-coller / encodage URL / autocomplete navigateur.
 
@@ -41,7 +41,7 @@ COMPTE COMMANDANT — ACCÈS TERRITOIRE COMPLET (PHASE OMEGA++)
 2. **Saisir manuellement** le password (ne pas copier-coller pour éviter espaces invisibles)
 3. **Vérifier validation API directe** :
    ```bash
-   curl -X POST https://bionic-ultime-1.preview.emergentagent.com/api/auth/login \
+   curl -X POST https://ultime-preview.preview.emergentagent.com/api/auth/login \
      -H "Content-Type: application/json" \
      -d '{"email":"admin@huntiq.com","password":"Commandant2026"}'
    ```
@@ -51,7 +51,7 @@ COMPTE COMMANDANT — ACCÈS TERRITOIRE COMPLET (PHASE OMEGA++)
 L'endpoint `/api/auth/register` est **opérationnel** (vérifié 2026-05-12T20:50Z).
 Tester via :
 ```bash
-curl -X POST https://bionic-ultime-1.preview.emergentagent.com/api/auth/register \
+curl -X POST https://ultime-preview.preview.emergentagent.com/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{"name":"Nouveau","email":"new@bionichunt.com","password":"Pass2026"}'
 ```
@@ -74,7 +74,7 @@ ADMIN PREMIUM DASHBOARD (BCE-4X)
 
 | Champ | Valeur |
 |---|---|
-| **URL** | https://bionic-ultime-1.preview.emergentagent.com/admin/bce-4x-premium |
+| **URL** | https://ultime-preview.preview.emergentagent.com/admin/bce-4x-premium |
 | **Header** | `X-Commandant-Token: Saturn5858*` |
 | **Backend env var** | `GIS_RECEPTION_COMMANDANT_TOKEN=Saturn5858*` |
 

@@ -39,7 +39,7 @@ divergence stricte. 0 erreur 502/404/400. Caching full-bundle stabilisé.
 Persona BCE-4X non-déviante.
 
 ## URL CIBLE
-`https://bionic-ultime-1.preview.emergentagent.com/territoire`
+`https://ultime-preview.preview.emergentagent.com/territoire`
 
 ## STACK
 - **Frontend** : React + Leaflet (BionicLayersV8.jsx, MonTerritoireBionicPage)

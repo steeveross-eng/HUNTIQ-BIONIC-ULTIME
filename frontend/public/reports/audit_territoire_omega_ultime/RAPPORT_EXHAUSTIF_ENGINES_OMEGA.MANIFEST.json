@@ -9,7 +9,7 @@
       "description": "PDF institutionnel imprimable (A3 paysage)",
       "size_bytes": 360532,
       "sha256": "59f6a2513446365d51c0be59e6812daeb439285c0c234367ed9474d39573ded4",
-      "url_https": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/RAPPORT_EXHAUSTIF_ENGINES_%CE%A9.pdf",
+      "url_https": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/RAPPORT_EXHAUSTIF_ENGINES_%CE%A9.pdf",
       "path_local": "/app/frontend/public/reports/audit_territoire_omega_ultime/RAPPORT_EXHAUSTIF_ENGINES_Ω.pdf"
     },
     {
@@ -17,7 +17,7 @@
       "description": "HTML lisible — rapport complet en ligne",
       "size_bytes": 159010,
       "sha256": "2c8bcb3dbad8f2aa22b3d46e0c07bf41d9042eab281855770cba0dfc3114bb58",
-      "url_https": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/RAPPORT_EXHAUSTIF_ENGINES_%CE%A9.html",
+      "url_https": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/RAPPORT_EXHAUSTIF_ENGINES_%CE%A9.html",
       "path_local": "/app/frontend/public/reports/audit_territoire_omega_ultime/RAPPORT_EXHAUSTIF_ENGINES_Ω.html"
     },
     {
@@ -25,7 +25,7 @@
       "description": "JSON exhaustif — données brutes 209 engines",
       "size_bytes": 274501,
       "sha256": "6d69677070ab52ce4a6ae368eef6df433b4c60e538096d70772fd9f0c0a75146",
-      "url_https": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/RAPPORT_EXHAUSTIF_ENGINES_%CE%A9.json",
+      "url_https": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/RAPPORT_EXHAUSTIF_ENGINES_%CE%A9.json",
       "path_local": "/app/frontend/public/reports/audit_territoire_omega_ultime/RAPPORT_EXHAUSTIF_ENGINES_Ω.json"
     },
     {
@@ -33,7 +33,7 @@
       "description": "CSV triable — 209 lignes engines (Excel/Numbers)",
       "size_bytes": 82492,
       "sha256": "b5a1aba242d9a36055e23953bcb92f2eae6790ddeebd291faf844b3635f86dac",
-      "url_https": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/RAPPORT_EXHAUSTIF_ENGINES_%CE%A9.csv",
+      "url_https": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/RAPPORT_EXHAUSTIF_ENGINES_%CE%A9.csv",
       "path_local": "/app/frontend/public/reports/audit_territoire_omega_ultime/RAPPORT_EXHAUSTIF_ENGINES_Ω.csv"
     }
   ],

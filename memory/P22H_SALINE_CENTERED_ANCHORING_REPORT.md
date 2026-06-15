@@ -222,7 +222,7 @@ Note : la baisse polylines 72→54 (P22G→P22H) est attendue — en mode SALINE
 ## 7. URL DE VALIDATION COMMANDANT
 
 ```
-https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic?corridorsDebug=on
+https://ultime-preview.preview.emergentagent.com/mon-territoire-bionic?corridorsDebug=on
 ```
 
 **Comportement attendu (sans aucun clic préalable, après ~30s)** :
@@ -233,7 +233,7 @@ https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic?corridor
 
 **Test API direct** :
 ```bash
-curl -X POST https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/corridors-organic/generate \
+curl -X POST https://ultime-preview.preview.emergentagent.com/api/v20/territoire/corridors-organic/generate \
   -H "Content-Type: application/json" \
   -d '{"lat":48.206657,"lon":-68.382422,"species":"orignal","anchor_mode":"SALINE_CENTERED","external_entry_exit_radius_m":600.0,"allow_multi_anchor":true}'
 ```

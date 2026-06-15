@@ -17,43 +17,43 @@
   "livrables_https": [
     {
       "filename": "FRONTEND_TERRITOIRE_APTE_Ω.json",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/FRONTEND_TERRITOIRE_APTE_%CE%A9.json",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/FRONTEND_TERRITOIRE_APTE_%CE%A9.json",
       "http_code": 200,
       "size_bytes": 1746
     },
     {
       "filename": "FRONTEND_TERRITOIRE_APTE_Ω.html",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/FRONTEND_TERRITOIRE_APTE_%CE%A9.html",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/FRONTEND_TERRITOIRE_APTE_%CE%A9.html",
       "http_code": 200,
       "size_bytes": 6506
     },
     {
       "filename": "GPS_GIS_PHASE_INIT_Ω.json",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/GPS_GIS_PHASE_INIT_%CE%A9.json",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/GPS_GIS_PHASE_INIT_%CE%A9.json",
       "http_code": 200,
       "size_bytes": 10137
     },
     {
       "filename": "GPS_GIS_PHASE_INIT_Ω.html",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/GPS_GIS_PHASE_INIT_%CE%A9.html",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/GPS_GIS_PHASE_INIT_%CE%A9.html",
       "http_code": 200,
       "size_bytes": 9519
     },
     {
       "filename": "PRE_SCEAU_X5_Ω.json",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/PRE_SCEAU_X5_%CE%A9.json",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/PRE_SCEAU_X5_%CE%A9.json",
       "http_code": 200,
       "size_bytes": 2946
     },
     {
       "filename": "ATTESTATION_X5.html",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/institution/ATTESTATION_X5.html",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/institution/ATTESTATION_X5.html",
       "http_code": 200,
       "size_bytes": 5398
     },
     {
       "filename": "ATTESTATION_X5.pdf",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/institution/ATTESTATION_X5.pdf",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/institution/ATTESTATION_X5.pdf",
       "http_code": 200,
       "size_bytes": 3121
     }

@@ -16,28 +16,28 @@
       "format": "JSON",
       "size_bytes": 25511,
       "sha256": "1dd532ee6378a6e8e6a92da28c271d9e0a2df8020d07a695e44e6d1f00279836",
-      "url_https": "https://bionic-ultime-1.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_WAPITI.json"
+      "url_https": "https://ultime-preview.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_WAPITI.json"
     },
     {
       "filename": "BIO_PROFILE_Ω_WAPITI.html",
       "format": "HTML",
       "size_bytes": 26333,
       "sha256": "c8bf2aaf4e03d6a1e691dd42ab0c4836285e1eedec076218e57e204fad88ffb0",
-      "url_https": "https://bionic-ultime-1.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_WAPITI.html"
+      "url_https": "https://ultime-preview.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_WAPITI.html"
     },
     {
       "filename": "BIO_PROFILE_Ω_WAPITI.csv",
       "format": "CSV",
       "size_bytes": 27794,
       "sha256": "6e0d80d89af213ddbffed3121938205907d80ffce06d878527d4b8be100c9b25",
-      "url_https": "https://bionic-ultime-1.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_WAPITI.csv"
+      "url_https": "https://ultime-preview.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_WAPITI.csv"
     },
     {
       "filename": "MANIFEST_BIO_PROFILE_Ω_WAPITI.json",
       "format": "JSON_MANIFEST",
       "size_bytes": 1562,
       "sha256": "20d67b5e501a6b7218adbae21356e63544c8f4185b72f90b9b65beaa3023a6df",
-      "url_https": "https://bionic-ultime-1.preview.emergentagent.com/reports/bio_profile_omega/MANIFEST_BIO_PROFILE_%CE%A9_WAPITI.json"
+      "url_https": "https://ultime-preview.preview.emergentagent.com/reports/bio_profile_omega/MANIFEST_BIO_PROFILE_%CE%A9_WAPITI.json"
     }
   ],
   "self_sha256": "20d67b5e501a6b7218adbae21356e63544c8f4185b72f90b9b65beaa3023a6df"

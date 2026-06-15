@@ -7,7 +7,7 @@
 **DATE DE CERTIFICATION:** 2026-04-09 18:04 UTC
 **METHODE:** Inspection directe code source (grep + sed) + Execution API LIVE (curl)
 **BRANCHE:** SUPRA_RECONSTRUCTION
-**ENVIRONNEMENT:** https://bionic-ultime-1.preview.emergentagent.com
+**ENVIRONNEMENT:** https://ultime-preview.preview.emergentagent.com
 **VERDICT:** 5/5 MODULES CERTIFIES — ARCHITECTURE MODULAIRE PURE
 
 ---

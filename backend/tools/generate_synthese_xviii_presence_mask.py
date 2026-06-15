@@ -25,7 +25,7 @@ from pathlib import Path
 
 CAPTURE_DIR = Path("/app/frontend/public/reports/captures_xviii_presence_mask")
 OUT = Path("/app/frontend/public/reports/SYNTHESE_XVIII_BIO_PRESENCE_MASK.json")
-PUBLIC_BASE = "https://bionic-ultime-1.preview.emergentagent.com/reports/captures_xviii_presence_mask"
+PUBLIC_BASE = "https://ultime-preview.preview.emergentagent.com/reports/captures_xviii_presence_mask"
 
 OFFICIAL_LAT = 48.206657
 OFFICIAL_LNG = -68.382422

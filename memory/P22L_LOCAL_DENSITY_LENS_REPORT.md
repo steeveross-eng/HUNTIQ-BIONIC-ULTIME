@@ -218,19 +218,19 @@ SPECIES_NORMALIZE = {
 
 ### 7.1 Endpoint backend (POST)
 ```bash
-curl -X POST https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/corridors-organic/local-density-profile \
+curl -X POST https://ultime-preview.preview.emergentagent.com/api/v20/territoire/corridors-organic/local-density-profile \
   -H "Content-Type: application/json" \
   -d '{"lat":48.206657,"lon":-68.382422,"radius_m":780.0,"anchor_mode":"SALINE_CENTERED"}'
 ```
 
 ### 7.2 URL frontend (panneau visible)
 ```
-https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic?lensDebug=on
+https://ultime-preview.preview.emergentagent.com/mon-territoire-bionic?lensDebug=on
 ```
 
 ### 7.3 URL combinée (panneau + corridors visibles)
 ```
-https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic?lensDebug=on&corridorsDebug=on
+https://ultime-preview.preview.emergentagent.com/mon-territoire-bionic?lensDebug=on&corridorsDebug=on
 ```
 
 ---

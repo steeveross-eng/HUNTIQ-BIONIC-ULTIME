@@ -4,7 +4,7 @@
   "commandant": "STEEVE-MAX",
   "directive": "RÉTABLISSEMENT IMMÉDIAT DE LA ROUTE /mon-territoire-bionic (Articles 1-5)",
   "executed_at_utc": "2026-04-28T20:03:10.988325+00:00",
-  "url_audit": "https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic",
+  "url_audit": "https://ultime-preview.preview.emergentagent.com/mon-territoire-bionic",
   "actions": [
     "sudo supervisorctl restart backend frontend",
     "sleep 18s pour propagation",
@@ -19,7 +19,7 @@
     "redirect_to_landing": false
   },
   "diag_dom": {
-    "url": "https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic",
+    "url": "https://ultime-preview.preview.emergentagent.com/mon-territoire-bionic",
     "ts": "2026-04-28T20:02:32.187Z",
     "url_pathname": "/mon-territoire-bionic",
     "is_territoire_route": true,

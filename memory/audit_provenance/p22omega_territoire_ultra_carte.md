@@ -3,7 +3,7 @@
 **Date UTC** : 2026-05-13
 **Commandant** : STEEVE-MAX
 **Scope** : Toutes les couches visuelles + Z-ORDER + palette + cohérence inter-couches
-**Préview URL** : `https://bionic-ultime-1.preview.emergentagent.com`
+**Préview URL** : `https://ultime-preview.preview.emergentagent.com`
 
 ---
 

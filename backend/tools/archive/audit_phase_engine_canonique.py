@@ -16,7 +16,7 @@ from pathlib import Path
 ROOT = Path("/app/frontend/public/reports/audit_territoire_omega_ultime")
 PHASE_ENG = ROOT / "phase_engine_canonique"
 PHASE_ENG.mkdir(parents=True, exist_ok=True)
-PUBLIC_BASE = "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime"
+PUBLIC_BASE = "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime"
 
 # ════════════════════════════════════════════════════════════════════════════
 # CATALOGUE INSTITUTIONNEL DES 36 ENGINES CANONIQUES

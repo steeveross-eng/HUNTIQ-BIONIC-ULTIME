@@ -40,37 +40,37 @@
   "xvi_livrables_https": [
     {
       "filename": "HEATMAP_XVd_Ω.png",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_XVd_%CE%A9.png",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_XVd_%CE%A9.png",
       "http_code": 200,
       "size_bytes": 117371
     },
     {
       "filename": "HEATMAP_XVd_Ω.html",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_XVd_%CE%A9.html",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_XVd_%CE%A9.html",
       "http_code": 200,
       "size_bytes": 6935
     },
     {
       "filename": "SUPER_ENGINES_Ω_SPEC.json",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/SUPER_ENGINES_%CE%A9_SPEC.json",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/SUPER_ENGINES_%CE%A9_SPEC.json",
       "http_code": 200,
       "size_bytes": 38191
     },
     {
       "filename": "SUPER_ENGINES_Ω_SPEC.html",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/SUPER_ENGINES_%CE%A9_SPEC.html",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/SUPER_ENGINES_%CE%A9_SPEC.html",
       "http_code": 200,
       "size_bytes": 8518
     },
     {
       "filename": "MIGRATION_TRACKER_Ω.json",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/MIGRATION_TRACKER_%CE%A9.json",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/MIGRATION_TRACKER_%CE%A9.json",
       "http_code": 200,
       "size_bytes": 27214
     },
     {
       "filename": "MIGRATION_TRACKER_Ω.html",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/MIGRATION_TRACKER_%CE%A9.html",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/MIGRATION_TRACKER_%CE%A9.html",
       "http_code": 200,
       "size_bytes": 22111
     }

@@ -5,7 +5,7 @@
 ---
 
 **DATE D'EXECUTION:** 2026-04-09 18:04:25 — 18:04:27 UTC
-**ENVIRONNEMENT:** https://bionic-ultime-1.preview.emergentagent.com
+**ENVIRONNEMENT:** https://ultime-preview.preview.emergentagent.com
 **METHODE:** curl API LIVE + grep code source + python3 validation
 **BRANCHE:** SUPRA_RECONSTRUCTION
 
@@ -17,7 +17,7 @@
 
 **Commande:**
 ```bash
-curl -s -X POST "https://bionic-ultime-1.preview.emergentagent.com/api/v2/alimentation/analyze" \
+curl -s -X POST "https://ultime-preview.preview.emergentagent.com/api/v2/alimentation/analyze" \
   -H "Content-Type: application/json" \
   -d '{"center_lat":47.3,"center_lng":-72.5,"species":"CERF","month":10,"max_salines":2}'
 ```
@@ -61,7 +61,7 @@ curl -s -X POST "https://bionic-ultime-1.preview.emergentagent.com/api/v2/alimen
 
 **Commande:**
 ```bash
-curl -s -o /dev/null -w "%{http_code}" -X POST "https://bionic-ultime-1.preview.emergentagent.com/api/v2/alimentation/analyze" \
+curl -s -o /dev/null -w "%{http_code}" -X POST "https://ultime-preview.preview.emergentagent.com/api/v2/alimentation/analyze" \
   -H "Content-Type: application/json" \
   -d '{"center_lat":47.3,"center_lng":-72.5,"species":"CERF","month":10,"max_salines":4}'
 ```
@@ -75,7 +75,7 @@ curl -s -o /dev/null -w "%{http_code}" -X POST "https://bionic-ultime-1.preview.
 
 **Commande:**
 ```bash
-curl -s -X POST "https://bionic-ultime-1.preview.emergentagent.com/api/v6/corridors/analyze-full" \
+curl -s -X POST "https://ultime-preview.preview.emergentagent.com/api/v6/corridors/analyze-full" \
   -H "Content-Type: application/json" \
   -d '{"center_lat":47.3,"center_lng":-72.5,"species":"CERF","month":10,"max_salines":2}'
 ```
@@ -243,5 +243,5 @@ engine.py:266: ANALYSIS_RADIUS_M = 780.0
 **21/21 TESTS PASSES — ZERO ECHEC — ZERO REGRESSION**
 
 **Date d'execution:** 2026-04-09 18:04:25 — 18:04:27 UTC
-**Environnement:** https://bionic-ultime-1.preview.emergentagent.com
+**Environnement:** https://ultime-preview.preview.emergentagent.com
 **Auteur:** Agent BCE-4X sous ordres COMMANDANT STEEVE-MAX

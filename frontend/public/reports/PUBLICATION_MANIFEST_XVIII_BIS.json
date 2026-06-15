@@ -4,7 +4,7 @@
   "subphase_origin": "PHASE_XVIII_BIS_DENSITY_WINDOW_OPTIMIZATION_Ω",
   "publication": {
     "status": "PUBLISHED_Ω",
-    "publication_url_https": "https://bionic-ultime-1.preview.emergentagent.com/reports/RAPPORT_XVIII_BIS_DENSITY_WINDOW.html",
+    "publication_url_https": "https://ultime-preview.preview.emergentagent.com/reports/RAPPORT_XVIII_BIS_DENSITY_WINDOW.html",
     "publication_url_alias": "/reports/RAPPORT_XVIII_BIS_DENSITY_WINDOW.html",
     "published_at_utc": "2026-04-27T14:08:00Z",
     "tls_https_verified": true,
@@ -46,10 +46,10 @@
   },
   "verification_commands_for_commandant": [
     "# Vérification SHA-256 institutionnel (post-strip script Cloudflare CDN)",
-    "curl -sS https://bionic-ultime-1.preview.emergentagent.com/reports/RAPPORT_XVIII_BIS_DENSITY_WINDOW.html | python3 -c \"import sys,re,hashlib;s=sys.stdin.read();c=re.sub(r'<script>\\\\(function\\\\(\\\\)\\\\{function c\\\\(\\\\).*?\\\\}\\\\}\\\\)\\\\(\\\\);</script>','',s,flags=re.DOTALL);print(hashlib.sha256(c.encode()).hexdigest())\"",
+    "curl -sS https://ultime-preview.preview.emergentagent.com/reports/RAPPORT_XVIII_BIS_DENSITY_WINDOW.html | python3 -c \"import sys,re,hashlib;s=sys.stdin.read();c=re.sub(r'<script>\\\\(function\\\\(\\\\)\\\\{function c\\\\(\\\\).*?\\\\}\\\\}\\\\)\\\\(\\\\);</script>','',s,flags=re.DOTALL);print(hashlib.sha256(c.encode()).hexdigest())\"",
     "expected: 7299a4479e7e3b5140adfaba5f66a887915d3a8ebbd0d187568bab220c4f00ee",
     "# Lecture du manifeste JSON :",
-    "curl -sS https://bionic-ultime-1.preview.emergentagent.com/reports/PUBLICATION_MANIFEST_XVIII_BIS.json | python3 -m json.tool"
+    "curl -sS https://ultime-preview.preview.emergentagent.com/reports/PUBLICATION_MANIFEST_XVIII_BIS.json | python3 -m json.tool"
   ],
   "publication_seal": "BCE-4X-XVIII-BIS-PUBLISH-Ω-V1",
   "commandant": "STEEVE-MAX",

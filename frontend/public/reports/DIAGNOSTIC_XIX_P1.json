@@ -258,7 +258,7 @@
     "global_inversion_rate_pct": 47.92
   },
   "api_status_territoire_corridors": {
-    "endpoint": "https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=orignal&month=10&hour=16",
+    "endpoint": "https://ultime-preview.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=orignal&month=10&hour=16",
     "http_status": 200,
     "payload_size_bytes": 85090,
     "latency_ms": 1876.1,

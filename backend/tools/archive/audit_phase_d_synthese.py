@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT = Path("/app/frontend/public/reports/audit_territoire_omega_ultime")
 PHASE_D = ROOT / "phase_d"
 CAPS = PHASE_D / "captures"
-PUBLIC_BASE = "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime"
+PUBLIC_BASE = "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime"
 
 
 def sha256_of(p: Path):

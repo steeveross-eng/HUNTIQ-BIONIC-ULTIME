@@ -57,119 +57,119 @@
   "livrables_https_n39": [
     {
       "filename": "RAPPORT_CONFIRMATION_OPTIMISATION_6_MASTERS_Ω.json",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/RAPPORT_CONFIRMATION_OPTIMISATION_6_MASTERS_%CE%A9.json",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/RAPPORT_CONFIRMATION_OPTIMISATION_6_MASTERS_%CE%A9.json",
       "http_code": 200,
       "size_bytes": 914,
       "sha256": "61c23272323826f41cd87ed14168935a40437b8f0e330318d7d81ad58ff24a3e"
     },
     {
       "filename": "RAPPORT_CONFIRMATION_OPTIMISATION_6_MASTERS_Ω.html",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/RAPPORT_CONFIRMATION_OPTIMISATION_6_MASTERS_%CE%A9.html",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/RAPPORT_CONFIRMATION_OPTIMISATION_6_MASTERS_%CE%A9.html",
       "http_code": 200,
       "size_bytes": 4104,
       "sha256": "be32d95cff00c3c1b32b51ef8333163595ba81347424a05f5b6a8a3d7279506d"
     },
     {
       "filename": "SUPER_MASTERS_Ω_HTTP_SPEC.json",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/SUPER_MASTERS_%CE%A9_HTTP_SPEC.json",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/SUPER_MASTERS_%CE%A9_HTTP_SPEC.json",
       "http_code": 200,
       "size_bytes": 1819,
       "sha256": "2fbc75566c05e4a0713cc3500409b4e8b0b6187e264f46a78b28e68ad8b16a83"
     },
     {
       "filename": "SUPER_MASTERS_Ω_HTTP_SPEC.html",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/SUPER_MASTERS_%CE%A9_HTTP_SPEC.html",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/SUPER_MASTERS_%CE%A9_HTTP_SPEC.html",
       "http_code": 200,
       "size_bytes": 5261,
       "sha256": "28564013f02722d947341c0462b26b3a08cff2fdb144dd0707e1e2cfff2e107d"
     },
     {
       "filename": "TERRITOIRE_MASTER_Ω_APTE_VISUALISATION.html",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/TERRITOIRE_MASTER_%CE%A9_APTE_VISUALISATION.html",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/TERRITOIRE_MASTER_%CE%A9_APTE_VISUALISATION.html",
       "http_code": 200,
       "size_bytes": 5123,
       "sha256": "6e10f31c03c76cc6cddfab5a5af1bc13350fd4db8e499fa71c0026c7c8ddc162"
     },
     {
       "filename": "HEATMAP_TERRITOIRE_Ω_COMPOSITE.png",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_TERRITOIRE_%CE%A9_COMPOSITE.png",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_TERRITOIRE_%CE%A9_COMPOSITE.png",
       "http_code": 200,
       "size_bytes": 118884,
       "sha256": "8ef1ced838c0da00a6311838d1c3c02c1b74d97275cfd99a82260af64ac06e87"
     },
     {
       "filename": "GPS_GIS_INTEGRATION_SPEC_Ω.json",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/GPS_GIS_INTEGRATION_SPEC_%CE%A9.json",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/GPS_GIS_INTEGRATION_SPEC_%CE%A9.json",
       "http_code": 200,
       "size_bytes": 4029,
       "sha256": "26473298cc60f46129ea8a7a7fa4f4cf26949a29d2f51d31aef3bd336797ab4a"
     },
     {
       "filename": "GPS_GIS_INTEGRATION_SPEC_Ω.html",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/GPS_GIS_INTEGRATION_SPEC_%CE%A9.html",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/GPS_GIS_INTEGRATION_SPEC_%CE%A9.html",
       "http_code": 200,
       "size_bytes": 7684,
       "sha256": "0257b7593531e5441adb63ea4ed561281b15e00a3004fd2c3c5820b6b2651fa7"
     },
     {
       "filename": "ATTESTATION_INSTITUTIONNELLE_Ω.json",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/institution/ATTESTATION_INSTITUTIONNELLE_%CE%A9.json",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/institution/ATTESTATION_INSTITUTIONNELLE_%CE%A9.json",
       "http_code": 200,
       "size_bytes": 1617,
       "sha256": "eca7ff9ba76c9a3b5e71bb10f492d17ec79391a39a172e187975e65833d2cf3b"
     },
     {
       "filename": "ATTESTATION_INSTITUTIONNELLE_Ω.html",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/institution/ATTESTATION_INSTITUTIONNELLE_%CE%A9.html",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/institution/ATTESTATION_INSTITUTIONNELLE_%CE%A9.html",
       "http_code": 200,
       "size_bytes": 6029,
       "sha256": "e5a7e66173235ce00ed1429b0ddd0ea520a50a0c01acbda13092896213c4e5c4"
     },
     {
       "filename": "SCEAU_INSTITUTIONNEL_X4_FINAL_Ω.html",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/institution/SCEAU_INSTITUTIONNEL_X4_FINAL_%CE%A9.html",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/institution/SCEAU_INSTITUTIONNEL_X4_FINAL_%CE%A9.html",
       "http_code": 200,
       "size_bytes": 6029,
       "sha256": "e5a7e66173235ce00ed1429b0ddd0ea520a50a0c01acbda13092896213c4e5c4"
     },
     {
       "filename": "SCEAU_INSTITUTIONNEL_X4_FINAL_Ω.pdf",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/institution/SCEAU_INSTITUTIONNEL_X4_FINAL_%CE%A9.pdf",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/institution/SCEAU_INSTITUTIONNEL_X4_FINAL_%CE%A9.pdf",
       "http_code": 200,
       "size_bytes": 4149,
       "sha256": "0d1f48d8c6cb791463c29fc45fbe304f5f9c2621444fb1510a9918d53d61c6ef"
     },
     {
       "filename": "HEATMAP_TERRITOIRE_Ω_ORIGNAL.png",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_TERRITOIRE_%CE%A9_ORIGNAL.png",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_TERRITOIRE_%CE%A9_ORIGNAL.png",
       "http_code": 200,
       "size_bytes": 38071,
       "sha256": "f28623500dac478c46c6de95c878180610c3b26a01b2217c46b420601e9e5f20"
     },
     {
       "filename": "HEATMAP_TERRITOIRE_Ω_CHEVREUIL.png",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_TERRITOIRE_%CE%A9_CHEVREUIL.png",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_TERRITOIRE_%CE%A9_CHEVREUIL.png",
       "http_code": 200,
       "size_bytes": 37503,
       "sha256": "e8033ecdfb48feaf4bb3733a464086e3b61685d0f039fb08c9f2504a692165e2"
     },
     {
       "filename": "HEATMAP_TERRITOIRE_Ω_WAPITI.png",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_TERRITOIRE_%CE%A9_WAPITI.png",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_TERRITOIRE_%CE%A9_WAPITI.png",
       "http_code": 200,
       "size_bytes": 36462,
       "sha256": "431b32342d8149afd02b13750129826cf86987c1a904538a516efb287b8b2c11"
     },
     {
       "filename": "HEATMAP_TERRITOIRE_Ω_OURS_NOIR.png",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_TERRITOIRE_%CE%A9_OURS_NOIR.png",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_TERRITOIRE_%CE%A9_OURS_NOIR.png",
       "http_code": 200,
       "size_bytes": 39296,
       "sha256": "30b2b49dfb6b2fbaa314c0cc8f4fa98b8843b10a2af298dd1e3d0246f1cd92a0"
     },
     {
       "filename": "HEATMAP_TERRITOIRE_Ω_DINDON_SAUVAGE.png",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_TERRITOIRE_%CE%A9_DINDON_SAUVAGE.png",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_TERRITOIRE_%CE%A9_DINDON_SAUVAGE.png",
       "http_code": 200,
       "size_bytes": 42986,
       "sha256": "757f2d17537b5bcd1b5913035ab086fa524f7f4013680e3857a7a373eb2f09f3"

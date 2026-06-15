@@ -5,7 +5,7 @@
 **Protocole** : BCE-4X ULTIME ABSOLU
 **Waypoint cible** : BSL (48.206657, -68.382422)
 **Espèce cible** : chevreuil
-**Préview URL** : `https://bionic-ultime-1.preview.emergentagent.com`
+**Préview URL** : `https://ultime-preview.preview.emergentagent.com`
 
 ---
 

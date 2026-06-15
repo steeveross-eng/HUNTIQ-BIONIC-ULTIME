@@ -199,7 +199,7 @@ Le panneau `LocalCorridorLensPanel` affiche désormais **4 tableaux** :
 ### 7.1 Backend endpoint v3 ULTIME
 
 ```bash
-curl -X POST https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/corridors-organic/local-density-profile \
+curl -X POST https://ultime-preview.preview.emergentagent.com/api/v20/territoire/corridors-organic/local-density-profile \
   -H "Content-Type: application/json" \
   -d '{
     "lat":48.206657,"lon":-68.382422,"radius_m":780.0,
@@ -219,7 +219,7 @@ curl -X POST https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoir
 ### 7.2 Frontend (panneau v3 visible)
 
 ```
-https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic?lensDebug=on
+https://ultime-preview.preview.emergentagent.com/mon-territoire-bionic?lensDebug=on
 ```
 
 → Le frontend envoie automatiquement les overrides V3 + exclusions V3 (paramétrés en dur dans le composant).

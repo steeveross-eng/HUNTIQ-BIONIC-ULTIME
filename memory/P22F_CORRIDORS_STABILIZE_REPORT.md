@@ -273,7 +273,7 @@ $ curl -X POST .../corridors-organic/generate \
 ## 9. URL DE VALIDATION COMMANDANT
 
 ```
-https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic?corridorsDebug=on
+https://ultime-preview.preview.emergentagent.com/mon-territoire-bionic?corridorsDebug=on
 ```
 
 **Comportement attendu (sans aucun clic préalable, après ~30-50s de boot)** :

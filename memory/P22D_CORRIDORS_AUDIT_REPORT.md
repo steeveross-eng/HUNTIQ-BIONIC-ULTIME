@@ -333,12 +333,12 @@ console.log(window.__OMEGA_CORRIDORS_X150_PROBES__);
 
 Pour activer l'overlay diagnostique :
 ```
-https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic?corridorsDebug=on
+https://ultime-preview.preview.emergentagent.com/mon-territoire-bionic?corridorsDebug=on
 ```
 
 Avec coordonnées personnalisées :
 ```
-https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic?corridorsDebug=on&lat=46.8139&lng=-71.2080&species=cerf
+https://ultime-preview.preview.emergentagent.com/mon-territoire-bionic?corridorsDebug=on&lat=46.8139&lng=-71.2080&species=cerf
 ```
 
 L'overlay apparaît en bas-gauche avec les 3 sections live (status, organic, DOM).

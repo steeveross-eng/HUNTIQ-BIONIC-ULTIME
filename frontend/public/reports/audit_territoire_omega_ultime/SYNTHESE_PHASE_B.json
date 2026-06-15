@@ -1168,31 +1168,31 @@
       "file": "B4_01_orignal_PRESENT.jpeg",
       "size_b": 118633,
       "sha256": "3e0902b481d7e45071623d01b16e6a985cbfe1934fdd20f27e64cbc9af95fee6",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/captures_frontend/B4_01_orignal_PRESENT.jpeg"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/captures_frontend/B4_01_orignal_PRESENT.jpeg"
     },
     {
       "file": "B4_02_chevreuil_PRESENT.jpeg",
       "size_b": 119115,
       "sha256": "b57c1d9d78b37c94e9c95049687c97df8b273bf6bc6e876fb99bf4196af77bd8",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/captures_frontend/B4_02_chevreuil_PRESENT.jpeg"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/captures_frontend/B4_02_chevreuil_PRESENT.jpeg"
     },
     {
       "file": "B4_03_ours_noir_PRESENT.jpeg",
       "size_b": 119418,
       "sha256": "54323c0311b25537ef61ad6c81ab5c1a90a9d2d113d9065a154aeac2f17d411b",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/captures_frontend/B4_03_ours_noir_PRESENT.jpeg"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/captures_frontend/B4_03_ours_noir_PRESENT.jpeg"
     },
     {
       "file": "B4_04_dindon_sauvage_ABSENT.jpeg",
       "size_b": 118800,
       "sha256": "165b79e5edf40ff0b77458fe6f9a5c4ac639a99a5d7789204ba547da50649294",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/captures_frontend/B4_04_dindon_sauvage_ABSENT.jpeg"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/captures_frontend/B4_04_dindon_sauvage_ABSENT.jpeg"
     },
     {
       "file": "B4_05_wapiti_ABSENT.jpeg",
       "size_b": 119003,
       "sha256": "347026ab4ac8e4e0939eddcaee188ac9f0eaca326ab6f7f9fca8ead1d5542159",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/captures_frontend/B4_05_wapiti_ABSENT.jpeg"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/captures_frontend/B4_05_wapiti_ABSENT.jpeg"
     }
   ],
   "payloads_hashed": [
@@ -1200,145 +1200,145 @@
       "file": "GLOBAL_layer_diag_orignal.json",
       "size_b": 553,
       "sha256": "40d6a37a7b1b6f0d385530f4ddc0c7943acd4bad137bedc9c7a40533e8e933a1",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/GLOBAL_layer_diag_orignal.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/GLOBAL_layer_diag_orignal.json"
     },
     {
       "file": "GLOBAL_presence_mask.json",
       "size_b": 3434,
       "sha256": "ab2e9ed3755c5a5cef4b3f40f2f752467b94569e6eeaee77000ffa5051f719dc",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/GLOBAL_presence_mask.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/GLOBAL_presence_mask.json"
     },
     {
       "file": "GLOBAL_purge.json",
       "size_b": 64,
       "sha256": "062f31910b1a0d050719053559b5e8744fbaacaba25ac24419fa22708235d823",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/GLOBAL_purge.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/GLOBAL_purge.json"
     },
     {
       "file": "GLOBAL_v30_status.json",
       "size_b": 3725,
       "sha256": "335f44a1946ec5ea0f14e4866a9165c7af4a32dca5d6b3a05e458fc557b01f2b",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/GLOBAL_v30_status.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/GLOBAL_v30_status.json"
     },
     {
       "file": "cerf_bundle_v20.json",
       "size_b": 81552,
       "sha256": "80064d972361df803ea0c1387522301918989f286247fba5d2e19ba208845e49",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/cerf_bundle_v20.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/cerf_bundle_v20.json"
     },
     {
       "file": "cerf_layer_diagnostic.json",
       "size_b": 550,
       "sha256": "56b8c56836ca8f7670aea3c447aa902183d1e7037d4615bdb5f0cbd38a406698",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/cerf_layer_diagnostic.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/cerf_layer_diagnostic.json"
     },
     {
       "file": "cerf_organic.json",
       "size_b": 66822,
       "sha256": "eab52aafea2805ff122b9fc89da495f80ddaa432bfd86570215858f4d3bd68eb",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/cerf_organic.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/cerf_organic.json"
     },
     {
       "file": "cerf_v30_status.json",
       "size_b": 2134,
       "sha256": "ce90af1c6e2b6a71782b97f1e346c1485c5a17e74ad978cbbc05806c0b5c5216",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/cerf_v30_status.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/cerf_v30_status.json"
     },
     {
       "file": "dindon_bundle_v20.json",
       "size_b": 67442,
       "sha256": "966799ec14c1d80964e203a9388fb2bdf39d2cef30960b334d3ae324ded432de",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/dindon_bundle_v20.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/dindon_bundle_v20.json"
     },
     {
       "file": "dindon_layer_diagnostic.json",
       "size_b": 554,
       "sha256": "bc9bbe0959a9970b1c898a2db357c8dc5095a6500c5faf1ca94f6f88b1ff7905",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/dindon_layer_diagnostic.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/dindon_layer_diagnostic.json"
     },
     {
       "file": "dindon_organic.json",
       "size_b": 67074,
       "sha256": "6e90b873c20213b86d7e97c3d01c4be99af693aa084ffb0c7b4881a0fa44d364",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/dindon_organic.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/dindon_organic.json"
     },
     {
       "file": "dindon_v30_status.json",
       "size_b": 2140,
       "sha256": "624af26aa2e47351e2db3282ca6aa85a6e3a9c7f9d946cd9159554e33e7992d8",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/dindon_v30_status.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/dindon_v30_status.json"
     },
     {
       "file": "orignal_bundle_v20.json",
       "size_b": 81198,
       "sha256": "93123c7063b77fc8b1ccc3f98653ec60733645b72697d4d083b92329ee4e09de",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/orignal_bundle_v20.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/orignal_bundle_v20.json"
     },
     {
       "file": "orignal_layer_diagnostic.json",
       "size_b": 553,
       "sha256": "40d6a37a7b1b6f0d385530f4ddc0c7943acd4bad137bedc9c7a40533e8e933a1",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/orignal_layer_diagnostic.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/orignal_layer_diagnostic.json"
     },
     {
       "file": "orignal_organic.json",
       "size_b": 84965,
       "sha256": "5999941dd8876aa3f542e7c079891f90d95b00b75731154384d9f6aef7ee1a57",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/orignal_organic.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/orignal_organic.json"
     },
     {
       "file": "orignal_v30_status.json",
       "size_b": 2131,
       "sha256": "51a49ae6cd56ec7ad69d71b60af52176ad55c18ff761fe0b6880627b25ae4b73",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/orignal_v30_status.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/orignal_v30_status.json"
     },
     {
       "file": "ours_bundle_v20.json",
       "size_b": 81530,
       "sha256": "79bbcb0c316d33eb86b80fd23693c2f612f6d2ec7a902a2a8febfbfb01e99a6b",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/ours_bundle_v20.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/ours_bundle_v20.json"
     },
     {
       "file": "ours_layer_diagnostic.json",
       "size_b": 516,
       "sha256": "7183ae30029568501b9f89f3ec9e81cbe3193c76661c447f5cb8fb224a0a3dbc",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/ours_layer_diagnostic.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/ours_layer_diagnostic.json"
     },
     {
       "file": "ours_organic.json",
       "size_b": 79003,
       "sha256": "9e9ed1b6ce07e66903e54fd64f92f30fd578183d159d1260eef2bce3c955b6a2",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/ours_organic.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/ours_organic.json"
     },
     {
       "file": "ours_v30_status.json",
       "size_b": 2133,
       "sha256": "d598ec0cc2194ae912a9a79bec7e303d1c5e60c2907c5a10f3a4aff8f4c807d0",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/ours_v30_status.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/ours_v30_status.json"
     },
     {
       "file": "wapiti_bundle_v20.json",
       "size_b": 66757,
       "sha256": "9420d503489c6b12c6cff609c488694d45a3a61e6e5c9886c8455203e0db8f43",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/wapiti_bundle_v20.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/wapiti_bundle_v20.json"
     },
     {
       "file": "wapiti_layer_diagnostic.json",
       "size_b": 554,
       "sha256": "1b3cb0484c679034802e18f551c439d9e4d5a575efa7a3d18c70331230d8dceb",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/wapiti_layer_diagnostic.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/wapiti_layer_diagnostic.json"
     },
     {
       "file": "wapiti_organic.json",
       "size_b": 67056,
       "sha256": "e10b3046f9554a39ca9e197523900dac50aeb9b8dd9140016c452a7cb76c1f22",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/wapiti_organic.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/wapiti_organic.json"
     },
     {
       "file": "wapiti_v30_status.json",
       "size_b": 2141,
       "sha256": "ddcceb834271fab23eecc5f3c572ff642ca1c96eaf9aa45fc4b3b0404718d0e3",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/wapiti_v30_status.json"
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_b/api_payloads/wapiti_v30_status.json"
     }
   ],
   "stabilization_plan": {

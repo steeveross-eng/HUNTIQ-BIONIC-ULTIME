@@ -6,7 +6,7 @@ import pytest
 import requests
 import os
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://bionic-ultime-1.preview.emergentagent.com')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://ultime-preview.preview.emergentagent.com')
 
 class TestAuthAPI:
     """Authentication endpoint tests"""

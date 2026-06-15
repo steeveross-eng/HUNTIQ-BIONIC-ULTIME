@@ -42,7 +42,7 @@
 
 ```json
 {
-  "url": "https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic?territoireDebug=on",
+  "url": "https://ultime-preview.preview.emergentagent.com/mon-territoire-bionic?territoireDebug=on",
   "rootChildren": 1,
   "rootInnerHTML_len": 306052,
   "hasMonTerritoirePage": true,
@@ -71,7 +71,7 @@ Capture : `/tmp/territoire_p22c_fix.png`
 
 ```json
 {
-  "url": "https://bionic-ultime-1.preview.emergentagent.com/admin/bce-4x-premium/territoire",
+  "url": "https://ultime-preview.preview.emergentagent.com/admin/bce-4x-premium/territoire",
   "rootChildren": 1,
   "rootSize": 35300,
   "swController": false,

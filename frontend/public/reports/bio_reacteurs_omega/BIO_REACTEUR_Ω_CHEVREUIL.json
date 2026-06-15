@@ -22,7 +22,7 @@
     "path": "/app/frontend/public/reports/bio_profile_omega/BIO_PROFILE_Ω_CHEVREUIL.json",
     "size_bytes": 30711,
     "sha256": "ef6a794d2477c5cc3cb44ab01e833cb1a47bac4a86e1948b9f73910767a9d72a",
-    "url_https": "https://bionic-ultime-1.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_CHEVREUIL.json"
+    "url_https": "https://ultime-preview.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_CHEVREUIL.json"
   },
   "champs_obligatoires_status": {
     "comportements_saisonniers": "PRESENT",

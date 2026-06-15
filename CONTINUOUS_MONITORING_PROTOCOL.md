@@ -7,7 +7,7 @@
 **DATE DE CERTIFICATION:** 2026-04-09 18:04 UTC
 **STATUT:** ACTIF — PERMANENT — SANS INTERRUPTION
 **BRANCHE:** SUPRA_RECONSTRUCTION
-**ENVIRONNEMENT:** https://bionic-ultime-1.preview.emergentagent.com
+**ENVIRONNEMENT:** https://ultime-preview.preview.emergentagent.com
 
 ---
 
@@ -98,7 +98,7 @@
 
 ### T1 — Selection salines
 ```bash
-API_URL="https://bionic-ultime-1.preview.emergentagent.com"
+API_URL="https://ultime-preview.preview.emergentagent.com"
 curl -s -X POST "$API_URL/api/v2/alimentation/analyze" \
   -H "Content-Type: application/json" \
   -d '{"center_lat":47.3,"center_lng":-72.5,"species":"CERF","month":10,"max_salines":2}' \

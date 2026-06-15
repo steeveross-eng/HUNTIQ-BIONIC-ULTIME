@@ -4,7 +4,7 @@
   "commandant": "STEEVE-MAX",
   "directive": "RÉVEIL IMMÉDIAT BACKEND TERRITOIRE_Ω (Articles 1-4)",
   "executed_at_utc": "2026-04-28T18:39:10.508500+00:00",
-  "url_audit": "https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic",
+  "url_audit": "https://ultime-preview.preview.emergentagent.com/mon-territoire-bionic",
   "constat_initial": {
     "message_capture_commandant": "Frontend Preview Only. Please wake servers to enable backend functionality",
     "diagnostic": "Pod backend en hibernation — réveil cold-start nécessaire"

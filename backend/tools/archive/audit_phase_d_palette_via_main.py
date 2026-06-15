@@ -5,7 +5,7 @@ from pathlib import Path
 
 OUT = Path("/app/frontend/public/reports/audit_territoire_omega_ultime/phase_d/captures")
 OUT.mkdir(parents=True, exist_ok=True)
-URL = "https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic"
+URL = "https://ultime-preview.preview.emergentagent.com/mon-territoire-bionic"
 
 JS_PROBE = r"""
 (() => {

@@ -143,7 +143,7 @@ failed_checks: []
 
 ### 4.4 Smoke test frontend live
 
-- URL : `https://bionic-ultime-1.preview.emergentagent.com/`
+- URL : `https://ultime-preview.preview.emergentagent.com/`
 - Chargement : OK (networkidle en ~3s)
 - Auto-login : OK (Commandant Steeve-MAX reconnu)
 - Aucune erreur JavaScript console

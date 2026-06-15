@@ -22,7 +22,7 @@
     "path": "/app/frontend/public/reports/bio_profile_omega/BIO_PROFILE_Ω_OURS_NOIR.json",
     "size_bytes": 17982,
     "sha256": "77157a186928d7af16deb8361aa218ef34ec522affa2a197a8bf216d411033bc",
-    "url_https": "https://bionic-ultime-1.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_OURS_NOIR.json"
+    "url_https": "https://ultime-preview.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_OURS_NOIR.json"
   },
   "champs_obligatoires_status": {
     "comportements_saisonniers": "PRESENT",

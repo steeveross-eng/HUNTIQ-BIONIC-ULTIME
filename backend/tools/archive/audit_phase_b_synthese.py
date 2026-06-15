@@ -9,7 +9,7 @@ ROOT = Path("/app/frontend/public/reports/audit_territoire_omega_ultime")
 PHASE_B = ROOT / "phase_b"
 PAYLOADS = PHASE_B / "api_payloads"
 CAPS = PHASE_B / "captures_frontend"
-PUBLIC_BASE = "https://bionic-ultime-1.preview.emergentagent.com/reports/audit_territoire_omega_ultime"
+PUBLIC_BASE = "https://ultime-preview.preview.emergentagent.com/reports/audit_territoire_omega_ultime"
 
 
 def sha256_of(p: Path):

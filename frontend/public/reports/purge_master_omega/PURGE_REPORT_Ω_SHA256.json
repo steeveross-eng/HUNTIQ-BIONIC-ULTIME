@@ -5,13 +5,13 @@
       "filename": "PURGE_REPORT_Ω.json",
       "size": 41926,
       "sha256": "144209580d5e1966b44039de50d0c4e85d6e4f3a80c4248e2dc48a605e41d614",
-      "url_https": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/PURGE_REPORT_%CE%A9.json"
+      "url_https": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/PURGE_REPORT_%CE%A9.json"
     },
     {
       "filename": "PURGE_REPORT_Ω.csv",
       "size": 19070,
       "sha256": "f99ab30def18bac5ef446308a116ff8428ae0eea4c75c93919cd0296fb43950f",
-      "url_https": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/PURGE_REPORT_%CE%A9.csv"
+      "url_https": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/PURGE_REPORT_%CE%A9.csv"
     }
   ]
 }

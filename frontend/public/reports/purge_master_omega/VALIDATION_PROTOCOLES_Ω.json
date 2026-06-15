@@ -38,42 +38,42 @@
   "livrables_https": [
     {
       "filename": "PROTOCOLE_BIO_PROFILE_NUTRITION_Ω.json",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/PROTOCOLE_BIO_PROFILE_NUTRITION_%CE%A9.json",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/PROTOCOLE_BIO_PROFILE_NUTRITION_%CE%A9.json",
       "http_code": 200,
       "size_bytes": 33152,
       "sha256": "e63485360e5f6ababd82a2310ed5da52e2b7a121d99a1e125b5fc175b39f6dd6"
     },
     {
       "filename": "PROTOCOLE_BIO_PROFILE_NUTRITION_Ω.html",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/PROTOCOLE_BIO_PROFILE_NUTRITION_%CE%A9.html",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/PROTOCOLE_BIO_PROFILE_NUTRITION_%CE%A9.html",
       "http_code": 200,
       "size_bytes": 28064,
       "sha256": "d80c07499a1bd9599045add4a9c79341d3a86ab79bebc72ee98901ef9521b186"
     },
     {
       "filename": "PROGRESSION_CORRIDORS_Ω.json",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_CORRIDORS_%CE%A9.json",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_CORRIDORS_%CE%A9.json",
       "http_code": 200,
       "size_bytes": 22647,
       "sha256": "03636626bc24aae7a093da44455b0a370bc5855fdd10ae8fde6c30b15cfa1a7b"
     },
     {
       "filename": "PROGRESSION_CORRIDORS_Ω.html",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_CORRIDORS_%CE%A9.html",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_CORRIDORS_%CE%A9.html",
       "http_code": 200,
       "size_bytes": 26339,
       "sha256": "74e9abfaf6f7cbcc08fce9db8e20cfbe72ccf14aeb50a01ab88cef4abab2e255"
     },
     {
       "filename": "PROGRESSION_SENSORIEL_Ω.json",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_SENSORIEL_%CE%A9.json",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_SENSORIEL_%CE%A9.json",
       "http_code": 200,
       "size_bytes": 29168,
       "sha256": "5e74a6820a96409a1c826ebb8e1c9e3085ace5a403152f852db0bed039932f91"
     },
     {
       "filename": "PROGRESSION_SENSORIEL_Ω.html",
-      "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_SENSORIEL_%CE%A9.html",
+      "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_SENSORIEL_%CE%A9.html",
       "http_code": 200,
       "size_bytes": 31026,
       "sha256": "ad346d1ad9eccd235df660077425d0e516f88b993f89b409172504af2698f8d4"

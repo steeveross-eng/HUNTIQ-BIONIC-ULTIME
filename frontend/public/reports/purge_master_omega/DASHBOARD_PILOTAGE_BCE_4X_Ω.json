@@ -78,11 +78,11 @@
       "livrables_https": [
         {
           "label": "PURGE_REPORT",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/PURGE_REPORT_%CE%A9.json"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/PURGE_REPORT_%CE%A9.json"
         },
         {
           "label": "DIFF_MASTER",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/DIFF_MASTER_%CE%A9.json"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/DIFF_MASTER_%CE%A9.json"
         }
       ]
     },
@@ -97,15 +97,15 @@
       "livrables_https": [
         {
           "label": "INDEX_XVcd",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/INDEX_XVcd_%CE%A9.html"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/INDEX_XVcd_%CE%A9.html"
         },
         {
           "label": "PLAN_REFACTOR",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/PLAN_REFACTOR_XVd_%CE%A9.html"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/PLAN_REFACTOR_XVd_%CE%A9.html"
         },
         {
           "label": "AUDIT_KEPT",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/AUDIT_KEPT_FOR_INTEGRITY_%CE%A9.html"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/AUDIT_KEPT_FOR_INTEGRITY_%CE%A9.html"
         }
       ]
     },
@@ -120,15 +120,15 @@
       "livrables_https": [
         {
           "label": "INDEX_XVI",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/INDEX_XVI_%CE%A9.html"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/INDEX_XVI_%CE%A9.html"
         },
         {
           "label": "HEATMAP_XVd",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_XVd_%CE%A9.html"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_XVd_%CE%A9.html"
         },
         {
           "label": "MIGRATION_TRACKER",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/MIGRATION_TRACKER_%CE%A9.html"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/MIGRATION_TRACKER_%CE%A9.html"
         }
       ]
     },
@@ -143,15 +143,15 @@
       "livrables_https": [
         {
           "label": "PROTOCOLE_NUTRITION",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/PROTOCOLE_BIO_PROFILE_NUTRITION_%CE%A9.html"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/PROTOCOLE_BIO_PROFILE_NUTRITION_%CE%A9.html"
         },
         {
           "label": "PROGRESSION_CORRIDORS",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_CORRIDORS_%CE%A9.html"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_CORRIDORS_%CE%A9.html"
         },
         {
           "label": "PROGRESSION_SENSORIEL",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_SENSORIEL_%CE%A9.html"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_SENSORIEL_%CE%A9.html"
         }
       ]
     },
@@ -166,11 +166,11 @@
       "livrables_https": [
         {
           "label": "VALIDATION_X3",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/VALIDATION_FUSION_SUPER_ENGINES_%CE%A9_ULTIME_ABSOLUE_X3.html"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/VALIDATION_FUSION_SUPER_ENGINES_%CE%A9_ULTIME_ABSOLUE_X3.html"
         },
         {
           "label": "TERRITOIRE_FUSION",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/TERRITOIRE_MASTER_%CE%A9_FUSION.html"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/TERRITOIRE_MASTER_%CE%A9_FUSION.html"
         }
       ]
     },
@@ -185,15 +185,15 @@
       "livrables_https": [
         {
           "label": "VALIDATION_X4",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/VALIDATION_%CE%A9_OPTIMISATION_MASTERS_X4.html"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/VALIDATION_%CE%A9_OPTIMISATION_MASTERS_X4.html"
         },
         {
           "label": "TERRITOIRE_X4",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/TERRITOIRE_MASTER_%CE%A9_FUSION_X4.html"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/TERRITOIRE_MASTER_%CE%A9_FUSION_X4.html"
         },
         {
           "label": "SIX_MASTERS",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/SIX_MASTERS_%CE%A9_OPTIMIS%C3%89S.html"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/SIX_MASTERS_%CE%A9_OPTIMIS%C3%89S.html"
         }
       ]
     },
@@ -208,19 +208,19 @@
       "livrables_https": [
         {
           "label": "SCEAU_X4_PDF",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/institution/SCEAU_INSTITUTIONNEL_X4_FINAL_%CE%A9.pdf"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/institution/SCEAU_INSTITUTIONNEL_X4_FINAL_%CE%A9.pdf"
         },
         {
           "label": "ATTESTATION",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/institution/ATTESTATION_INSTITUTIONNELLE_%CE%A9.html"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/institution/ATTESTATION_INSTITUTIONNELLE_%CE%A9.html"
         },
         {
           "label": "VALIDATION_39",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/VALIDATION_%CE%A9_ORDRE_39.html"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/VALIDATION_%CE%A9_ORDRE_39.html"
         },
         {
           "label": "VISUALISATION",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/TERRITOIRE_MASTER_%CE%A9_APTE_VISUALISATION.html"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/TERRITOIRE_MASTER_%CE%A9_APTE_VISUALISATION.html"
         }
       ]
     },
@@ -235,19 +235,19 @@
       "livrables_https": [
         {
           "label": "GPS_GIS_INIT",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/GPS_GIS_PHASE_INIT_%CE%A9.html"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/GPS_GIS_PHASE_INIT_%CE%A9.html"
         },
         {
           "label": "FRONTEND",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/purge_master_omega/FRONTEND_TERRITOIRE_APTE_%CE%A9.html"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/purge_master_omega/FRONTEND_TERRITOIRE_APTE_%CE%A9.html"
         },
         {
           "label": "ATTESTATION_X5",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/reports/institution/ATTESTATION_X5.pdf"
+          "url": "https://ultime-preview.preview.emergentagent.com/reports/institution/ATTESTATION_X5.pdf"
         },
         {
           "label": "/territoire-apte (LIVE)",
-          "url": "https://bionic-ultime-1.preview.emergentagent.com/territoire-apte"
+          "url": "https://ultime-preview.preview.emergentagent.com/territoire-apte"
         }
       ]
     },

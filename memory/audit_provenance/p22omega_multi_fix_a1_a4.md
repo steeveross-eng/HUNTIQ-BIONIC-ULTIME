@@ -4,7 +4,7 @@
 **Commandant** : STEEVE-MAX
 **Waypoint cible** : BSL (48.206657, -68.382422)
 **Espèces validées** : chevreuil, orignal, ours, dindon, coyote
-**Préview URL** : `https://bionic-ultime-1.preview.emergentagent.com`
+**Préview URL** : `https://ultime-preview.preview.emergentagent.com`
 
 ---
 

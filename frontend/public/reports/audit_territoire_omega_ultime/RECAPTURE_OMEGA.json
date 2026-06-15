@@ -4,14 +4,14 @@
   "commandant": "STEEVE-MAX",
   "directive": "INVALIDATION FORMELLE + REPRISE CONTRÔLÉE DU RENDU Ω (Articles 1-5)",
   "executed_at_utc": "2026-04-28T19:15:29.769100+00:00",
-  "url_audit": "https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic",
+  "url_audit": "https://ultime-preview.preview.emergentagent.com/mon-territoire-bionic",
   "non_conformites_corrigees": [
     "SCORE PARTIEL → SCORE ULTIME (FAVORABLE/NEUTRE) en place du score V30 alignement",
     "V30 BRUT REJETÉ rouge → V30 BRUT → Ω · PURGE INSTITUTIONNELLE en VERT (conformité, pas erreur)",
     "labelColor étendu pour bandes FAVORABLE/NEUTRE/RÉSERVE"
   ],
   "diag_dom": {
-    "url": "https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic",
+    "url": "https://ultime-preview.preview.emergentagent.com/mon-territoire-bionic",
     "ts": "2026-04-28T19:15:29.283Z",
     "ultime_block_present": true,
     "ultime_score_value": "80.33%",

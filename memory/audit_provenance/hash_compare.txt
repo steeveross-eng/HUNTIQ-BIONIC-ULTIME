@@ -5,7 +5,7 @@ Date: 2026-05-12T14:03:23Z
 Émetteur: Agent BCE-4X ULTIME ABSOLU
 Destinataire: COMMANDANT STEEVE-MAX
 Endpoint PROD: https://huntiq-restore.emergent.host
-Endpoint PREVIEW: https://bionic-ultime-1.preview.emergentagent.com
+Endpoint PREVIEW: https://ultime-preview.preview.emergentagent.com
 
 ═══════════════════════════════════════════════════════════════════════
 SECTION 1 — HASH SHA-256 DES SOURCES (PREVIEW = code actif courant)

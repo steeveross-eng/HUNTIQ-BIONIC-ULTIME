@@ -49,7 +49,7 @@ from engines.v8_institutional.especes.engine_phenologie_omega import (
 
 
 OUT_DIR = Path("/app/frontend/public/reports/purge_master_omega")
-INGRESS = "https://bionic-ultime-1.preview.emergentagent.com"
+INGRESS = "https://ultime-preview.preview.emergentagent.com"
 UTC_NOW = datetime.now(timezone.utc).isoformat(timespec="seconds")
 HTTP_UA = "Mozilla/5.0 BCE-4X-OMEGA-XVIII"
 e = html_lib.escape

@@ -3,7 +3,7 @@
 **Date UTC** : 2026-05-13
 **Commandant** : STEEVE-MAX
 **Injonction** : ×300 — Rendu tardif corridors (~15s)
-**Préview URL** : `https://bionic-ultime-1.preview.emergentagent.com`
+**Préview URL** : `https://ultime-preview.preview.emergentagent.com`
 
 ---
 
@@ -127,7 +127,7 @@ const corridorsToRender = organicReady ? organicBundle.corridors : corridors;
 ```python
 organic_calls = []
 page.on("request", lambda req: organic_calls.append(req.url) if "/corridors-organic/generate" in req.url else None)
-page.goto("https://bionic-ultime-1.preview.emergentagent.com/territoire", ...)
+page.goto("https://ultime-preview.preview.emergentagent.com/territoire", ...)
 page.wait_for_timeout(20000)  # 20s observation
 ```
 
@@ -181,7 +181,7 @@ page.wait_for_timeout(20000)  # 20s observation
 ## 9 · LIEN HTTPS TÉLÉCHARGEABLE
 
 ```
-https://bionic-ultime-1.preview.emergentagent.com/api/v20/territoire/audit/files/p22omega_frontend_render_injonction_omega.md
+https://ultime-preview.preview.emergentagent.com/api/v20/territoire/audit/files/p22omega_frontend_render_injonction_omega.md
 ```
 
 ---

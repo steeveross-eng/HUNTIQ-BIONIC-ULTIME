@@ -4,7 +4,7 @@
 **Commandant** : STEEVE-MAX
 **Scope** : `territoire_omega` · Waypoint **BSL** (48.206657, -68.382422)
 **Mode** : BCE-4X **ULTIME** · V30 LOCK = **INVIOLÉ**
-**Préview URL** : `https://bionic-ultime-1.preview.emergentagent.com`
+**Préview URL** : `https://ultime-preview.preview.emergentagent.com`
 
 ---
 

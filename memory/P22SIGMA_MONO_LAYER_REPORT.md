@@ -233,7 +233,7 @@ Tooltip auto-généré sur chaque corridor : `<b>id</b><br>P22Σ MONO_LAYER · L
 
 | Environnement | URL | Statut P22Σ |
 |---|---|---|
-| **PREVIEW** | `https://bionic-ultime-1.preview.emergentagent.com` | 🟢 **P22Σ DEPLOYED & VALIDÉ** |
+| **PREVIEW** | `https://ultime-preview.preview.emergentagent.com` | 🟢 **P22Σ DEPLOYED & VALIDÉ** |
 | **PRD** | `https://huntiq-restore.emergent.host` | 🟡 **REDÉPLOIEMENT REQUIS** |
 
 ### 🔄 Procédure pour propager P22Σ en PRD
@@ -250,7 +250,7 @@ Tooltip auto-généré sur chaque corridor : `<b>id</b><br>P22Σ MONO_LAYER · L
 ### 6.1 Preview (testé live)
 
 ```
-https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic?monoLayer=on
+https://ultime-preview.preview.emergentagent.com/mon-territoire-bionic?monoLayer=on
 ```
 
 → Affiche la rosace orange mono-layer P22Σ avec TERRITORY_CONTINUOUS.

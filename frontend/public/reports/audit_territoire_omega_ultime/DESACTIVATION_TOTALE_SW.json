@@ -4,9 +4,9 @@
   "commandant": "STEEVE-MAX",
   "directive": "DÉSACTIVATION TOTALE DU SERVICE WORKER (Articles 1-6)",
   "executed_at_utc": "2026-04-28T17:39:45.485038+00:00",
-  "url_audit": "https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic",
+  "url_audit": "https://ultime-preview.preview.emergentagent.com/mon-territoire-bionic",
   "diag_initial": {
-    "url": "https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic",
+    "url": "https://ultime-preview.preview.emergentagent.com/mon-territoire-bionic",
     "ts": "2026-04-28T17:39:35.413Z",
     "sw_registrations": [],
     "sw_count": 0,

@@ -228,7 +228,7 @@ affuts = compute_affuts_block(biologie=biologie, meteo=meteo, terrain=terrain, .
 
 ```bash
 # Test post-extraction (à exécuter après chaque étape 1→10)
-API="https://bionic-ultime-1.preview.emergentagent.com"
+API="https://ultime-preview.preview.emergentagent.com"
 
 # C1 — Bundle endpoint
 curl -s -m 8 "$API/api/v20/territoire/bundle?lat=48.207&lon=-68.382&species=chevreuil&month=5&hour=13&wind_deg=225" \

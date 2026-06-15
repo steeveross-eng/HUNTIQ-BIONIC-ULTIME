@@ -23,7 +23,7 @@
 ### ZIP #1 — Backup complet (128 MB)
 - **Fichier** : `BIONIC_OS_BACKUP_COMPLET_v5201.zip`
 - **Contenu** : backend (modules, engines, core, routes, bce), frontend (src, public), configs, memory
-- **HTTPS** : `https://bionic-ultime-1.preview.emergentagent.com/BIONIC_OS_BACKUP_COMPLET_v5201.zip`
+- **HTTPS** : `https://ultime-preview.preview.emergentagent.com/BIONIC_OS_BACKUP_COMPLET_v5201.zip`
 
 ### ZIP #2 — 7 blocs critiques (128 MB)
 - **Fichier** : `BIONIC_OS_7BLOCS_v5201.zip`
@@ -35,18 +35,18 @@
   - BLOC 5 : Assets statiques (27 fichiers)
   - BLOC 6 : Build et deploiement (4 fichiers)
   - BLOC 7 : Configuration systeme (2 fichiers)
-- **HTTPS** : `https://bionic-ultime-1.preview.emergentagent.com/BIONIC_OS_7BLOCS_v5201.zip`
+- **HTTPS** : `https://ultime-preview.preview.emergentagent.com/BIONIC_OS_7BLOCS_v5201.zip`
 
 ### MongoDB Dump (254 KB)
 - **Fichier** : `BIONIC_OS_MONGODB_DUMP_v5201.zip`
 - **Collections** : 34
 - **Documents** : 703
-- **HTTPS** : `https://bionic-ultime-1.preview.emergentagent.com/BIONIC_OS_MONGODB_DUMP_v5201.zip`
+- **HTTPS** : `https://ultime-preview.preview.emergentagent.com/BIONIC_OS_MONGODB_DUMP_v5201.zip`
 
 ### Snapshot systeme (4 KB)
 - **Fichier** : `BIONIC_OS_SNAPSHOT_v5201.json`
 - **Contenu** : versions Python/Node/Yarn, inventaire backend/frontend, structure DB, gouvernance
-- **HTTPS** : `https://bionic-ultime-1.preview.emergentagent.com/BIONIC_OS_SNAPSHOT_v5201.json`
+- **HTTPS** : `https://ultime-preview.preview.emergentagent.com/BIONIC_OS_SNAPSHOT_v5201.json`
 
 ---
 
@@ -54,9 +54,9 @@
 
 ### Etape 1 — Telecharger les fichiers
 ```bash
-wget https://bionic-ultime-1.preview.emergentagent.com/BIONIC_OS_BACKUP_COMPLET_v5201.zip
-wget https://bionic-ultime-1.preview.emergentagent.com/BIONIC_OS_MONGODB_DUMP_v5201.zip
-wget https://bionic-ultime-1.preview.emergentagent.com/BIONIC_OS_SNAPSHOT_v5201.json
+wget https://ultime-preview.preview.emergentagent.com/BIONIC_OS_BACKUP_COMPLET_v5201.zip
+wget https://ultime-preview.preview.emergentagent.com/BIONIC_OS_MONGODB_DUMP_v5201.zip
+wget https://ultime-preview.preview.emergentagent.com/BIONIC_OS_SNAPSHOT_v5201.json
 ```
 
 ### Etape 2 — Extraire le code

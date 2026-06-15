@@ -281,7 +281,7 @@ Capture : `/tmp/p22e_final_R1R2R3.png`
 ## 9. URL DE VALIDATION COMMANDANT
 
 ```
-https://bionic-ultime-1.preview.emergentagent.com/mon-territoire-bionic?corridorsDebug=on
+https://ultime-preview.preview.emergentagent.com/mon-territoire-bionic?corridorsDebug=on
 ```
 
 Comportement attendu (sans aucun clic préalable) :

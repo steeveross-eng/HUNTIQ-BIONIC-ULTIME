@@ -264,7 +264,7 @@ Les endpoints admin utilisent l'authentification existante.
         },
         "servers": [
             {
-                "url": "https://bionic-ultime-1.preview.emergentagent.com",
+                "url": "https://ultime-preview.preview.emergentagent.com",
                 "description": "Preview Server"
             }
         ],
