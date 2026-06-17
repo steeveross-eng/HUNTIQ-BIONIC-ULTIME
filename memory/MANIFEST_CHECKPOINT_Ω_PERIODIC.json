@@ -1,10 +1,10 @@
 {
   "_doctrine": "P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_Ω",
-  "_emitted_at": "2026-06-16T18:07:35.761046+00:00",
+  "_emitted_at": "2026-06-17T11:39:59.290060+00:00",
   "manifest": {
     "doctrine": "P22ΩΩ_ZEROCOST_CANADA_H3R6_Ω",
-    "generated_at": "2026-06-16T18:01:34.105398+00:00",
-    "drift_seconds": 361.655624,
+    "generated_at": "2026-06-17T11:33:39.723455+00:00",
+    "drift_seconds": 379.56658,
     "drift_ok": true,
     "drift_alert": false,
     "n_tiles": 207627,

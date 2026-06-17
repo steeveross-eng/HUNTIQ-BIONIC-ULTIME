@@ -16,13 +16,13 @@
     "RAPPORT_3RF_T+100%_Ω_FINAL": "2026-05-24T11:35:33.075166+00:00",
     "MANIFEST_CHECKPOINT_Ω": "2026-05-24T11:35:33.075166+00:00",
     "AUDIT_DIVERGENCE_BIO_Ω": "2026-05-24T11:35:33.075166+00:00",
-    "RAPPORT_QC_PROGRESS_Ω_last": "2026-06-16T18:07:35.226783+00:00",
+    "RAPPORT_QC_PROGRESS_Ω_last": "2026-06-17T11:39:58.898762+00:00",
     "HABITAT_FUSION_STRUCTURAL_REPORT_Ω_last": "2026-06-16T18:07:35.323681+00:00",
-    "MANIFEST_CHECKPOINT_Ω_periodic_last": "2026-06-16T18:07:35.761375+00:00",
+    "MANIFEST_CHECKPOINT_Ω_periodic_last": "2026-06-17T11:39:59.290378+00:00",
     "RAPPORT_AUTOPILOT_MIDPOINT_Ω": "2026-05-28T18:59:24.704340+00:00"
   },
-  "check_count": 126,
-  "last_check_at": "2026-06-16T18:02:19.997115+00:00",
+  "check_count": 127,
+  "last_check_at": "2026-06-17T11:35:41.053804+00:00",
   "last_error": "stability_check: 'stability_actions'",
   "phase_2_grid_full": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_full.json",
   "phase_2_grid_limitrophes": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_limitrophes.json",
@@ -31,27 +31,6 @@
   "block_outside_qc": true,
   "workers_supervisor_action_required": true,
   "stability_actions": [
-    {
-      "kind": "WORKERS_ALIVE_COUNT",
-      "at": "2026-06-06T23:50:44.081696+00:00",
-      "count": 3,
-      "target": 8,
-      "min_required": 4
-    },
-    {
-      "kind": "WORKERS_ALIVE_COUNT",
-      "at": "2026-06-07T00:24:03.290662+00:00",
-      "count": 3,
-      "target": 8,
-      "min_required": 4
-    },
-    {
-      "kind": "WORKERS_ALIVE_COUNT",
-      "at": "2026-06-07T00:56:15.282741+00:00",
-      "count": 3,
-      "target": 8,
-      "min_required": 4
-    },
     {
       "kind": "WORKERS_ALIVE_COUNT",
       "at": "2026-06-07T01:02:23.828485+00:00",
@@ -442,6 +421,57 @@
     {
       "kind": "SOFT_RESTART_DECISION",
       "at": "2026-06-16T18:07:35.773261+00:00",
+      "soft_restarts": [
+        {
+          "action": "DETECTION_ONLY",
+          "kill_enabled": false,
+          "workers_alive": 0,
+          "note": "Définir AUTOPILOT_STABILITY_KILL=1 pour activer SIGTERM · Watchdog respawn massif si workers<4 (MIN_WORKERS)"
+        }
+      ]
+    },
+    {
+      "kind": "WORKERS_ALIVE_COUNT",
+      "at": "2026-06-17T11:39:59.299985+00:00",
+      "count": 0,
+      "target": 8,
+      "min_required": 4
+    },
+    {
+      "kind": "STALE_WORKERS_DETECTED",
+      "at": "2026-06-17T11:39:59.300326+00:00",
+      "stale_workers": [
+        {
+          "worker_index": 1,
+          "latency_s": 250.1
+        },
+        {
+          "worker_index": 0,
+          "latency_s": 250.1
+        },
+        {
+          "worker_index": 3,
+          "latency_s": 250.1
+        },
+        {
+          "worker_index": 4,
+          "latency_s": 250.1
+        },
+        {
+          "worker_index": 2,
+          "latency_s": 250.1
+        },
+        {
+          "worker_index": 5,
+          "latency_s": 250.1
+        }
+      ],
+      "count": 6,
+      "kill_enabled": false
+    },
+    {
+      "kind": "SOFT_RESTART_DECISION",
+      "at": "2026-06-17T11:39:59.300330+00:00",
       "soft_restarts": [
         {
           "action": "DETECTION_ONLY",

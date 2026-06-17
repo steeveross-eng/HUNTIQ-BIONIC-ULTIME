@@ -1,7 +1,7 @@
 # MANIFEST_CHECKPOINT_Ω (périodique)
 
 - **Doctrine**: P22ΩΩ_AUTOPILOT_4D_SAFE_PLUS_Ω · checkpoint 12h
-- **Emitted at**: 2026-06-16T18:07:35.761028+00:00
+- **Emitted at**: 2026-06-17T11:39:59.290040+00:00
 - **Bucket R2**: bionic-zerocost-omega
 
 ## Manifest R2 (snapshot)
@@ -9,8 +9,8 @@
 | Champ | Valeur |
 |---|---|
 | doctrine | `P22ΩΩ_ZEROCOST_CANADA_H3R6_Ω` |
-| generated_at | `2026-06-16T18:01:34.105398+00:00` |
-| drift_seconds | **361.7 s** (cible <900.0s) |
+| generated_at | `2026-06-17T11:33:39.723455+00:00` |
+| drift_seconds | **379.6 s** (cible <900.0s) |
 | drift_ok | ✅ OUI |
 | drift_alert | ✅ NORMAL |
 | n_tiles | 207627 |
