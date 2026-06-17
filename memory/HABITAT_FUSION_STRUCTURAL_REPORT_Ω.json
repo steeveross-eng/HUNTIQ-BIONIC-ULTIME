@@ -1,7 +1,7 @@
 {
   "_doctrine": "P22ΩΩ_AUTOPILOT_4D_SAFE_Ω",
   "_report": "HABITAT_FUSION_STRUCTURAL_REPORT_Ω",
-  "_generated_at": "2026-06-07T20:07:46.890987+00:00",
+  "_generated_at": "2026-06-16T18:07:35.268897+00:00",
   "engine_p0": {
     "name": "HABITAT-FUSION-ENGINE-P0",
     "version": "V1-PRE-FUSION-2026-05",
@@ -18,18 +18,18 @@
     "version": "V1.0-STRUCTURAL_PLUS-AWAITING-CREDENTIALS",
     "phase": "P1_STRUCTURAL+_AWAITING_INGESTION",
     "weight_active": 0.35,
-    "ingestion_p1_ready": true,
-    "clients_credential_ready": 4,
-    "clients_armed": 4
+    "ingestion_p1_ready": false,
+    "clients_credential_ready": 2,
+    "clients_armed": 0
   },
   "ingestion_clients": {
     "nasa_hls": {
       "client": "NASA-HLS-CLIENT",
       "version": "V1.0-CODE-READY-AWAITING-CREDENTIALS",
       "doctrine": "P22ΩΩ_NDVI_LIDAR_P1_STRUCTURAL+_Ω",
-      "credential_ready": true,
-      "armed_for_ingestion": true,
-      "operational_mode": "INGESTION_READY",
+      "credential_ready": false,
+      "armed_for_ingestion": false,
+      "operational_mode": "AWAITING_CREDENTIALS",
       "sources": [
         "HLSL30",
         "HLSS30"
@@ -40,9 +40,9 @@
       "client": "ESA-SENTINEL2-L2A-CLIENT",
       "version": "V1.0-CODE-READY-AWAITING-CREDENTIALS",
       "doctrine": "P22ΩΩ_NDVI_LIDAR_P1_STRUCTURAL+_Ω",
-      "credential_ready": true,
-      "armed_for_ingestion": true,
-      "operational_mode": "INGESTION_READY",
+      "credential_ready": false,
+      "armed_for_ingestion": false,
+      "operational_mode": "AWAITING_CREDENTIALS",
       "source": "Sentinel-2 L2A (B04 Red + B08 NIR · 10 m)",
       "stac_endpoint": "https://catalogue.dataspace.copernicus.eu/stac",
       "auth_endpoint": "https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/token"
@@ -52,8 +52,8 @@
       "version": "V1.0-CODE-READY-OPEN-DATA",
       "doctrine": "P22ΩΩ_NDVI_LIDAR_P1_STRUCTURAL+_Ω",
       "credential_ready": true,
-      "armed_for_ingestion": true,
-      "operational_mode": "INGESTION_READY",
+      "armed_for_ingestion": false,
+      "operational_mode": "AWAITING_COMMANDANT_ARM_AND_DISK_AUTH",
       "license": "Open Government Licence — Canada (CC-BY 2.0)",
       "source": "NRCan HRDEM (High Resolution DEM)",
       "resolution_m": 1.0,
@@ -64,8 +64,8 @@
       "version": "V1.0-CODE-READY-OPEN-DATA",
       "doctrine": "P22ΩΩ_NDVI_LIDAR_P1_STRUCTURAL+_Ω",
       "credential_ready": true,
-      "armed_for_ingestion": true,
-      "operational_mode": "INGESTION_READY",
+      "armed_for_ingestion": false,
+      "operational_mode": "AWAITING_COMMANDANT_ARM_AND_DISK_AUTH",
       "license": "Données ouvertes Québec (Licence ouverte 2.0)",
       "source": "MFFP Forêt Ouverte · LiDAR forestier QC",
       "resolution_m": 0.5,
