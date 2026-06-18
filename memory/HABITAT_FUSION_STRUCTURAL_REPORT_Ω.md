@@ -1,14 +1,14 @@
 # HABITAT_FUSION_STRUCTURAL_REPORT_Ω
 
 - **Doctrine**: P22ΩΩ_AUTOPILOT_4D_SAFE_Ω · Phase 3 permanent
-- **Emitted at**: 2026-06-16T18:07:35.323250+00:00
+- **Emitted at**: 2026-06-18T13:45:02.954786+00:00
 - **Cadence**: toutes les 24h
 
 ---
 
 ```
 ══════════════════════════════════════════════════════════════════════════════
-  HABITAT_FUSION_STRUCTURAL_REPORT_Ω · 2026-06-16T18:07:35.316797+00:00
+  HABITAT_FUSION_STRUCTURAL_REPORT_Ω · 2026-06-18T13:45:02.950216+00:00
 ══════════════════════════════════════════════════════════════════════════════
 
 § A · ENGINE P0
@@ -24,12 +24,12 @@
   Phase                   : P1_STRUCTURAL+_AWAITING_INGESTION
   weight_active           : 0.35 (INCHANGÉ vs P0)
   ingestion_p1_ready      : False
-  clients credential ready: 2/4
+  clients credential ready: 4/4
   clients armés           : 0/4
 
 § C · CLIENTS INGESTION (CODE-READY · INERTES)
-  nasa_hls                 : mode=AWAITING_CREDENTIALS · cred_ready=False
-  esa_sentinel2_l2a        : mode=AWAITING_CREDENTIALS · cred_ready=False
+  nasa_hls                 : mode=AWAITING_COMMANDANT_ARM_FLAG · cred_ready=True
+  esa_sentinel2_l2a        : mode=AWAITING_COMMANDANT_ARM_FLAG · cred_ready=True
   nrcan_hrdem              : mode=AWAITING_COMMANDANT_ARM_AND_DISK_AUTH · cred_ready=True
   mffp_foret_ouverte       : mode=AWAITING_COMMANDANT_ARM_AND_DISK_AUTH · cred_ready=True
 

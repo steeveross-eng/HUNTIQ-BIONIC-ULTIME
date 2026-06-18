@@ -1,7 +1,7 @@
 {
   "_doctrine": "P22ΩΩ_AUTOPILOT_4D_SAFE_Ω",
   "_report": "HABITAT_FUSION_STRUCTURAL_REPORT_Ω",
-  "_generated_at": "2026-06-16T18:07:35.268897+00:00",
+  "_generated_at": "2026-06-18T13:45:02.914861+00:00",
   "engine_p0": {
     "name": "HABITAT-FUSION-ENGINE-P0",
     "version": "V1-PRE-FUSION-2026-05",
@@ -19,7 +19,7 @@
     "phase": "P1_STRUCTURAL+_AWAITING_INGESTION",
     "weight_active": 0.35,
     "ingestion_p1_ready": false,
-    "clients_credential_ready": 2,
+    "clients_credential_ready": 4,
     "clients_armed": 0
   },
   "ingestion_clients": {
@@ -27,9 +27,9 @@
       "client": "NASA-HLS-CLIENT",
       "version": "V1.0-CODE-READY-AWAITING-CREDENTIALS",
       "doctrine": "P22ΩΩ_NDVI_LIDAR_P1_STRUCTURAL+_Ω",
-      "credential_ready": false,
+      "credential_ready": true,
       "armed_for_ingestion": false,
-      "operational_mode": "AWAITING_CREDENTIALS",
+      "operational_mode": "AWAITING_COMMANDANT_ARM_FLAG",
       "sources": [
         "HLSL30",
         "HLSS30"
@@ -40,9 +40,9 @@
       "client": "ESA-SENTINEL2-L2A-CLIENT",
       "version": "V1.0-CODE-READY-AWAITING-CREDENTIALS",
       "doctrine": "P22ΩΩ_NDVI_LIDAR_P1_STRUCTURAL+_Ω",
-      "credential_ready": false,
+      "credential_ready": true,
       "armed_for_ingestion": false,
-      "operational_mode": "AWAITING_CREDENTIALS",
+      "operational_mode": "AWAITING_COMMANDANT_ARM_FLAG",
       "source": "Sentinel-2 L2A (B04 Red + B08 NIR · 10 m)",
       "stac_endpoint": "https://catalogue.dataspace.copernicus.eu/stac",
       "auth_endpoint": "https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/token"
