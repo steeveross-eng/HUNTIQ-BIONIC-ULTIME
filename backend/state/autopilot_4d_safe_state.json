@@ -21,9 +21,9 @@
     "MANIFEST_CHECKPOINT_Ω_periodic_last": "2026-06-18T13:45:03.365676+00:00",
     "RAPPORT_AUTOPILOT_MIDPOINT_Ω": "2026-05-28T18:59:24.704340+00:00"
   },
-  "check_count": 146,
-  "last_check_at": "2026-06-18T19:52:30.684333+00:00",
-  "last_error": "stability_check: 'stability_actions'",
+  "check_count": 149,
+  "last_check_at": "2026-06-19T18:43:34.251094+00:00",
+  "last_error": "get_3rf_pct: rapport_3rf_t95_omega.py exit=1 · stderr=/context.py\", line 123, in wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/.venv/lib/python3.11/site-packages/botocore/",
   "phase_2_grid_full": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_full.json",
   "phase_2_grid_limitrophes": "/app/backend/cache/zerocost_v1/canada_h3_grid_r5_seed_qc_limitrophes.json",
   "phase_2_active_priority": 1,
@@ -31,20 +31,6 @@
   "block_outside_qc": true,
   "workers_supervisor_action_required": true,
   "stability_actions": [
-    {
-      "kind": "WORKERS_ALIVE_COUNT",
-      "at": "2026-06-07T23:18:48.029175+00:00",
-      "count": 3,
-      "target": 8,
-      "min_required": 4
-    },
-    {
-      "kind": "WORKERS_ALIVE_COUNT",
-      "at": "2026-06-07T23:45:00.983529+00:00",
-      "count": 3,
-      "target": 8,
-      "min_required": 4
-    },
     {
       "kind": "WORKERS_ALIVE_COUNT",
       "at": "2026-06-08T00:09:00.827077+00:00",
@@ -497,6 +483,20 @@
     {
       "kind": "WORKERS_ALIVE_COUNT",
       "at": "2026-06-18T19:54:19.035023+00:00",
+      "count": 0,
+      "target": 8,
+      "min_required": 4
+    },
+    {
+      "kind": "WORKERS_ALIVE_COUNT",
+      "at": "2026-06-18T20:48:26.340753+00:00",
+      "count": 0,
+      "target": 8,
+      "min_required": 4
+    },
+    {
+      "kind": "WORKERS_ALIVE_COUNT",
+      "at": "2026-06-18T21:20:37.174986+00:00",
       "count": 0,
       "target": 8,
       "min_required": 4
