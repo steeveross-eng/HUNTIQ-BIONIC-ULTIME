@@ -2226,6 +2226,19 @@ async def serve_archive_v5201(filename: str):
     raise _HTTPException(status_code=404, detail="Archive file not found")
 
 
+
+
+# ============================================================
+# V51 ENGINES ACTIVATION (Sprint Activation Kit - 2026-09-11)
+# 19 endpoints /api/v1/v51/* (temporal, lunar, provinces, habitat, ecosystem, intelligence V7)
+# ============================================================
+try:
+    from modules.v51_engines.router import router as v51_engines_router
+    app.include_router(v51_engines_router)
+    logger.info("V51_ENGINES active : 19 endpoints under /api/v1/v51")
+except Exception as e:
+    logger.warning(f"V51_ENGINES router not loaded: {e}")
+
 # ==============================================
 # MAIN
 # ==============================================
