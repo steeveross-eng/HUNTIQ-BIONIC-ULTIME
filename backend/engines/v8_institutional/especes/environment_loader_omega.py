@@ -1,4 +1,75 @@
 """
+environment_loader_omega.py
+============================
+STATUT : SUPERSEDED_BY_PHASE_P20 (sealed 2026-09-11)
+
+Ce loader attendait `noaa_gfs_forecast()` et `copernicus_ecmwf_reanalysis()` qui
+sont maintenant listes dans `weather_provider_policy_omega.WEATHER_PROVIDER_POLICY_OMEGA
+["deprecated_enforced"]` (Phase P20).
+
+Consumers doivent utiliser :
+  - `backend/engines/v8_institutional/weather/noaa_pipeline_omega.py`
+    pour weather (OWM realtime + CFSv2 streaming) et climate (WOD23 B2)
+  - `backend/engines/v8_institutional/especes/solunar_lunar_omega.py`
+    pour phases lune, illumination et attraction gravitationnelle solunaire
+
+Toute tentative de `load()` sur ce module renvoie desormais une exception
+explicite (SupersededError) pointant vers les remplacants.
+
+Refs:
+  - `weather_provider_policy_omega.WEATHER_PROVIDER_POLICY_OMEGA`
+  - `NOAA_AUDIT.md` §3, §7
+"""
+
+from dataclasses import dataclass
+from typing import Optional
+
+
+class SupersededError(RuntimeError):
+    """Levée quand un consumer tente d\'utiliser un loader superseded par P20."""
+    pass
+
+
+@dataclass(frozen=True)
+class SupersededMeta:
+    """Meta immuable annonçant la supersession du loader."""
+    superseded_by: str = "PHASE_P20"
+    sealed_at: str = "2026-09-11T00:00:00Z"
+    replacement_weather: str = "backend.engines.v8_institutional.weather.noaa_pipeline_omega"
+    replacement_solunar: str = "backend.engines.v8_institutional.especes.solunar_lunar_omega"
+    policy_ref: str = "weather_provider_policy_omega.WEATHER_PROVIDER_POLICY_OMEGA"
+
+    @staticmethod
+    def is_available() -> bool:
+        """Toujours False - ce loader est SUPERSEDED_BY_PHASE_P20."""
+        return False
+
+    def raise_superseded(self) -> None:
+        raise SupersededError(
+            f"environment_loader_omega SUPERSEDED_BY_PHASE_P20 (sealed {self.sealed_at}). "
+            f"Use `{self.replacement_weather}` for weather/climate, "
+            f"`{self.replacement_solunar}` for lunar/solunar."
+        )
+
+
+SUPERSEDED_META = SupersededMeta()
+
+
+def load(*_args, **_kwargs):
+    """Ancien entrypoint - toujours superseded."""
+    SUPERSEDED_META.raise_superseded()
+
+
+def get_default_loader(*_args, **_kwargs):
+    """Ancien facade - toujours superseded."""
+    SUPERSEDED_META.raise_superseded()
+
+
+# ============================================================================
+# ANCIEN CONTENU CONSERVE POUR HISTORIQUE (never called after supersede)
+# ============================================================================
+
+"""
 environment_loader_omega.py — ORDRE N°52-R16-D-PREP · STUB
 ═══════════════════════════════════════════════════════════════════════════
 COMMANDANT STEEVE-MAX · BCE-4X ULTIME ABSOLU · ANTI_GÉNÉRIQUE_STRICT
